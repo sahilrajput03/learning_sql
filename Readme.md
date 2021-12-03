@@ -8,6 +8,4 @@ _Npm packages_: sequelize and sqlite3.
 
 _Tip_: You can install vscode extension: `alexcvzz.vscode-sqlite`
 
-_Tip_: Also install linux tool for viewing the sqlite database file as well -
-
-[My installation guide](https://github.com/sahilrajput03/sahilrajput03/blob/master/arch-notes.md#insatlled-sqliteman)
+_Tip_: Also install linux tool for viewing the sqlite database file as well - [Installation guide](https://github.com/sahilrajput03/sahilrajput03/blob/master/arch-notes.md#insatlled-sqliteman)
