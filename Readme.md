@@ -2,6 +2,8 @@
 
 This repository includes testing for sqlite. Most of sql command of sql are implemented in sql except [few](https://sqlite.org/omitted.html).
 
+--
+
 _Sequelize docs_: https://sequelize.org/master/
 
 _Npm packages_: sequelize and sqlite3.
