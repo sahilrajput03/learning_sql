@@ -4,7 +4,7 @@ This repository includes testing for sqlite. Most of sql command of sql are impl
 
 --
 
-My Sql notes from w3school: [Here](https://gist.github.com/sahilrajput03/6e8e89c2e62809d890c5f09d78e0d601).
+W3school Notes: [Here](W3schools).
 
 _Sequelize docs_: https://sequelize.org/master/
 
@@ -14,8 +14,8 @@ _Tip_: You can install vscode extension: `alexcvzz.vscode-sqlite`
 
 _Tip_: Also install linux tool for viewing the sqlite database file as well - [Installation guide](https://github.com/sahilrajput03/sahilrajput03/blob/master/arch-notes.md#insatlled-sqliteman)
 
-
 --
+
 ## Sqlite:
 
 • Sqlite Docs: https://www.sqlite.org/index.html
