@@ -4,6 +4,8 @@ This repository includes testing for sqlite. Most of sql command of sql are impl
 
 --
 
+My Sql notes from w3school: [Here](https://gist.github.com/sahilrajput03/6e8e89c2e62809d890c5f09d78e0d601).
+
 _Sequelize docs_: https://sequelize.org/master/
 
 _Npm packages_: sequelize and sqlite3.
