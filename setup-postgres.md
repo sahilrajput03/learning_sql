@@ -8,6 +8,9 @@ I'm officiall maintaing all this info in fso's part 13's solution repo.
 # src: https://wiki.archlinux.org/title/PostgreSQL
 sudo pacman -S postgresql
 
+# To check the version.
+postgresql --version
+
 # Enable postgresql to be run on system boot as well.
 sudo systemctl enable postgresql
 
