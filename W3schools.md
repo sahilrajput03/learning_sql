@@ -107,17 +107,8 @@ src:: https://www.w3schools.com/sql/sql_autoincrement.asp
 
 ```
 - Insert a new record in the Customers table.
-INSERT INTO Customers (
-CustomerName, 
-Address, 
-City, 
-PostalCode,
-Country)
-VALUES ('Hekkan Burger',
-'Gateveien 15',
-'Sandnes',
-'4306',
-'Norway')
+INSERT INTO Customers ( CustomerName, Address, City, PostalCode, Country)
+VALUES ('Hekkan Burger', 'Gateveien 15', 'Sandnes', '4306', 'Norway')
 ; 
 ```
 https://www.w3schools.com/sql/sql_insert.asp
