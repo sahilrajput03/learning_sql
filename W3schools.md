@@ -49,6 +49,9 @@ DROP INDEX - deletes an index
 - Selects all columns from Cutomers table.
 SELECT * FROM Customers
 
+- - Select all the values from the Country and Age column in the Customers table.
+SELECT Country, Age FROM Customers;
+
 - Select all the different values from the Country column in the Customers table.
 SELECT DISTINCT Country FROM Customers;
 
@@ -107,18 +110,8 @@ src:: https://www.w3schools.com/sql/sql_autoincrement.asp
 
 ```
 - Insert a new record in the Customers table.
-INSERT INTO Customers (
-CustomerName, 
-Address, 
-City, 
-PostalCode,
-Country)
-VALUES ('Hekkan Burger',
-'Gateveien 15',
-'Sandnes',
-'4306',
-'Norway')
-; 
+INSERT INTO Customers ( CustomerName, Address, City, PostalCode, Country)
+VALUES ('Hekkan Burger', 'Gateveien 15', 'Sandnes', '4306', 'Norway'); 
 ```
 https://www.w3schools.com/sql/sql_insert.asp
 ```
