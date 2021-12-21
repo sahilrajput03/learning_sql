@@ -1,4 +1,5 @@
 ## Lesson 2: Queries with constraints
+
 =====================================
 
 ```txt
@@ -8,12 +9,13 @@ WHERE condition
     AND/OR another_condition
     AND/OR …;
 
-Operator		Condition						SQL Example
-=, !=, < <=, >, >=	Standard numerical operators				col_name != 4
-BETWEEN … AND …		Number is within range of two values (inclusive)	col_name BETWEEN 1.5 AND 10.5
-NOT BETWEEN … AND …	Number is not within range of two values (inclusive)	col_name NOT BETWEEN 1 AND 10
-IN (…)			Number exists in a list					col_name IN (2, 4, 6)
-NOT IN (…)		Number does not exist in a list				col_name NOT IN (1, 3, 5)
+
+Operator		          Condition						                                    SQL Example
+=, !=, < <=, >, >=	  Standard numerical operators				                    col_name != 4
+BETWEEN … AND …		    Number is within range of two values (inclusive)	      col_name BETWEEN 1.5 AND 10.5
+NOT BETWEEN … AND …	  Number is not within range of two values (inclusive)	  col_name NOT BETWEEN 1 AND 10
+IN (…)			          Number exists in a list					                        col_name IN (2, 4, 6)
+NOT IN (…)		        Number does not exist in a list				                  col_name NOT IN (1, 3, 5)
 ```
 
 In addition to making the results more manageable to understand, writing clauses to constrain the set of rows returned also allows the query to run faster due to the reduction in unnecessary data being returned.
@@ -27,22 +29,22 @@ SELECT * FROM movies where Year not between 2000 and 2010;
 SELECT title, year FROM movies where year < 2004;
 ```
 
-
-
 ## SQL Lesson 3: Queries with constraints (Pt. 2)
+
 =================================================
 
-Operato		Condition												Example
-=		Case sensitive exact string comparison (notice the single equals)					col_name = "abc"
-!= or <		Case sensitive exact string inequality comparison							col_name != "abcd"
-LIKE		Case insensitive exact string comparison								col_name LIKE "ABC"
-NOT LIKE	Case insensitive exact string inequality comparison							col_name NOT LIKE "ABCD"
-%		Used anywhere in a string to match a sequence of zero or more characters (only with LIKE or NOT LIKE)	col_name LIKE "%AT%" (matches "AT","ATTIC","CAT" or even "BATS")
-_		Used anywhere in a string to match a single character (only with LIKE or NOT LIKE)			col_name LIKE "AN_" (matches "AND", but not "AN")
-IN (…)		String exists in a list											col_name IN ("A", "B", "C")
-NOT IN (…)	String does not exist in a list										col_name NOT IN ("D", "E", "F")
+Operato Condition Example
+= Case sensitive exact string comparison (notice the single equals) col\*name = "abc"
+!= or < Case sensitive exact string inequality comparison col_name != "abcd"
+LIKE Case insensitive exact string comparison col_name LIKE "ABC"
+NOT LIKE Case insensitive exact string inequality comparison col_name NOT LIKE "ABCD"
+% Used anywhere in a string to match a sequence of zero or more characters (only with LIKE or NOT LIKE) col_name LIKE "%AT%" (matches "AT","ATTIC","CAT" or even "BATS")
 
-- Examples
+- Used anywhere in a string to match a single character (only with LIKE or NOT LIKE) col*name LIKE "AN*" (matches "AND", but not "AN")
+  IN (…) String exists in a list col_name IN ("A", "B", "C")
+  NOT IN (…) String does not exist in a list col_name NOT IN ("D", "E", "F")
+
+* Examples
 
 ```sql
 SELECT * FROM movies WHERE Title LIKE "toy story%";
@@ -51,10 +53,9 @@ SELECT * FROM movies WHERE Director!="John Lasseter";
 SELECT * FROM movies where title LIKE "WALL-%";
 ```
 
-SQL Lesson 4: Filtering and sorting Query results
-=================================================
+# SQL Lesson 4: Filtering and sorting Query results
 
-```syntax
+```sql
 --- DISTINCT keyword will blindly remove duplicate rows
 
 SELECT DISTINCT column, another_column, …
@@ -84,8 +85,8 @@ LIMIT num_limit OFFSET num_offset;
 
 ```
 
-```sql
-SELECT DISTINCT director FROM movies order by Director ; 	-- List all directors of Pixar movies (alphabetically), without duplicates 
+````sql
+SELECT DISTINCT director FROM movies order by Director ; 	-- List all directors of Pixar movies (alphabetically), without duplicates
 SELECT * FROM movies ORDER BY YEAR DESC LIMIT 4; 		-- List the last four Pixar movies released (ordered from most recent to least)
 SELECT * FROM movies ORDER BY title LIMIT 5; 			-- List the first five Pixar movies sorted alphabetically
 SELECT * FROM movies ORDER BY title LIMIT 5 OFFSET 5; 		-- List the next five Pixar movies sorted alphabetically
@@ -100,10 +101,9 @@ SELECT * FROM north_american_cities where country="Canada"; 					--- List all th
 SELECT * FROM north_american_cities WHERE country="United States" ORDER BY latitude DESC;	--- Order all the cities in the United States by their latitude from north to south
 LEARN: For learning latitudes and logitudes, refer telegram's group of Geography
 SELECT * FROM north_american_cities WHERE longitude<-87.629798 ORDER BY Longitude;				--- List all the cities west of Chicago, ordered from west to east
-SELECT * FROM north_american_cities WHERE Country="Mexico" ORDER BY Population DESC LIMIT 2;			--- List the two largest cities in Mexico (by population) 
+SELECT * FROM north_american_cities WHERE Country="Mexico" ORDER BY Population DESC LIMIT 2;			--- List the two largest cities in Mexico (by population)
 SELECT * FROM north_american_cities WHERE Country="United States" ORDER BY Population DESC LIMIT 2 OFFSET 2;	--- List the third and fourth largest cities (by population) in the United States and their population ✓
-```
-
+````
 
 - Q. What is Normalization ?
 
@@ -120,10 +120,11 @@ Normalization entails organizing the columns (attributes) and tables (relations)
 Using the JOIN clause in a query, we can combine row data across two separate tables using this unique key. The first of the joins that we will introduce is the INNER JOIN.
 
 Select query with INNER JOIN on multiple tables
-```syntax
+
+```sql
 SELECT column, another_table_column, …
 FROM mytable
-INNER JOIN another_table 
+INNER JOIN another_table
     ON mytable.id = another_table.id
 WHERE condition(s)
 ORDER BY column, … ASC/DESC
@@ -133,27 +134,25 @@ LIMIT num_limit OFFSET num_offset;
 The INNER JOIN is a process that matches rows from the first table and the second table which have the same key (as defined by the ON constraint) to create a result row with the combined columns from both tables. After the tables are joined, the other clauses we learned previously are then applied.
 
 - Did you know?
-You might see queries where the INNER JOIN is written simply as a JOIN. These two are equivalent, but we will continue to refer to these joins as inner-joins because they make the query easier to read once you start using other types of joins, which will be introduced in the following lesson.
+  You might see queries where the INNER JOIN is written simply as a JOIN. These two are equivalent, but we will continue to refer to these joins as inner-joins because they make the query easier to read once you start using other types of joins, which will be introduced in the following lesson.
 
 ```sql
 SELECT Title, domestic_sales, international_sales FROM movies JOIN boxoffice on Movies.id=Boxoffice.movie_id; 	# Find the domestic and international sales for each movie
 # ALSO: Movies.id=Boxoffice.movie_id can also be written as: id=movie_id coz the column names are unique (i.e., column is only in either of those two tables).
 
 SELECT * FROM movies JOIN boxoffice on id=movie_id WHERE International_sales>Domestic_sales;			# Show the sales numbers for each movie that did better
-														# internationally rather than domestically 
+														# internationally rather than domestically
 SELECT * FROM movies JOIN boxoffice on id=movie_id ORDER BY rating DESC;					# List all the movies by their ratings in descending order
 ```
 
-SQL Lesson 7: OUTER JOINs
-=========================
+# SQL Lesson 7: OUTER JOINs
 
 Depending on how you want to analyze the data, the INNER JOIN we used last lesson might not be sufficient because the resulting table only contains data that belongs in both of the tables. If the two tables have asymmetric data, which can easily happen when data is entered in different stages, then we would have to use a LEFT JOIN, RIGHT JOIN or FULL JOIN instead to ensure that the data you need is not left out of the results.
 
-
-```syntax
+```sql
 SELECT column, another_column, …
 FROM mytable
-INNER/LEFT/RIGHT/FULL JOIN another_table 
+INNER/LEFT/RIGHT/FULL JOIN another_table
     ON mytable.id = another_table.matching_id
 WHERE condition(s)
 ORDER BY column, … ASC/DESC
@@ -175,13 +174,12 @@ SELECT distinct Building_name FROM Buildings LEFT JOIN Employees ON Building_nam
 
 SELECT Building_name, Capacity FROM Buildings									# Find the list of all buildings and their capacity
 
-SELECT distinct building_name, role FROM Buildings LEFT JOIN Employees on  building_name=building		# List all buildings and the distinct employee roles in 
+SELECT distinct building_name, role FROM Buildings LEFT JOIN Employees on  building_name=building		# List all buildings and the distinct employee roles in
 														# each building (including empty buildings)
 
 ```
 
-SQL Lesson 8: A short note on NULLs
-===================================
+# SQL Lesson 8: A short note on NULLs
 
 As promised in the last lesson, we are going to quickly talk about NULL values in an SQL database. It's always good to reduce the possibility of NULL values in databases because they require special attention when constructing queries, constraints (certain functions behave differently with null values) and when processing the results.
 
@@ -189,7 +187,7 @@ An alternative to NULL values in your database is to have data-type appropriate 
 
 Sometimes, it's also not possible to avoid NULL values, as we saw in the last lesson when outer-joining two tables with asymmetric data. In these cases, you can test a column for NULL values in a WHERE clause by using either the IS NULL or IS NOT NULL constraint.
 
-```syntax
+```sql
 Select query with constraints on NULL values
 SELECT column, another_column, …
 FROM mytable
@@ -204,13 +202,12 @@ SELECT * FROM Employees left join Buildings ON Building_name=Building WHERE Buil
 SELECT * FROM Buildings left join Employees ON Building_name=Building WHERE role is null; 	    # Find the names of the buildings that hold no employees ✓
 ```
 
-
-SQL Lesson 9: Queries with expressions
-======================================
+# SQL Lesson 9: Queries with expressions
 
 In addition to querying and referencing raw column data with SQL, you can also use expressions to write more complex logic on column values in a query. These expressions can use mathematical and string functions along with basic arithmetic to transform values when the query is executed, as shown in this physics example.
 
 Example query with expressions
+
 ```sql
 SELECT particle_speed / 2.0 AS half_particle_speed
 FROM physics_data
@@ -221,6 +218,7 @@ Each database has its own supported set of mathematical, string, and date functi
 The use of expressions can save time and extra post-processing of the result data, but can also make the query harder to read, so we recommend that when expressions are used in the SELECT part of the query, that they are also given a descriptive alias using the AS keyword.
 
 Select query with expression aliases
+
 ```sql
 SELECT col_expression AS expr_description, …
 FROM mytable;
@@ -228,6 +226,7 @@ In addition to expressions, regular columns and even tables can also have aliase
 ```
 
 Example query with both column and table name aliases
+
 ```sql
 SELECT column AS better_column_name, …
 FROM a_long_widgets_table_name AS mywidgets
@@ -235,12 +234,9 @@ INNER JOIN widget_sales
   ON mywidgets.id = widget_sales.widget_id;
 ```
 
-
 ```sql
 SELECT Title, (domestic_sales+International_sales)/1000000 as Sales FROM movies LEFT JOIN Boxoffice on id=movie_id;	# List all movies and their combined sales in millions of dollars
 SELECT Title, rating*10 as Rating FROM Movies LEFT JOIN Boxoffice ON id=movie_id;					# List all movies and their ratings in percent
 															# (fyi: rating was out of 10)
 SELECT Title, year FROM Movies LEFT JOIN Boxoffice ON id=movie_id WHERE Year % 2 = 0;					# List all movies that were released on even number years ✓
 ```
-
-
