@@ -90,7 +90,7 @@ SELECT DISTINCT director FROM movies order by Director ; 	-- List all directors 
 SELECT * FROM movies ORDER BY YEAR DESC LIMIT 4; 		-- List the last four Pixar movies released (ordered from most recent to least)
 SELECT * FROM movies ORDER BY title LIMIT 5; 			-- List the first five Pixar movies sorted alphabetically
 SELECT * FROM movies ORDER BY title LIMIT 5 OFFSET 5; 		-- List the next five Pixar movies sorted alphabetically
-
+```
 
 
 Lesson 5 - SQL Review: Simple SELECT Queries
