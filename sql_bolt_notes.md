@@ -1,7 +1,5 @@
 ## Lesson 2: Queries with constraints
 
-=====================================
-
 ```txt
 SELECT column, another_column, …
 FROM mytable
@@ -30,8 +28,6 @@ SELECT title, year FROM movies where year < 2004;
 ```
 
 ## SQL Lesson 3: Queries with constraints (Pt. 2)
-
-=================================================
 
 Operato Condition Example
 = Case sensitive exact string comparison (notice the single equals) col\*name = "abc"
@@ -93,8 +89,7 @@ SELECT * FROM movies ORDER BY title LIMIT 5 OFFSET 5; 		-- List the next five Pi
 ```
 
 
-Lesson 5 - SQL Review: Simple SELECT Queries
-============================================
+## Lesson 5 - SQL Review: Simple SELECT Queries
 
 ```sql
 SELECT * FROM north_american_cities where country="Canada"; 					--- List all the Canadian cities and their populations
