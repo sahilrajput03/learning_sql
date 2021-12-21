@@ -49,6 +49,9 @@ DROP INDEX - deletes an index
 - Selects all columns from Cutomers table.
 SELECT * FROM Customers
 
+- - Select all the values from the Country and Age column in the Customers table.
+SELECT Country, Age FROM Customers;
+
 - Select all the different values from the Country column in the Customers table.
 SELECT DISTINCT Country FROM Customers;
 
