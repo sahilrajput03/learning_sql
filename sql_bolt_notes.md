@@ -1,3 +1,9 @@
+# My notes
+
+Add to todo, practise with mailchil's mail api if thats free and also discover the use mandrill integration with mailchimp.
+
+column_name and table name are case in-sensitive so free with sql, its very flexible!
+
 ## Lesson 2: Queries with constraints
 
 ```txt
@@ -231,7 +237,318 @@ INNER JOIN widget_sales
 
 ```sql
 SELECT Title, (domestic_sales+International_sales)/1000000 as Sales FROM movies LEFT JOIN Boxoffice on id=movie_id;	# List all movies and their combined sales in millions of dollars
-SELECT Title, rating*10 as Rating FROM Movies LEFT JOIN Boxoffice ON id=movie_id;					# List all movies and their ratings in percent
-															# (fyi: rating was out of 10)
-SELECT Title, year FROM Movies LEFT JOIN Boxoffice ON id=movie_id WHERE Year % 2 = 0;					# List all movies that were released on even number years ✓
+SELECT Title, rating*10 as Rating FROM Movies LEFT JOIN Boxoffice ON id=movie_id;					    --- List all movies and their ratings in percent
+															--- (fyi: rating was out of 10)
+SELECT Title, year FROM Movies LEFT JOIN Boxoffice ON id=movie_id WHERE Year % 2 = 0;					--- List all movies that were released on even number years
+```
+
+## SQL Lesson 10: Queries with aggregates (Pt. 1)
+
+In addition to the simple expressions that we introduced last lesson, SQL also supports the use of aggregate expressions (or functions) that allow you to summarize information about a group of rows of data. With the Pixar database that you've been using, aggregate functions can be used to answer questions like, "How many movies has Pixar produced?", or "What is the highest grossing Pixar film each year?".
+
+```sql
+Select query with aggregate functions over all rows
+SELECT AGG_FUNC(column_or_expression) AS aggregate_description, …
+FROM mytable
+WHERE constraint_expression;
+--- Without a specified grouping, each aggregate function is going to run on the whole set of result rows and return a single value. And like normal expressions, giving your aggregate functions an alias ensures that the results will be easier to read and process.
+```
+
+Common aggregate functions
+Here are some common aggregate functions that we are going to use in our examples:
+
+**Function Description**
+
+```sql
+COUNT(*), COUNT(column) --- A common function used to counts the number of rows in the group if no column name is specified. Otherwise, count the number of rows in the group with non-NULL values in the specified column.
+MIN(column) --- Finds the smallest numerical value in the specified column for all rows in the group.
+MAX(column) --- Finds the largest numerical value in the specified column for all rows in the group.
+AVG(column) --- Finds the average numerical value in the specified column for all rows in the group.
+SUM(column) --- Finds the sum of all numerical values in the specified column for the rows in the group.
+--- In addition to aggregating across all the rows, you can instead apply the aggregate functions to individual groups of data within that group (ie. box office sales for Comedies vs Action movies).
+--- This would then create as many results as there are unique groups defined as by the GROUP BY clause.
+```
+
+Docs: [SQLite Aggregate functions](https://www.sqlite.org/lang_aggfunc.html), [Postgres Aggregate Functions](https://www.postgresql.org/docs/9.4/functions-aggregate.html), [MySQL Aggregate Functions](https://docs.microsoft.com/en-us/sql/t-sql/functions/aggregate-functions-transact-sql?redirectedfrom=MSDN&view=sql-server-ver15).
+
+```sql
+Select query with aggregate functions over groups
+SELECT AGG_FUNC(column_or_expression) AS aggregate_description, …
+FROM mytable
+WHERE constraint_expression
+GROUP BY column;
+--- The GROUP BY clause works by grouping rows that have the same value in the column specified.
+```
+
+```sql
+SELECT MAX(years_employed) FROM employees;                                           --- Find the longest time that an employee has been at the studio
+SELECT role, AVG(years_employed) as AVG_YEARS FROM employees GROUP BY role;          --- For each role, find the average number of years employed by employees in that role
+SELECT building, SUM(years_employed) as AVG_YEARS FROM employees GROUP BY building;  --- Find the total number of employee years worked in each building
+```
+
+## SQL Lesson 11: Queries with aggregates (Pt. 2)
+
+[HAVING@w3schools](https://www.w3schools.com/sql/sql_having.asp)
+
+Our queries are getting fairly complex, but we have nearly introduced all the important parts of a SELECT query. One thing that you might have noticed is that if the GROUP BY clause is executed after the WHERE clause (which filters the rows which are to be grouped), then how exactly do we filter the grouped rows?
+
+Luckily, SQL allows us to do this by adding an additional HAVING clause which is used specifically with the GROUP BY clause to allow us to filter grouped rows from the result set.
+
+```sql
+Select query with HAVING constraint
+SELECT group_by_column, AGG_FUNC(column_expression) AS aggregate_result_alias, …
+FROM mytable
+WHERE condition
+GROUP BY column
+HAVING group_condition;
+--- The HAVING clause constraints are written the same way as the WHERE clause constraints, and are applied to the grouped rows. With our examples, this might not seem like a particularly useful construct, but if you imagine data with millions of rows with different properties, being able to apply additional constraints is often necessary to quickly make sense of the data.
+```
+
+Did you know?
+If you aren't using the `GROUP BY` clause, a simple `WHERE` clause will suffice.
+
+```sql
+SELECT COUNT() FROM employees WHERE role="Artist"; --- Find the number of Artists in the studio (without a HAVING clause)
+SELECT Role, COUNT(ROLE) as employeed_count FROM employees GROUP BY Role; --- Find the number of Employees of each role in the studio
+SELECT sum(years_employed) FROM employees WHERE role="Engineer"; --- Find the total number of years employed by all Engineers
+```
+
+## SQL Lesson 12: Order of execution of a Query
+
+Now that we have an idea of all the parts of a query, we can now talk about how they all fit together in the context of a complete query.
+
+Complete SELECT query
+
+```sql
+SELECT DISTINCT column, AGG_FUNC(column_or_expression), …
+FROM mytable
+    JOIN another_table
+      ON mytable.column = another_table.column
+    WHERE constraint_expression
+    GROUP BY column
+    HAVING constraint_expression
+    ORDER BY column ASC/DESC
+    LIMIT count OFFSET COUNT;
+---Each query begins with finding the data that we need in a database, and then filtering that data down into something that can be processed and understood as quickly as possible. Because each part of the query is executed sequentially, it's important to understand the order of execution so that you know what results are accessible where.
+```
+
+Query order of execution
+
+1. FROM and JOINs
+   The FROM clause, and subsequent JOINs are first executed to determine the total working set of data that is being queried. This includes subqueries in this clause, and can cause temporary tables to be created under the hood containing all the columns and rows of the tables being joined.
+
+2. WHERE
+   Once we have the total working set of data, the first-pass WHERE constraints are applied to the individual rows, and rows that do not satisfy the constraint are discarded. Each of the constraints can only access columns directly from the tables requested in the FROM clause. Aliases in the SELECT part of the query are not accessible in most databases since they may include expressions dependent on parts of the query that have not yet executed.
+
+3. GROUP BY
+   The remaining rows after the WHERE constraints are applied are then grouped based on common values in the column specified in the GROUP BY clause. As a result of the grouping, there will only be as many rows as there are unique values in that column. Implicitly, this means that you should only need to use this when you have aggregate functions in your query.
+
+4. HAVING
+   If the query has a GROUP BY clause, then the constraints in the HAVING clause are then applied to the grouped rows, discard the grouped rows that don't satisfy the constraint. Like the WHERE clause, aliases are also not accessible from this step in most databases.
+
+5. SELECT
+   Any expressions in the SELECT part of the query are finally computed.
+
+6. DISTINCT
+   Of the remaining rows, rows with duplicate values in the column marked as DISTINCT will be discarded.
+
+7. ORDER BY
+   If an order is specified by the ORDER BY clause, the rows are then sorted by the specified data in either ascending or descending order. Since all the expressions in the SELECT part of the query have been computed, you can reference aliases in this clause.
+
+8. LIMIT / OFFSET
+   Finally, the rows that fall outside the range specified by the LIMIT and OFFSET are discarded, leaving the final set of rows to be returned from the query.
+
+Conclusion
+Not every query needs to have all the parts we listed above, but a part of why SQL is so flexible is that it allows developers and data analysts to quickly manipulate data without having to write additional code, all just by using the above clauses.
+
+```sql
+SELECT Director, Count(Title) FROM movies GROUP BY Director               --- Find the number of movies each director has directed
+
+SELECT Director, Sum(Domestic_sales+International_sales) FROM movies INNER JOIN Boxoffice on id=Movie_id GROUP BY Director ---Find the total domestic and international sales that can be attributed to each director ✓
+```
+
+## SQL Lesson 13: Inserting rows
+
+We've spent quite a few lessons on how to query for data in a database, so it's time to start learning a bit about SQL schemas and how to add new data.
+
+What is a Schema?
+We previously described a table in a database as a two-dimensional set of rows and columns, with the columns being the properties and the rows being instances of the entity in the table. In SQL, the database schema is what describes the structure of each table, and the datatypes that each column of the table can contain.
+
+Example: Correlated subquery
+For example, in our Movies table, the values in the Year column must be an Integer, and the values in the Title column must be a String.
+
+This fixed structure is what allows a database to be efficient, and consistent despite storing millions or even billions of rows.
+
+Inserting new data
+When inserting data into a database, we need to use an INSERT statement, which declares which table to write into, the columns of data that we are filling, and one or more rows of data to insert. In general, each row of data you insert should contain values for every corresponding column in the table. You can insert multiple rows at a time by just listing them sequentially.
+
+```sql
+Insert statement with values for all columns
+INSERT INTO mytable
+VALUES (value_or_expr, another_value_or_expr, …),
+       (value_or_expr_2, another_value_or_expr_2, …),
+       …;
+--- In some cases, if you have incomplete data and the table contains columns that support default values, you can insert rows with only the columns of data you have by specifying them explicitly.
+```
+
+```sql
+Insert statement with specific columns
+INSERT INTO mytable
+(column, another_column, …)
+VALUES (value_or_expr, another_value_or_expr, …),
+      (value_or_expr_2, another_value_or_expr_2, …),
+      …;
+--- In these cases, the number of values need to match the number of columns specified. Despite this being a more verbose statement to write, inserting values this way has the benefit of being forward compatible. For example, if you add a new column to the table with a default value, no hardcoded INSERT statements will have to change as a result to accommodate that change.
+```
+
+In addition, you can use mathematical and string expressions with the values that you are inserting.
+This can be useful to ensure that all data inserted is formatted a certain way.
+
+```sql
+Example Insert statement with expressions
+INSERT INTO boxoffice
+(movie_id, rating, sales_in_millions)
+VALUES (1, 9.9, 283742034 / 1000000);
+```
+
+```sql
+INSERT INTO Movies (Title, Director, Year, Length_minutes) VALUES ("Toy Story 4", "John Lasseter", 2001, 190) --- Add the studio's new production, Toy Story 4 to the list of movies (you can use any director)
+
+INSERT INTO Boxoffice (Movie_id, Rating, Domestic_sales, International_sales) VALUES (15, 8.7, 340000000, 270000000) --- Toy Story 4 has been released to critical acclaim! It had a rating of 8.7, and made 340 million domestically and 270 million internationally. Add the record to the BoxOffice table.
+```
+
+## SQL Lesson 14: Updating rows
+
+In addition to adding new data, a common task is to update existing data, which can be done using an UPDATE statement. Similar to the INSERT statement, you have to specify exactly which table, columns, and rows to update. In addition, the data you are updating has to match the data type of the columns in the table schema.
+
+Update statement with values
+
+```sql
+UPDATE mytable
+SET column = value_or_expr,
+    other_column = another_value_or_expr,
+    …
+WHERE condition;
+--- The statement works by taking multiple column/value pairs, and applying those changes to each and every row that satisfies the constraint in the WHERE clause.
+```
+
+Taking care
+
+Most people working with SQL will make mistakes updating data at one point or another. Whether it's updating the wrong set of rows in a production database, or accidentally leaving out the WHERE clause (which causes the update to apply to all rows), you need to be extra careful when constructing UPDATE statements.
+
+One helpful tip is to always write the constraint first and test it in a SELECT query to make sure you are updating the right rows, and only then writing the column/value pairs to update.
+
+```sql
+UPDATE Movies SET Director="John Lasseter" WHERE id=2                     --- The director for A Bug's Life is incorrect, it was actually directed by John Lasseter
+UPDATE Movies SET Year=1999 WHERE id=3                                    --- The year that Toy Story 2 was released is incorrect, it was actually released in 1999
+UPDATE Movies SET title="Toy Story 3", director="Lee Unkrich" WHERE id=11 --- Both the title and director for Toy Story 8 is incorrect! The title should be "Toy Story 3" and it was directed by Lee Unkrich
+```
+
+## SQL Lesson 15: Deleting rows
+
+When you need to delete data from a table in the database, you can use a DELETE statement, which describes the table to act on, and the rows of the table to delete through the WHERE clause.
+
+```sql
+Delete statement with condition
+DELETE FROM mytable
+WHERE condition;
+--- If you decide to leave out the WHERE constraint, then all rows are removed, which is a quick and easy way to clear out a table completely (if intentional).
+```
+
+Taking extra care
+Like the UPDATE statement from last lesson, it's recommended that you run the constraint in a SELECT query first to ensure that you are removing the right rows. Without a proper backup or test database, it is downright easy to irrevocably remove data, so always read your DELETE statements twice and execute once.
+
+```sql
+DELETE FROM Movies WHERE Year<2005                  --- This database is getting too big, lets remove all movies that were released before 2005.
+DELETE FROM Movies WHERE Director="Andrew Stanton"  --- Andrew Stanton has also left the studio, so please remove all movies directed by him.
+```
+
+## SQL Lesson 16: Creating tables
+
+When you have new entities and relationships to store in your database, you can create a new database table using the CREATE TABLE statement.
+
+Create table statement w/ optional table constraint and default value
+
+```sql
+CREATE TABLE IF NOT EXISTS mytable (
+    column DataType TableConstraint DEFAULT default_value,
+    another_column DataType TableConstraint DEFAULT default_value,
+    …
+);
+```
+
+The structure of the new table is defined by its table schema, which defines a series of columns. Each column has a name, the type of data allowed in that column, an optional table constraint on values being inserted, and an optional default value.
+
+If there already exists a table with the same name, the SQL implementation will usually throw an error, so to suppress the error and skip creating a table if one exists, you can use the IF NOT EXISTS clause.
+
+SQL Data Types: https://sqlbolt.com/lesson/creating_tables (Data too comple to be put here but really useful data types explained here).
+
+```sql
+CREATE TABLE Database (
+    Name STRING PRIMARY KEY,
+    Version FLOAT,
+    Download_count INTEGER
+);
+--- Create a new table named Database with the following columns:
+--- – Name A string (text) describing the name of the database
+--- – Version A number (floating point) of the latest version of this database
+--- – Download_count An integer count of the number of times this database was downloaded
+--- This table has no constraints.
+```
+
+## SQL Lesson 17: Altering tables
+
+As your data changes over time, SQL provides a way for you to update your corresponding tables and database schemas by using the ALTER TABLE statement to add, remove, or modify columns and table constraints.
+
+Adding columns
+The syntax for adding a new column is similar to the syntax when creating new rows in the CREATE TABLE statement. You need to specify the data type of the column along with any potential table constraints and default values to be applied to both existing and new rows. In some databases like MySQL, you can even specify where to insert the new column using the FIRST or AFTER clauses, though this is not a standard feature.
+
+Altering table to add new column(s)
+
+```sql
+ALTER TABLE mytable
+ADD column DataType OptionalTableConstraint
+    DEFAULT default_value;
+Removing columns
+-- Dropping columns is as easy as specifying the column to drop, however, some databases (including SQLite) don't support this feature. Instead you may have to create a new table and migrate the data over.
+```
+
+Altering table to remove column(s)
+
+```sql
+ALTER TABLE mytable
+DROP column_to_be_deleted;
+Renaming the table
+--- If you need to rename the table itself, you can also do that using the RENAME TO clause of the statement.
+```
+
+Altering table name
+
+```sql
+ALTER TABLE mytable
+RENAME TO new_table_name;
+Other changes
+--- Each database implementation supports different methods of altering their tables, so it's always best to consult your database docs before proceeding: MySQL, Postgres, SQLite, Microsoft SQL Server.
+```
+
+```sql
+ALTER TABLE Movies ADD Aspect_ratio FLOAT;              --- Add a column named Aspect_ratio with a FLOAT data type to store the aspect-ratio each movie was released in.
+ALTER TABLE Movies ADD Language TEXT DEFAULT "English"; --- Add another column named Language with a TEXT data type to store the language that the movie was released in. Ensure that the default for this language is English.
+```
+
+## SQL Lesson 18: Dropping tables
+
+In some rare cases, you may want to remove an entire table including all of its data and metadata, and to do so, you can use the DROP TABLE statement, which differs from the DELETE statement in that it also removes the table schema from the database entirely.
+
+```
+Drop table statement
+DROP TABLE IF EXISTS mytable;
+Like the CREATE TABLE statement, the database may throw an error if the specified table does not exist, and to suppress that error, you can use the IF EXISTS clause.
+```
+
+In addition, if you have another table that is dependent on columns in table you are removing (for example, with a FOREIGN KEY dependency) then you will have to either update all dependent tables first to remove the dependent rows or to remove those tables entirely.
+
+```sql
+DROP TABLE Movies; --- We've sadly reached the end of our lessons, lets clean up by removing the Movies table
+DROP TABLE BoxOffice --- And drop the BoxOffice table as well
 ```
