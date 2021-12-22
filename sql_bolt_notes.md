@@ -49,7 +49,7 @@ SELECT * FROM movies WHERE Director!="John Lasseter";
 SELECT * FROM movies where title LIKE "WALL-%";
 ```
 
-# SQL Lesson 4: Filtering and sorting Query results
+## SQL Lesson 4: Filtering and sorting Query results
 
 ```sql
 --- DISTINCT keyword will blindly remove duplicate rows
@@ -140,7 +140,7 @@ SELECT * FROM movies JOIN boxoffice on id=movie_id WHERE International_sales>Dom
 SELECT * FROM movies JOIN boxoffice on id=movie_id ORDER BY rating DESC;					# List all the movies by their ratings in descending order
 ```
 
-# SQL Lesson 7: OUTER JOINs
+## SQL Lesson 7: OUTER JOINs
 
 Depending on how you want to analyze the data, the INNER JOIN we used last lesson might not be sufficient because the resulting table only contains data that belongs in both of the tables. If the two tables have asymmetric data, which can easily happen when data is entered in different stages, then we would have to use a LEFT JOIN, RIGHT JOIN or FULL JOIN instead to ensure that the data you need is not left out of the results.
 
@@ -174,7 +174,7 @@ SELECT distinct building_name, role FROM Buildings LEFT JOIN Employees on  build
 
 ```
 
-# SQL Lesson 8: A short note on NULLs
+## SQL Lesson 8: A short note on NULLs
 
 As promised in the last lesson, we are going to quickly talk about NULL values in an SQL database. It's always good to reduce the possibility of NULL values in databases because they require special attention when constructing queries, constraints (certain functions behave differently with null values) and when processing the results.
 
@@ -197,7 +197,7 @@ SELECT * FROM Employees left join Buildings ON Building_name=Building WHERE Buil
 SELECT * FROM Buildings left join Employees ON Building_name=Building WHERE role is null; 	    # Find the names of the buildings that hold no employees ✓
 ```
 
-# SQL Lesson 9: Queries with expressions
+## SQL Lesson 9: Queries with expressions
 
 In addition to querying and referencing raw column data with SQL, you can also use expressions to write more complex logic on column values in a query. These expressions can use mathematical and string functions along with basic arithmetic to transform values when the query is executed, as shown in this physics example.
 
