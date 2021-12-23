@@ -1,3 +1,5 @@
+Browse @ http://localhost:9201/
+
 Source: https://bbs.archlinux.org/viewtopic.php?id=266423
 
 NOTE: I set pgadmin4's password as same as my user password.
