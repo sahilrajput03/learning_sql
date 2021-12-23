@@ -2,7 +2,7 @@ Source: https://bbs.archlinux.org/viewtopic.php?id=266423
 
 NOTE: I set pgadmin4's password as same as my user password.
 
-NOTE
+NOTE: Since our pgadmin4 host i.e., our container is not same as localhost so we need to add a configuration to our postgresql server so that it can accept connection from hosts other than localhost. So we can do that by following below steps (Src: https://dba.stackexchange.com/a/105887):
 
 1. First (for once) you need to add entries to two files:
 
@@ -16,9 +16,7 @@ host all all 0.0.0.0/0 md5
 listen_addresses='*'
 ```
 
-Src: https://dba.stackexchange.com/a/105887
-
-Official postgres docs for hba_conf file: https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html
+Postgres Docs - hba_conf file: https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html
 
 2. The target user in postgres must have a password so you can do it by connecting to the database via psql and set a password like:
 
@@ -33,7 +31,7 @@ Host: 192.168.18.3
 Port: 5432
 Maintainance db: postgres
 Username: array
-Passowrd: <useYourPassword>
+Passowrd: <passwordSetInStep2>
 Role: array
 ```
 
