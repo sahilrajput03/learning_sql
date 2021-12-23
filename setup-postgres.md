@@ -1,5 +1,3 @@
-I'm officiall maintaing all this info in fso's part 13's solution repo.
-
 ## Setting postgres - I AM USING ARCHOS
 
 [Docs @ Archlinux](https://wiki.archlinux.org/title/PostgreSQL)
@@ -7,6 +5,8 @@ I'm officiall maintaing all this info in fso's part 13's solution repo.
 ```
 # src: https://wiki.archlinux.org/title/PostgreSQL
 sudo pacman -S postgresql
+# It will also create a system user called postgres. src: https://wiki.archlinux.org/title/PostgreSQL
+
 
 # To check the version.
 postgresql --version
@@ -44,3 +44,8 @@ systemctl start postgresql
 systemctl status postgresql
 systemctl enable postgresql
 ```
+
+### From offical postgres docs:
+
+Starting postgres server using some other data by providing some directory path.
+src: https://www.postgresql.org/docs/9.1/server-start.html
