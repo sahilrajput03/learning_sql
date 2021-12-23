@@ -2,7 +2,9 @@ Source: https://bbs.archlinux.org/viewtopic.php?id=266423
 
 NOTE: I set pgadmin4's password as same as my user password.
 
-First (for once) you need to add entries to two files:
+NOTE
+
+1. First (for once) you need to add entries to two files:
 
 `Use sudo -iu postgres` commad to edit files
 
@@ -18,13 +20,20 @@ Src: https://dba.stackexchange.com/a/105887
 
 Official postgres docs for hba_conf file: https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html
 
-Use below settings with pgadmin4 to connect to your postgresserver:
+2. The target user in postgres must have a password so you can do it by connecting to the database via psql and set a password like:
+
+```
+\password <user>
+```
+
+3. Use below settings with pgadmin4 to connect to your postgresserver:
 
 ```
 Host: 192.168.18.3
 Port: 5432
 Maintainance db: postgres
 Username: array
+Passowrd: <useYourPassword>
 Role: array
 ```
 
