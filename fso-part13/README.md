@@ -22,6 +22,8 @@ help        # for overalll help guide
 \d          # Shows all tables (relations) in the database
 \d notes;   # Shows the records of `notes` table.
 \watch [SEC]# execute query every SEC seconds
+show port;  # shows the port number of the database
+show listen_addresses; #show the addresses from which the service is accessible. src: https://serverfault.com/a/573327
 ```
 
 - FYI: The column id has a default value, which is obtained by calling the internal function of Postgres nextval.
