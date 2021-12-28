@@ -1,0 +1,6 @@
+#!/bin/bash
+. .env-bash
+# echo a=$a b=$b # Prints the variables for testing.
+
+echo "REQUEST: $@"
+nodemon -e sh,js -d 2000ms -x "sh $@"

@@ -1,9 +1,12 @@
 require("dotenv").config();
 require("./setupColors");
 
-const { Sequelize, QueryTypes } = require("sequelize");
+const { Sequelize, QueryTypes, Model, DataTypes } = require("sequelize");
 const express = require("express");
 const app = express();
+app.use(express.json());
+
+const s = JSON.stringify;
 
 const prod = 0;
 let DATABASE_URL, config;
@@ -25,6 +28,35 @@ if (prod) {
 console.log("DATABASE_URL".bgGreen, DATABASE_URL.green);
 const sequelize = new Sequelize(DATABASE_URL, config);
 
+class Note extends Model {}
+Note.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    important: {
+      type: DataTypes.BOOLEAN,
+    },
+    date: {
+      type: DataTypes.DATE,
+    },
+  },
+  {
+    sequelize,
+    underscored: true,
+    timestamps: false,
+    modelName: "note",
+  }
+);
+
+Note.sync();
+
 sequelize
   .authenticate()
   .then(() => {
@@ -35,10 +67,32 @@ sequelize
   });
 
 app.get("/api/notes", async (req, res) => {
-  const notes = await sequelize.query("SELECT * FROM notes", {
-    type: QueryTypes.SELECT,
-  });
+  const notes = await Note.findAll();
+  console.log("my notes:", s(notes));
   res.json(notes);
+});
+
+app.post("/api/notes", async (req, res) => {
+  console.log(req.body);
+  try {
+    const note = await Note.create({ ...req.body, important: true });
+    return res.json(note);
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
+
+app.get("/api/notes/:id", async (req, res) => {
+  const note = await Note.findByPk(req.params.id);
+  // console.log("my note::", note.toJSON()); // In addition to the note information, all sorts of other things are printed on the console. We can reach the desired result by calling the model-object method toJSON:
+  console.log("my note::", s(note)); // However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
+  if (note) {
+    note.important = req.body.important;
+    await note.save();
+    res.json(note);
+  } else {
+    res.status(404).end();
+  }
 });
 
 const PORT = process.env.PORT || 3001;
