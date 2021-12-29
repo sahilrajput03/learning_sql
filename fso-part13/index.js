@@ -71,10 +71,9 @@ sequelize
     console.error("~Sahil: Unable to connect to the database :".bgRed, err);
   });
 
-app.get("/api/notes", logMw, async (req, res) => {
-  const page = 1;
-  const limit = 3;
-  const notes = await Note.findAll({ limit: null, offset: page * lt || null });
+app.use(logMw);
+app.get("/api/notes", async (req, res) => {
+  let notes = await Note.findAll();
   console.log("my notes:", p(s(notes, null, 2))); // Parsing the object makes the printed object colored accordingly to the data types.
   res.json(notes);
 });

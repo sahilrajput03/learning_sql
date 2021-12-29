@@ -1,3 +1,24 @@
+## Subtle pagination
+
+````js
+app.get("/api/notes", async (req, res) => {
+  const page = 1; // Page values : 1, 2, 3...
+  const limit = 2; // limit means itemsPerPage; Fetch all records via ```limit: null```
+  const offset = (page - 1) * limit;
+  let notes;
+  try {
+    notes = await Note.findAll({
+      limit,
+      offset,
+    });
+    console.log("my notes:", p(s(notes, null, 2))); // Parsing the object makes the printed object colored accordingly to the data types.
+    res.json(notes);
+  } catch (error) {
+    res.json({ ERORR_MESSAGE: String(error), more: error });
+  }
+});
+````
+
 ## Model Querying - Finders
 
 Docs [here](https://sequelize.org/master/manual/model-querying-finders.html).
@@ -12,6 +33,10 @@ if (project === null) {
   console.log("Not found!");
 }
 ```
+
+**\*For ready made pagination please refer that specific topic above**
+
+[Docs in Sequelize](https://sequelize.org/v5/manual/models-usage.html#manipulating-the-dataset-with-limit--offset--order-and-group)
 
 ```js
 // AMAZING PAGINATION WITH SEQUELIZE:
