@@ -1,18 +1,25 @@
 ## Subtle pagination
 
 ````js
+const s = JSON.stringify;
+const p = JSON.parse;
 app.get("/api/notes", async (req, res) => {
-  const page = 1; // Page values : 1, 2, 3...
+  const page = 2; // Page values : 1, 2, 3...
   const limit = 2; // limit means itemsPerPage; Fetch all records via ```limit: null```
   const offset = (page - 1) * limit;
   let notes;
   try {
-    notes = await Note.findAll({
+    notes = await Note.findAndCountAll({
       limit,
       offset,
     });
     console.log("my notes:", p(s(notes, null, 2))); // Parsing the object makes the printed object colored accordingly to the data types.
-    res.json(notes);
+    notes.totalPages = Math.ceil(notes.count / limit);
+    notes.currentPage = page;
+    notes.limit = limit;
+    // notes.count is the total sum of records of `note` in the notes table.
+    // notes.rows is the records for current page.
+    res.json(notes); // notes.count is the total number of records(not pages).
   } catch (error) {
     res.json({ ERORR_MESSAGE: String(error), more: error });
   }

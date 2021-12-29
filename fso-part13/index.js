@@ -73,9 +73,10 @@ sequelize
 
 app.use(logMw);
 app.get("/api/notes", async (req, res) => {
-  let notes = await Note.findAll();
+  let notes;
+  notes = await Note.findAll({});
   console.log("my notes:", p(s(notes, null, 2))); // Parsing the object makes the printed object colored accordingly to the data types.
-  res.json(notes);
+  res.json(notes); // notes.count is the total number of records(not pages).
 });
 
 app.get("/api/notes/:id", async (req, res) => {
