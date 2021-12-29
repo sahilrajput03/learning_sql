@@ -1,5 +1,7 @@
 # Readme - FSO Part 13
 
+**Note: This file in specific to FSO's content only, for sequelize's refer `README-sequelize.md` file.**
+
 ## Heroku LEARNINGS
 
 ```bash

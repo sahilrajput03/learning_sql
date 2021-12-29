@@ -14,6 +14,14 @@ if (project === null) {
 ```
 
 ```js
+// AMAZING PAGINATION WITH SEQUELIZE:
+// step over(skip~sahil) the first n items using offset, and take next p items. Results include starting from 3rd element.
+const project = await Project.findAll({ offset: 3, limit: 2 });
+// default (limit) : null
+// default (offset) : 0 or null. BEWARE: Setting limit as 0 will always return 0 results.
+```
+
+```js
 const [user, created] = await User.findOrCreate({
   where: { username: "sdepold" },
   defaults: {
@@ -77,6 +85,11 @@ console.log("my note::", note.toJSON()); // In addition to the note information,
 
 ```js
 let s = JSON.stringify;
+let p = JSON.parse;
 console.log(s(note)); // rocks!
 console.log(s(notes)); // rocks!
+
+console.log(p(s(note))); // super rocks!
+console.log(p(s(notes))); // super rocks!
+// super rocks = coz it prints the colors according to data types of each entity as well
 ```

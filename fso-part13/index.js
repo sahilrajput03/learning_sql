@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("./setupColors");
+const logMw = require("logmw");
 
 const { Sequelize, QueryTypes, Model, DataTypes } = require("sequelize");
 const express = require("express");
@@ -7,6 +8,7 @@ const app = express();
 app.use(express.json());
 
 const s = JSON.stringify;
+const p = JSON.parse;
 
 const prod = 0;
 let DATABASE_URL, config;
@@ -69,16 +71,18 @@ sequelize
     console.error("~Sahil: Unable to connect to the database :".bgRed, err);
   });
 
-app.get("/api/notes", async (req, res) => {
-  const notes = await Note.findAll();
-  // console.log("my notes:", s(notes, null, 2));
+app.get("/api/notes", logMw, async (req, res) => {
+  const page = 1;
+  const limit = 3;
+  const notes = await Note.findAll({ limit: null, offset: page * lt || null });
+  console.log("my notes:", p(s(notes, null, 2))); // Parsing the object makes the printed object colored accordingly to the data types.
   res.json(notes);
 });
 
 app.get("/api/notes/:id", async (req, res) => {
   const note = await Note.findByPk(req.params.id);
-  // console.log("my note::", note.toJSON()); // In addition to the note information, all sorts of other things are printed on the console. We can reach the desired result by calling the model-object method toJSON:
-  console.log("my note::", s(note)); // However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
+  console.log("my note::", p(s(note))); // However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
+  // console.log("my note::", s(note)); // However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
   if (note) {
     note.important = req.body.important;
     await note.save();
