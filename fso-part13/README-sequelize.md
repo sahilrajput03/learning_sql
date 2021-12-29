@@ -1,3 +1,30 @@
+## Model Querying - Finders
+
+Docs [here](https://sequelize.org/master/manual/model-querying-finders.html).
+
+Though
+
+```js
+const project = await Project.findOne({ where: { title: "My Title" } });
+const project = await Project.findByPk(123);
+const project = await project.findAll();
+if (project === null) {
+  console.log("Not found!");
+}
+```
+
+```js
+const [user, created] = await User.findOrCreate({
+  where: { username: "sdepold" },
+  defaults: {
+    job: "Technical Lead JavaScript",
+  },
+});
+// created: boolean, if true its just created else older existing record is returned.
+// user: record, either created or existing.
+// TIP: If the `defaults` do not contain values for every column, Sequelize will take the values given to where (if present). ~sahil: We dont' need to pass username property in `defaults`.
+```
+
 ## raw way of querying
 
 ```js

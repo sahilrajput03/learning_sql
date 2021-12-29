@@ -22,7 +22,10 @@ if (prod) {
   };
 } else {
   DATABASE_URL = "postgres://array@localhost:5432/myDb1";
-  config = null; // Its must be null(can't send undefined).
+  // config = null; // Its must be null(can't send undefined).
+  config = {
+    logging: false, // Turn off logging, src: https://stackoverflow.com/a/55874733/10012446
+  };
 }
 
 console.log("DATABASE_URL".bgGreen, DATABASE_URL.green);
@@ -68,18 +71,8 @@ sequelize
 
 app.get("/api/notes", async (req, res) => {
   const notes = await Note.findAll();
-  console.log("my notes:", s(notes));
+  // console.log("my notes:", s(notes, null, 2));
   res.json(notes);
-});
-
-app.post("/api/notes", async (req, res) => {
-  console.log(req.body);
-  try {
-    const note = await Note.create({ ...req.body, important: true });
-    return res.json(note);
-  } catch (error) {
-    return res.status(400).json({ error });
-  }
 });
 
 app.get("/api/notes/:id", async (req, res) => {
@@ -92,6 +85,16 @@ app.get("/api/notes/:id", async (req, res) => {
     res.json(note);
   } else {
     res.status(404).end();
+  }
+});
+
+app.post("/api/notes", async (req, res) => {
+  console.log(req.body);
+  try {
+    const note = await Note.create({ ...req.body, important: true });
+    return res.json(note);
+  } catch (error) {
+    return res.status(400).json({ error });
   }
 });
 
