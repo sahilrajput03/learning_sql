@@ -11,3 +11,6 @@ colors.setTheme({
 	bm: ['bold', 'magenta'],
 	by: ['bold', 'yellow'],
 })
+
+// Usage: Simply put below line in your server file:
+// require('./colorsConfig')
