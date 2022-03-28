@@ -42,3 +42,8 @@ CREATE TABLE notes (
 select * from notes;
 ---The semicolon in the end is important in SQL.
 ```
+
+- Creating a notes table having notes colmn with array type:
+CREATE TABLE notes (
+    notes TEXT [] NOT NULL
+);
