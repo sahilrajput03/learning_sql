@@ -20,6 +20,7 @@ sudo -iu postgres
 # Initializing database cluster in /var/lib/postgresql/data directory.
 initdb -D /var/lib/postgres/data    # SHOULD BE RUN AS POSTGRES USER.
 
+
 # Give permission to /run/postgresql directory to the postgres user.
 # Src: https://stackoverflow.com/a/23645981/10012446
 mkdir /run/postgresql
@@ -38,6 +39,8 @@ createdb myDb1
 
 # Now you can access this db via psql.
 psql -d myDb1                                       # Connect to db with this now.
+psql -U postgres        # User psql as postgres user
+
 
 # You can use below command to play with postgresql service.
 systemctl start postgresql
