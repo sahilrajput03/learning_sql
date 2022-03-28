@@ -1,6 +1,8 @@
 const db = require('./db.js')
 require('./colorsConfig')
-// const sequelize = require("seqelize");
+
+// For express+sequelize example, please refer official guide on it
+// https://github.com/sequelize/express-example
 
 async function main() {
 	try {
