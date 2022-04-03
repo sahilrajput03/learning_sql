@@ -1,16 +1,15 @@
 #!/bin/bash
-PS3='Enter task number: '
+PS3='ENTER TASK NUMBER: '
 # In below command I have added `clear`, `ls` commands to clear screen and list commands. Yo!
+# USAGE:
+# - Press Enter anytime to print the options menu!
+# - Press 1 to clear screen anytime.
 # src: https://linuxize.com/post/bash-select/
-select script in clear list $(ls $(dirname "$0"))
+select script in 'Clear Screen' $(ls $(dirname "$0"))
 do
 	case $script in
-		clear)
+		'Clear Screen')
 			clear
-			"$0"
-		  ;;
-
-		list)
 			"$0"
 		  ;;
 
