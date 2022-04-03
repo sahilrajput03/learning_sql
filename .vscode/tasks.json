@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			// "command": "pwd", // for testing.
+			"command": "./fso-part13/curls/post_note.sh",
+			"label": "Post a note ~Sahil"
+		},
+		{
+			"type": "shell",
+			// "command": "pwd", // for testing.
+			"command": "./fso-part13/curls/get_a_note.sh",
+			"label": "Get a note ~Sahil"
+		},
+		{
+			"type": "shell",
+			// "command": "pwd", // for testing.
+			"command": "./fso-part13/curls/get_all_notes.sh",
+			"label": "Get all note ~Sahil"
+		},
+		{
+			"type": "shell",
+			// "command": "pwd", // for testing.
+			"command": "./fso-part13/curls/resetNotes.sh",
+			"label": "Reset notes table! ~Sahil"
+		}
+	]
+}

@@ -1,109 +1,59 @@
-require("dotenv").config();
-require("./setupColors");
-const logMw = require("logmw");
+require('dotenv').config()
+require('./setupColors')
 
-const { Sequelize, QueryTypes, Model, DataTypes } = require("sequelize");
-const express = require("express");
-const app = express();
-app.use(express.json());
+const express = require('express')
+const NoteM = require('./models/Note')
+const logMw = require('logmw')
+const {l, s, ps, dataValues, _dataValues} = require('./utils')
 
-const s = JSON.stringify;
-const p = JSON.parse;
+const app = express()
 
-const prod = 0;
-let DATABASE_URL, config;
-if (prod) {
-  DATABASE_URL = process.env.db_connect_string;
-  config = {
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  };
-} else {
-  DATABASE_URL = "postgres://array@localhost:5432/myDb1";
-  // config = null; // Its must be null(can't send undefined).
-  config = {
-    logging: false, // Turn off logging, src: https://stackoverflow.com/a/55874733/10012446
-  };
-}
+app.use(express.json())
+app.use(logMw)
 
-console.log("DATABASE_URL".bgGreen, DATABASE_URL.green);
-const sequelize = new Sequelize(DATABASE_URL, config);
+app.get('/api/notes', async (req, res) => {
+	let notes
+	notes = await NoteM.findAll({})
+	l('notes:', dataValues(notes)) // This is another way of printing values though!
+	// l('notes:', _dataValues(notes)) // This is another way of printing values though!
 
-class Note extends Model {}
-Note.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    important: {
-      type: DataTypes.BOOLEAN,
-    },
-    date: {
-      type: DataTypes.DATE,
-    },
-  },
-  {
-    sequelize,
-    underscored: true,
-    timestamps: false,
-    modelName: "note",
-  }
-);
+	return res.json(notes) // notes.count is the total number of records(not pages).
+})
 
-Note.sync();
+app.get('/api/notes/:id', async (req, res) => {
+	const note = await NoteM.findByPk(req.params.id)
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.".mb);
-  })
-  .catch((err) => {
-    console.error("~Sahil: Unable to connect to the database :".bgRed, err);
-  });
+	// return if note is not found!
+	if (!note) return res.status(400).json({message: 'note not found!'})
 
-app.use(logMw);
-app.get("/api/notes", async (req, res) => {
-  let notes;
-  notes = await Note.findAll({});
-  console.log("my notes:", p(s(notes, null, 2))); // Parsing the object makes the printed object colored accordingly to the data types.
-  res.json(notes); // notes.count is the total number of records(not pages).
-});
+	l('my note::', note.dataValues) //? However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
+	// l('my note::', s(note)) //? indented + no data type syntax highlight
+	// l('my note::', ps(note)) //? no indentation + data type syntax highlight
 
-app.get("/api/notes/:id", async (req, res) => {
-  const note = await Note.findByPk(req.params.id);
-  console.log("my note::", p(s(note))); // However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
-  // console.log("my note::", s(note)); // However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
-  if (note) {
-    note.important = req.body.important;
-    await note.save();
-    res.json(note);
-  } else {
-    res.status(404).end();
-  }
-});
+	note.important = req.body.important
+	await note.save()
+	return res.json(note)
+})
 
-app.post("/api/notes", async (req, res) => {
-  console.log(req.body);
-  try {
-    const note = await Note.create({ ...req.body, important: true });
-    return res.json(note);
-  } catch (error) {
-    return res.status(400).json({ error });
-  }
-});
+app.post('/api/notes', async (req, res) => {
+	l(req.body)
+	try {
+		const note = await NoteM.create({...req.body, important: true})
+		return res.json(note)
+	} catch (error) {
+		return res.status(400).json({error})
+	}
+})
 
-const PORT = process.env.PORT || 3001;
+app.get('/api/reset/notes', async (req, res) => {
+	// NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+	l('?>', NoteM.sync({force: true})) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+
+	return res.json({message: 'notes removed!'})
+})
+
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+	l(`Server running on port ${PORT}`)
+})
