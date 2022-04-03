@@ -7,11 +7,11 @@ do
 	case $script in
 		clear)
 			clear
-			./$0
+			"$0"
 		  ;;
 
 		list)
-			./$0
+			"$0"
 		  ;;
 
 		*)
