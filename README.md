@@ -2,7 +2,7 @@
 
 This repository includes testing for sqlite. Most of sql command of sql are implemented in sql except [few](https://sqlite.org/omitted.html).
 
-- _Npm packages_: [`sequelize`](https://sequelize.org/master/) and `sqlite3`.
+- _Npm packages_: `sequelize` ([docs](https://sequelize.org/master/)) and `sqlite3`.
 - _Tip_: You can install vscode extension: `alexcvzz.vscode-sqlite`
 - _Tip_: Also install linux tool for viewing the sqlite database file as well - [Installation guide](https://github.com/sahilrajput03/sahilrajput03/blob/master/arch-notes.md#insatlled-sqliteman)
 
