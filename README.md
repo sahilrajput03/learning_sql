@@ -16,6 +16,6 @@ This repository includes testing for sqlite. Most of sql command of sql are impl
 - [Docs](https://www.sqlite.org/index.html)
 - [Connect to nodejs](https://www.sqlitetutorial.net/sqlite-nodejs/connect/)
 - https://www.sqlitetutorial.net/sqlite-nodejs/
-- [Other: Google search Sqlite with node](https://www.google.com/search?q=sqllite+with+node&rlz=1C1CHBD_enIN917IN917&oq=sqllite+with+node&aqs=chrome..69i57j0i13i457j0i13j0i10i22i30j0i22i30l4.2738j0j1&sourceid=chrome&ie=UTF-8)
+- Other: [Google search Sqlite with node](https://www.google.com/search?q=sqllite+with+node&rlz=1C1CHBD_enIN917IN917&oq=sqllite+with+node&aqs=chrome..69i57j0i13i457j0i13j0i10i22i30j0i22i30l4.2738j0j1&sourceid=chrome&ie=UTF-8)
 - Software to manage sqlite db files: https://sqlitebrowser.org/
 (Another alternate for inmemory db would be simply using node's file api to write and read from a .json file and store in object form in it, yikes!!!)
