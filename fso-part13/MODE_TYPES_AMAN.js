@@ -2,6 +2,7 @@
 // -
 // -- [les-chat](https://github.com/amand33p/les-chat)
 // -- [bug-tracker](https://github.com/amand33p/bug-tracker)
+// -- official sequelize-express example: https://github.com/sequelize/express-example
 
 /*
 	type: Sequelize.INTEGER,
