@@ -6,6 +6,13 @@ require('hot-module-replacement')({
 	ignore: /node_modules/,
 })
 
+global.watchingService = () => {
+	// This will keep the running test watching service alive for atleast 60 mins.
+	// This will help the hot module replacement kept open!
+	// LEARN: So its important to call watchingService function to be able to watch for tests continuously for sql tests coz the connection is closed automatically with our use case!
+	setTimeout(() => {}, 24 * 60 * 60 * 1000) // 24hrs
+}
+
 let _beforeAll
 global.beforeAll = async (cb) => {
 	_beforeAll = cb || (() => {})
@@ -53,7 +60,8 @@ function clearLogs() {
 	// This is true craziness!
 
 	try {
-		execSync('badCommand', {stdio: 'pipe'}) // mimic for people who don't have tmux installed should also be able to run without errors!
 		execSync('tmux clear-history -t $(tmux display -pt "${TMUX_PANE:?}" "#{pane_index}")', {stdio: 'pipe'})
+		// LEARN: Please keep this ^^ line always before the below line!
+		execSync('badCommand', {stdio: 'pipe'}) // mimic for people who don't have tmux installed should also be able to run without errors!
 	} catch (error) {}
 }

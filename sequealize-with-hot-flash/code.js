@@ -3,12 +3,13 @@ const {expect} = require('expect')
 // expect DOCS (from jest): https://jestjs.io/docs/expect
 // toMatchObject: (src: https://jestjs.io/docs/expect#tomatchobjectobject) Used to check that a JavaScript object matches a subset of the properties of an object
 
+watchingService()
+
 // LEARN: ALL CONNECTION AND MODEL RELATED STUFF GOES HERE..
 connectToDb(async () => {
 	// await require('./initMongodb.js')
 	await require('./initPostgreSql')
 	log('connected to db..')
-	setTimeout(() => {}, 10 * 60 * 1000)
 })
 
 beforeAll(async () => {
@@ -17,7 +18,7 @@ beforeAll(async () => {
 
 // LEARN: You may never use console.log but simply use debugger to debug values like reply below by placing breakpoint in the functin end brace.
 const _note = {
-	// id: '', // You should not give id manually coz its always auto assigned.
+	// id: '', // You should *not* give id manually coz its always auto assigned.
 	content: 'i am note 1',
 	important: false,
 	date: new Date(),
@@ -34,24 +35,31 @@ test('save note with given id', async () => {
 	expect(note.dataValues).toMatchObject(_noteWithId)
 })
 
-test('save note with already existing id should throw error', async () => {
-	const _noteWithId = {..._note, id: 2}
+test('saving note with duplicate id should throw unique id error', async () => {
+	// inspiration: https://stackoverflow.com/a/48707461/10012446
+	let receivedErr
 
-	const er = 'id must be unique'
-
-	expect(async () => {
-		let note = await NoteM.create(_noteWithId)
-	}).rejects.toThrow('Validation error')
-	// LEARN: `rejects.toThrow` method compares `error.message` property
-
-	// Testing specific errors with above operation.
 	try {
+		let _noteWithId = {..._note, id: 2}
 		let note = await NoteM.create(_noteWithId)
-	} catch (error) {
-		let expectedMessage1 = 'Validation error'
-		let expectedMessage2 = 'id must be unique'
-
-		expect(error.message).toBe(expectedMessage1)
-		expect(error.errors[0].message).toBe(expectedMessage2)
+	} catch (err) {
+		receivedErr = err
 	}
+
+	const validationErr = 'Validation error'
+	const uniqueIdErr = 'id must be unique'
+
+	expect(receivedErr.message).toBe(validationErr)
+	expect(receivedErr.errors[0].message).toBe(uniqueIdErr)
 })
+
+// Learn JEST:
+// expect(async () => {
+// 	let note = await NoteM.create(_noteWithId)
+// }).rejects.toThrow('Validation error')
+// LEARN: `rejects.toThrow` method compares `error.message` property
+
+// This works buddy in jest though!
+// expect(() => {
+// 	throw new Error('cool')
+// }).toThrow('cool')
