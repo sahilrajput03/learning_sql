@@ -3,7 +3,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 let {DATABASE_URL} = process.env
-console.log('we got db url as :::', DATABASE_URL)
+// console.log('we got db url as :::', DATABASE_URL)
 let enableSSL = false
 let dialectOptions = enableSSL
 	? {
@@ -22,6 +22,9 @@ let config = {
 
 const sequelize = new Sequelize(DATABASE_URL, config)
 
+if (!DATABASE_URL.includes('test')) {
+	throw new Error('Please use a database with test in its name for testing... ~ Sahil')
+}
 module.exports = sequelize.authenticate()
 // .then(() => {
 // 	console.log('Connection has been established successfully.'.mb)

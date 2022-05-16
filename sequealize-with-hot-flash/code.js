@@ -13,8 +13,8 @@ connectToDb(async () => {
 })
 
 beforeAll(async () => {
-	let k = await sequelize.sync({force: true})
-	// await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+	// let k = await sequelize.sync({force: true})
+	await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 })
 
 // LEARN: You may never use console.log but simply use debugger to debug values like reply below by placing breakpoint in the functin end brace.
@@ -30,11 +30,20 @@ test('save note', async () => {
 	expect(note.dataValues).toMatchObject(_note)
 })
 
+test('find a note', async () => {
+	let id = 1
+	const note = await NoteM.findByPk(id)
+
+	expect(note).toMatchObject({..._note, id})
+})
+
 test('save note with given id', async () => {
 	const _noteWithId = {..._note, id: 2}
 	const note = await NoteM.create(_noteWithId)
 	expect(note.dataValues).toMatchObject(_noteWithId)
 })
+
+let dataValues = (data) => data.map((n) => n.dataValues)
 
 test('saving note with duplicate id should throw unique id error', async () => {
 	// inspiration: https://stackoverflow.com/a/48707461/10012446
@@ -52,6 +61,27 @@ test('saving note with duplicate id should throw unique id error', async () => {
 
 	expect(receivedErr.message).toBe(validationErr)
 	expect(receivedErr.errors[0].message).toBe(uniqueIdErr)
+})
+
+test('drop notes table', async () => {
+	await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+
+	try {
+		let notes = await NoteM.findAll({})
+		expect(notes.length).toBe(0)
+	} catch (error) {
+		log('bhayankar error state...')
+	}
+})
+
+test('insert many rows (notes) in notes_table', async () => {
+	// User.bulkCreate([{}])
+
+	let notes = await NoteM.findAll({})
+
+	// dataValues(notes).forEach((row) => {
+	// 	expect(row).toMatchObject()
+	// })
 })
 
 // Learn JEST:
