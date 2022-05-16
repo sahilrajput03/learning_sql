@@ -1,4 +1,7 @@
 require('dotenv').config()
+const {Op} = require('sequelize')
+// log('::Available operators::', Object.keys(Op))
+// eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,etc
 const {expect} = require('expect')
 // expect DOCS (from jest): https://jestjs.io/docs/expect
 // toMatchObject: (src: https://jestjs.io/docs/expect#tomatchobjectobject) Used to check that a JavaScript object matches a subset of the properties of an object
@@ -128,6 +131,36 @@ test('get all notes/rows using for a matching property value', async () => {
 	dataValues(notes).forEach((row, idx) => {
 		expect(row).toMatchObject(_notes[idx])
 	})
+})
+
+test('pagination', async () => {
+	// drop notes table
+	await NoteM.sync({force: true})
+
+	// Saving 8 notes from data.js file
+	let _notes = require('./data')
+	let notes = await NoteM.bulkCreate(_notes)
+
+	// pagination
+	let page = 1 // e.g., 1,2,3...
+	let limit = 2 // items per page
+	let offset = (page - 1) * limit
+	// LEARN: offset=skip we use mongoosejs, yikes!
+
+	// LEARN: The findAndCountAll method is a convenience method that combines findAll and count.
+	const {count, rows} = await NoteM.findAndCountAll({
+		where: {
+			content: {
+				[Op.like]: 'i am note%', // This searchs for any row that entry for content having prefix as `i am note`
+			},
+		},
+		offset,
+		limit,
+	})
+	expect(dataValues(rows).length).toBe(limit)
+
+	// LEARN: count is the total number of results in db!
+	expect(count).toBe(_notes.length)
 })
 
 // Learn JEST:
