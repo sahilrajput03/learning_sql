@@ -6,11 +6,16 @@ require('hot-module-replacement')({
 	ignore: /node_modules/,
 })
 
-global.watchingService = () => {
+let _watchingService = false
+global.watchingService = async (status) => {
 	// This will keep the running test watching service alive for atleast 60 mins.
 	// This will help the hot module replacement kept open!
 	// LEARN: So its important to call watchingService function to be able to watch for tests continuously for sql tests coz the connection is closed automatically with our use case!
-	setTimeout(() => {}, 24 * 60 * 60 * 1000) // 24hrs
+
+	if (status) {
+		setTimeout(() => {}, 24 * 60 * 60 * 1000) // 24hrs
+		_watchingService = true
+	}
 }
 
 let _beforeAll
@@ -30,7 +35,12 @@ global.connectToDb = async (cb) => {
 	await _beforeAll()
 
 	// We're ready to run tests now coz connection is successful
-	runTests()
+	await runTests()
+
+	if (!_watchingService) {
+		const db = sequelize
+		await db.close() // close the connection.
+	}
 }
 
 // running codejs here..

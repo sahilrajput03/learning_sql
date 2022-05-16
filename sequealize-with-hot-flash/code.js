@@ -7,7 +7,8 @@ const {expect} = require('expect')
 
 //? Sequelize querying methods (findAll, findByPk, findOne, findOrCreate, findAndCountAll): https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
 
-watchingService()
+// Disable below line to disable watching service
+watchingService(true)
 
 // LEARN: ALL CONNECTION AND MODEL RELATED STUFF GOES HERE..
 connectToDb(async () => {
