@@ -8,8 +8,8 @@
 		"test:watch": "fr code.js -w"
 	},
 	"oldScripts": {
-		"test": "node ./_startTesting.js",
-		"test:watch": "nodemon -w ./_startTesting.js -x 'node ./_startTesting.js -w || exit 0'"
+		"test": "fr code.js",
+		"test:watch": "fr -w code.js"
 	},
 	"dependencies": {
 		"dotenv": "^16.0.0",
