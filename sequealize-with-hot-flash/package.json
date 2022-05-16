@@ -8,8 +8,8 @@
 		"test:watch": "fr code.js -w"
 	},
 	"oldScripts": {
-		"test": "fr code.js",
-		"test:watch": "fr -w code.js"
+		"test": "node ./_deprecate_startTesting.js",
+		"test:watch": "nodemon -w ./_deprecate_startTesting.js -x 'node ./_deprecate_startTesting.js -w || exit 0'"
 	},
 	"dependencies": {
 		"dotenv": "^16.0.0",
