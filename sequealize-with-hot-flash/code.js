@@ -3,6 +3,8 @@ const {expect} = require('expect')
 // expect DOCS (from jest): https://jestjs.io/docs/expect
 // toMatchObject: (src: https://jestjs.io/docs/expect#tomatchobjectobject) Used to check that a JavaScript object matches a subset of the properties of an object
 
+//? Sequelize querying methods: https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
+
 watchingService()
 
 // LEARN: ALL CONNECTION AND MODEL RELATED STUFF GOES HERE..
@@ -27,14 +29,22 @@ const _note = {
 
 test('save note', async () => {
 	const note = await NoteM.create(_note)
+	expect(note).toMatchObject(_note)
 	expect(note.dataValues).toMatchObject(_note)
 })
 
-test('find a note', async () => {
+test('find a note by primary key', async () => {
 	let id = 1
 	const note = await NoteM.findByPk(id)
 
 	expect(note).toMatchObject({..._note, id})
+})
+
+test('findOne using filter', async () => {
+	const note = await NoteM.findOne({where: {content: 'i am note 1'}})
+
+	expect(note).toMatchObject(_notes[0])
+	expect(note.dataValues).toMatchObject(_notes[0])
 })
 
 test('save note with given id', async () => {
@@ -95,7 +105,24 @@ test('insert many notes/rows', async () => {
 })
 
 test('get all notes/rows', async () => {
-	let notes = await NoteM.findAll({})
+	let notes = await NoteM.findAll()
+
+	dataValues(notes).forEach((row, idx) => {
+		expect(row).toMatchObject(_notes[idx])
+	})
+})
+
+test('get all notes/rows (with empty filter)', async () => {
+	let filter = {}
+	let notes = await NoteM.findAll(filter)
+
+	dataValues(notes).forEach((row, idx) => {
+		expect(row).toMatchObject(_notes[idx])
+	})
+})
+
+test('get all notes using for a matching property value', async () => {
+	const notes = await NoteM.findAll({where: {important: false}})
 
 	dataValues(notes).forEach((row, idx) => {
 		expect(row).toMatchObject(_notes[idx])
