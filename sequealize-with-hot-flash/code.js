@@ -74,6 +74,7 @@ test('saving note with duplicate id should throw unique id error', async () => {
 })
 
 test('drop notes table', async () => {
+	// Below method doesn't return anything meaningful ~ imo ~ Sahil
 	await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
 	let notes = await NoteM.findAll()
@@ -121,7 +122,7 @@ test('get all notes/rows (with empty filter)', async () => {
 	})
 })
 
-test('get all notes using for a matching property value', async () => {
+test('get all notes/rows using for a matching property value', async () => {
 	const notes = await NoteM.findAll({where: {important: false}})
 
 	dataValues(notes).forEach((row, idx) => {
