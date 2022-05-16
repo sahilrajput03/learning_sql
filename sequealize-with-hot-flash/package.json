@@ -4,8 +4,12 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"test": "node ./startTesting.js",
-		"test:watch": "nodemon -w ./startTesting.js -x 'node ./startTesting.js -w || exit 0'"
+		"test": "fr code.js",
+		"test:watch": "fr code.js -w"
+	},
+	"oldScripts": {
+		"test": "node ./_startTesting.js",
+		"test:watch": "nodemon -w ./_startTesting.js -x 'node ./_startTesting.js -w || exit 0'"
 	},
 	"dependencies": {
 		"dotenv": "^16.0.0",
@@ -14,5 +18,8 @@
 		"pg": "^8.7.3",
 		"prompt": "^1.1.0",
 		"sequelize": "^6.19.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.16"
 	}
 }
