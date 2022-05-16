@@ -16,6 +16,7 @@ let dialectOptions = enableSSL
 
 let config = {
 	logging: false, // Turn off logging, src: https://stackoverflow.com/a/55874733/10012446
+	// logging: true, // for debugging only.
 	dialectOptions,
 }
 // config = null; // Its must be null(can't send undefined).
@@ -61,11 +62,6 @@ NoteM.init(
 		modelName: 'note',
 	}
 )
-
-// They say that all tables get delete within the database:
-// sequelize.sync({force: true})
-
-NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
 global.NoteM = NoteM
 global.sequelize = sequelize
