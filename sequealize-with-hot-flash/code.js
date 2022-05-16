@@ -6,7 +6,7 @@ const {expect} = require('expect')
 // expect DOCS (from jest): https://jestjs.io/docs/expect
 // toMatchObject: (src: https://jestjs.io/docs/expect#tomatchobjectobject) Used to check that a JavaScript object matches a subset of the properties of an object
 
-//? Sequelize querying methods: https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
+//? Sequelize querying methods (findAll, findByPk, findOne, findOrCreate, findAndCountAll): https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
 
 watchingService()
 
