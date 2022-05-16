@@ -4,7 +4,8 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"start": "nodemon -w ./startTesting.js -x 'node ./startTesting.js || exit 0'"
+		"test": "node ./startTesting.js",
+		"test:watch": "nodemon -w ./startTesting.js -x 'node ./startTesting.js -w || exit 0'"
 	},
 	"dependencies": {
 		"dotenv": "^16.0.0",

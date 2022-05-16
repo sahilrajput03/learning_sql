@@ -7,14 +7,16 @@ const {expect} = require('expect')
 
 //? Sequelize querying methods (findAll, findByPk, findOne, findOrCreate, findAndCountAll): https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
 
-// Disable below line to disable watching service
-watchingService(true)
-
 // LEARN: ALL CONNECTION AND MODEL RELATED STUFF GOES HERE..
 connectToDb(async () => {
 	// await require('./initMongodb.js')
 	await require('./initPostgreSql')
 	log('connected to db..')
+})
+
+closeDb(async () => {
+	const db = sequelize
+	await db.close() // close the connection.
 })
 
 beforeAll(async () => {

@@ -6,21 +6,17 @@ require('hot-module-replacement')({
 	ignore: /node_modules/,
 })
 
-let _watchingService = false
-global.watchingService = async (status) => {
-	// This will keep the running test watching service alive for atleast 60 mins.
-	// This will help the hot module replacement kept open!
-	// LEARN: So its important to call watchingService function to be able to watch for tests continuously for sql tests coz the connection is closed automatically with our use case!
+// Check if user passed -w or --watch flag
+let watching = process.argv.includes('-w') || process.argv.includes('--watch')
 
-	if (status) {
-		setTimeout(() => {}, 24 * 60 * 60 * 1000) // 24hrs
-		_watchingService = true
-	}
+let beforeAllFn = () => {}
+global.beforeAll = (cb) => {
+	beforeAllFn = cb
 }
 
-let _beforeAll
-global.beforeAll = async (cb) => {
-	_beforeAll = cb || (() => {})
+let closeDbFn = () => {}
+global.closeDb = (cb) => {
+	closeDbFn = cb
 }
 
 let connected = false
@@ -32,14 +28,16 @@ global.connectToDb = async (cb) => {
 	connected = true
 
 	// Run beforeAll method (FYI: See LEARN*1)
-	await _beforeAll()
+	await beforeAllFn()
 
 	// We're ready to run tests now coz connection is successful
 	await runTests()
 
-	if (!_watchingService) {
-		const db = sequelize
-		await db.close() // close the connection.
+	if (!watching) {
+		await closeDbFn()
+	} else {
+		// Keep the event loop busy with minimal load!
+		setTimeout(() => {}, 24 * 60 * 60 * 1000) // 24hrs
 	}
 }
 
@@ -54,7 +52,7 @@ if (module.hot) {
 		// RE-RUN BEFOREALL BEFORE RUNNING TESTSUITE
 		// LEARN*1: I run beforeAll even when the connection is active, this is beneficial say when you want your dbs or collecitons to cleared off.
 		clearLogs() // Learn: Using clearLogs here helps us print logs of beforeAll on each execution as well. Yikes!
-		await _beforeAll()
+		await beforeAllFn()
 
 		runTests()
 	})
