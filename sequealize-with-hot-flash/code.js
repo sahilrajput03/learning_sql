@@ -66,22 +66,40 @@ test('saving note with duplicate id should throw unique id error', async () => {
 test('drop notes table', async () => {
 	await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
-	try {
-		let notes = await NoteM.findAll({})
-		expect(notes.length).toBe(0)
-	} catch (error) {
-		log('bhayankar error state...')
-	}
+	let notes = await NoteM.findAll()
+	expect(notes.length).toBe(0)
 })
 
-test('insert many rows (notes) in notes_table', async () => {
-	// User.bulkCreate([{}])
+let _notes = [
+	{
+		content: 'i am note 1',
+		important: false,
+		date: new Date(),
+	},
+	{
+		content: 'i am note 2',
+		important: false,
+		date: new Date(),
+	},
+]
 
+test('insert many notes/rows', async () => {
+	let notes = await NoteM.bulkCreate(_notes)
+	notes = dataValues(notes)
+
+	expect(notes.length).toBe(_notes.length)
+
+	notes.forEach((note, idx) => {
+		expect(note).toMatchObject(_notes[idx])
+	})
+})
+
+test('get all notes/rows', async () => {
 	let notes = await NoteM.findAll({})
 
-	// dataValues(notes).forEach((row) => {
-	// 	expect(row).toMatchObject()
-	// })
+	dataValues(notes).forEach((row, idx) => {
+		expect(row).toMatchObject(_notes[idx])
+	})
 })
 
 // Learn JEST:
