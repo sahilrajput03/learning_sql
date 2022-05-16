@@ -148,6 +148,7 @@ test('pagination', async () => {
 	// LEARN: offset=skip we use mongoosejs, yikes!
 
 	// LEARN: The findAndCountAll method is a convenience method that combines findAll and count.
+	// Docs: https://sequelize.org/docs/v6/core-concepts/model-querying-finders/#findandcountall
 	const {count, rows} = await NoteM.findAndCountAll({
 		where: {
 			content: {
