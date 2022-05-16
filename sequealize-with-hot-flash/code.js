@@ -1,7 +1,6 @@
 require('dotenv').config()
 const {Op} = require('sequelize')
-// log('::Available operators::', Object.keys(Op))
-// eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,etc
+// log('::Available operators::', Object.keys(Op)) // Output: eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,etc
 const {expect} = require('expect')
 // expect DOCS (from jest): https://jestjs.io/docs/expect
 // toMatchObject: (src: https://jestjs.io/docs/expect#tomatchobjectobject) Used to check that a JavaScript object matches a subset of the properties of an object
