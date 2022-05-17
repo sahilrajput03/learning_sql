@@ -41,7 +41,15 @@ const _note = {
 
 test('save note', async () => {
 	const note = await NoteM.create(_note)
-	expect(note).toMatchObject(_note)
+	expect(note).toMatchObject(_note) // this has lots of unnecessar information so not suitable to send over http request.
+
+	// Sequlize object to plain js object, src: https://stackoverflow.com/questions/21961818/sequelize-convert-entity-to-plain-object
+	// Way 1: FSO
+	let noteObject = note.toJSON()
+	expect(noteObject).toMatchObject(_note)
+	expect(typeof noteObject).toBe('object')
+
+	// Way 2: Sahil
 	expect(note.dataValues).toMatchObject(_note)
 })
 
