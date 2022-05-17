@@ -147,7 +147,7 @@ test('count document', async () => {
 test('get all notes/rows', async () => {
 	let notes = await NoteM.findAll()
 
-	// FSO WAY and Sequelize docs way:
+	// FSO WAY and Sequelize docs way: (actually good way!)
 	let notesArray = notes.map((note) => note.toJSON())
 	notesArray.forEach((row, idx) => {
 		expect(row).toMatchObject(_notes[idx])
