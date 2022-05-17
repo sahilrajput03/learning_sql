@@ -43,7 +43,10 @@ test('save note', async () => {
 	const note = await NoteM.create(_note)
 	expect(note).toMatchObject(_note) // this has lots of unnecessar information so not suitable to send over http request.
 
+	// Sequelize docs on .toJSON(), https://sequelize.org/docs/v6/core-concepts/model-instances/#note-logging-instances
 	// Sequlize object to plain js object, src: https://stackoverflow.com/questions/21961818/sequelize-convert-entity-to-plain-object
+	// Issue @ sequelize: https://github.com/sequelize/sequelize/issues/4291
+
 	// Way 1: FSO
 	let noteObject = note.toJSON()
 	expect(noteObject).toMatchObject(_note)
