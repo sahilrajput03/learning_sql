@@ -1,0 +1,33 @@
+{
+	"name": "fso-part13",
+	"version": "1.0.0",
+	"description": "## Heroku:",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon index.js",
+		"dev": "env-cmd -f .env.dev nodemon --inspect index.js",
+		"dev2": "nodemon --inspect index.js .env.dev",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"scriptsComments": {
+		"dev": "We pass environment file using env-cmd using -f option.",
+		"dev2": "We pass envionment file by passing filepath as argument and accessing it as process.argv and using that in `dotenv.config` function.",
+		"Why two?": "For fun only, both way works absolutely fine! ~ Sahil"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"eslint": "^8.5.0",
+		"nodemon": "^2.0.15"
+	},
+	"dependencies": {
+		"colors": "^1.4.0",
+		"dotenv": "^10.0.0",
+		"env-cmd": "^10.1.0",
+		"express": "^4.17.2",
+		"logmw": "file:middlewares/low-mw.js",
+		"pg": "^8.7.1",
+		"sequelize": "^6.12.0-beta.3"
+	}
+}

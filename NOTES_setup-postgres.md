@@ -84,7 +84,8 @@ Source: https://chartio.com/resources/tutorials/how-to-list-databases-and-tables
 \dt
 
 # Create database
-CREATE DATABASE db_pikachu;
+CREATE DATABASE "db_pikachu";
+# Quotes helps in createing case-senstive database, yes its for real ~Sahil
 
 # Change owner of a database ; Learn: You must connect as the current table owner, not the user you wish to change the table ownership to. Src: https://stackoverflow.com/a/31869945/10012446
 ALTER DATABASE db_pikachu OWNER TO "array";
