@@ -1,23 +1,22 @@
 const {Sequelize} = require('sequelize')
 
-const prod = 0
-let DATABASE_URL, config
-if (prod) {
-	DATABASE_URL = process.env.db_connect_string
-	config = {
-		dialectOptions: {
-			ssl: {
-				require: true,
-				rejectUnauthorized: false,
-			},
-		},
-	}
-} else {
-	DATABASE_URL = 'postgres://array@localhost:5432/myDb1'
-	// config = null; // Its must be null(can't send undefined).
-	config = {
-		logging: false, // Turn off logging, src: https://stackoverflow.com/a/55874733/10012446
-	}
+let {DATABASE_URL, NODE_ENV} = process.env
+// console.log({DATABASE_URL, NODE_ENV})
+
+let isDev = NODE_ENV === 'dev'
+let isTesting = NODE_ENV === 'test'
+let isLocal = isDev || isTesting
+
+let config = {
+	logging: isLocal ? false : true, // Turn off logging based upon environment, src: https://stackoverflow.com/a/55874733/10012446
+	dialectOptions: {
+		ssl: isLocal
+			? null
+			: {
+					require: true,
+					rejectUnauthorized: false,
+			  },
+	},
 }
 
 console.log('DATABASE_URL'.bgGreen, DATABASE_URL.green)

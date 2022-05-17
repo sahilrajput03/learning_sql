@@ -1,4 +1,7 @@
-require('dotenv').config()
+const dotenv = require('dotenv')
+dotenv.config({path: process.argv[2]})
+
+console.log('db url>>>>', process.env.DATABASE_URL)
 require('./setupColors')
 
 const express = require('express')

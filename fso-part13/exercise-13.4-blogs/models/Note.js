@@ -10,22 +10,28 @@ NoteM.init(
 			primaryKey: true,
 			autoIncrement: true,
 		},
-		content: {
+		author: {
+			type: DataTypes.TEXT,
+			allowNull: true,
+		},
+		url: {
 			type: DataTypes.TEXT,
 			allowNull: false,
 		},
-		important: {
-			type: DataTypes.BOOLEAN,
+		title: {
+			type: DataTypes.TEXT,
+			allowNull: false,
 		},
-		date: {
-			type: DataTypes.DATE,
+		likes: {
+			type: DataTypes.NUMBER,
+			defaultValue: 0,
 		},
 	},
 	{
 		sequelize,
 		underscored: true,
 		timestamps: false,
-		modelName: 'note',
+		modelName: 'blogs', // this is table name the model is associated to.
 	}
 )
 
