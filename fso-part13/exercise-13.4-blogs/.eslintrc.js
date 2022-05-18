@@ -4,6 +4,9 @@ module.exports = {
 		es2021: true,
 		node: true,
 	},
+	globals: {
+		log: 'writable',
+	},
 	extends: 'eslint:recommended',
 	parserOptions: {
 		ecmaVersion: 13,
