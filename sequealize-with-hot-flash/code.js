@@ -1,4 +1,6 @@
-require('dotenv').config()
+require('dotenv').config({
+	path: '.env.test',
+})
 const {Op} = require('sequelize')
 // log('::Available operators::', Object.keys(Op)) // Output: eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,etc
 const {expect} = require('expect')
