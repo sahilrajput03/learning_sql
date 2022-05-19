@@ -1,4 +1,4 @@
-/* global log */
+/* global */
 const dotenv = require('dotenv')
 dotenv.config({path: process.argv[2]})
 global.log = console.log

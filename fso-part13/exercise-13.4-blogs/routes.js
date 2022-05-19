@@ -55,4 +55,10 @@ router.get('/bugged_api', async (req, res, next) => {
 	}
 })
 
+router.get('/bugged_api_2', async (req, res, next) => {
+	// always wrap your controller code with try catch and pass error to next() so error can be handled by errorHandler middleware.
+	// Testing random error handling by errorHandler middleware!
+	throw new Error('Some stupid error..')
+})
+
 module.exports = router

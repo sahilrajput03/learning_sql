@@ -26,7 +26,7 @@ const errorHandler = (error, request, response, next) => {
 	}
 
 	let NODE_ENV = process.env
-	log({NODE_ENV})
+	// log({NODE_ENV})
 
 	if (process.env.NODE_ENV === 'test') {
 		// ! Caution here for test mode!

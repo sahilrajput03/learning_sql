@@ -17,9 +17,6 @@ connectToDb(async () => {
 	// wait till the connection establishes to postgresql!
 	await connection
 	log('connection to db::SUCCESSFUL')
-
-	// Fix the schema on the fly.
-	BlogM.sync({alter: true})
 })
 
 closeDb(async () => {
@@ -29,13 +26,16 @@ closeDb(async () => {
 })
 
 beforeAll(async () => {
+	// Fix the schema on the fly.
+	await BlogM.sync({alter: true})
+
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await BlogM.sync({force: true})
 })
 
-test.only('post blog', async () => {
-	const expectedBody = {id: 196, author: '', url: '', title: '', likes: 1}
+test('post blog', async () => {
+	const expectedBody = {id: 201, author: '', url: '', title: '', likes: 1}
 	const expectedStatus = 200
 
 	const {body} = await api.post('/api/blogs').send(expectedBody)
@@ -75,7 +75,15 @@ test('bad request ', async () => {
 	// Please read code of ``CAUTION`` in `middleware/errorHandler` function to know why I have disabled error logging for `test` mode in backend by default but still you can enable it very easily enable it.
 	let expectedError
 	const res = await api.get('/bugged_api')
-	// log({body: res.body})
+
+	expect(res.body.error).toBeDefined()
+	expect(res.body.error).toBe('Some stupid error..')
+})
+
+test('bad request (with `express-async-errors`)', async () => {
+	// Please read code of ``CAUTION`` in `middleware/errorHandler` function to know why I have disabled error logging for `test` mode in backend by default but still you can enable it very easily enable it.
+	let expectedError
+	const res = await api.get('/bugged_api_2')
 
 	expect(res.body.error).toBeDefined()
 	expect(res.body.error).toBe('Some stupid error..')
