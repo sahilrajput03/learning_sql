@@ -1,9 +1,13 @@
 /* global connectToDb, closeDb beforeAll test sequelize BlogM */
 //? Use .env.test file for environment.
 const path = require('path')
-
 const dotenv = require('dotenv')
 dotenv.config({path: path.join(__dirname, '..', '.env.test')}) // Joining path using path.join and __dirname allows us to execute files withSupertest using `fr withSupertest` from inside __tests__ folder and from the root folder as well.
+
+if (process.env.NODE_ENV !== 'test' || !process.env.DATABASE_URL.includes('test')) {
+	console.log("what's going on??", process.env.NODE_ENV !== 'test', !process.env.DATABASE_URL.includes('test'))
+	throw new Error('*CRITICAL ERROR*: You are not using test environment ~ flash-runner')
+}
 
 const supertest = require('supertest')
 const app = require('../app')
@@ -68,11 +72,3 @@ test('post blog', async () => {
 	// log({body})
 	expect(body).toMatchObject(expectedBody)
 })
-
-//? Add below thing as important..!
-// if (
-// 	process.env.NODE_ENV !== 'test' ||
-// 	!process.env.DATABASE_URL.includes('test')
-// ) {
-// 	throw new Error('*CRITICAL ERROR*: You are not using test environment')
-// }
