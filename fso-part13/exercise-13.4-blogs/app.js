@@ -18,7 +18,9 @@ const app = express()
 const middleware = require('./utils/middleware')
 
 app.use(express.json())
-app.use(logMw)
+
+// Disable logMw for a while
+// app.use(logMw)
 
 app.use('/', function (req, res, next) {
 	router(req, res, next)

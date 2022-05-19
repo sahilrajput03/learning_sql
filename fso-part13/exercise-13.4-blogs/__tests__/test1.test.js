@@ -34,43 +34,6 @@ beforeAll(async () => {
 	await BlogM.sync({force: true})
 })
 
-test('post blog', async () => {
-	const expectedBody = {id: 201, author: '', url: '', title: '', likes: 1}
-	const expectedStatus = 200
-
-	const {body} = await api.post('/api/blogs').send(expectedBody)
-	// log({body})
-	expect(body).toMatchObject(expectedBody)
-})
-
-test('Check /b endpoint, #supertest', async () => {
-	const expectedBody = {car: 20, bike: 30}
-	const expectedStatus = 203
-
-	await api
-		.get('/b')
-		.send(expectedBody) //🔥︎ This is how you send data.
-		.expect('Content-Type', /application\/json/)
-		.expect(expectedStatus, expectedBody)
-})
-
-test('database request', async () => {
-	const expectedBody = {
-		name: 'Bruno Mars',
-		phoneNumber: 123456789,
-		address: 'Some address here',
-	}
-
-	const expectedStatus = 200
-
-	// Never await api call if you are using .end function on the api call.
-	const res = await api.post('/c').send(expectedBody).expect(expectedStatus) //🔥︎ This is how you send data.
-	// .expect('Content-Type', /application\/json/) // this fails the request.
-
-	expect(res.body).toMatchObject(expectedBody)
-	expect(res.body).toHaveProperty('_id')
-})
-
 test('bad request ', async () => {
 	// Please read code of ``CAUTION`` in `middleware/errorHandler` function to know why I have disabled error logging for `test` mode in backend by default but still you can enable it very easily enable it.
 	let expectedError
@@ -87,6 +50,23 @@ test('bad request (with `express-async-errors`)', async () => {
 
 	expect(res.body.error).toBeDefined()
 	expect(res.body.error).toBe('Some stupid error..')
+})
+
+test('post blog', async () => {
+	const expectedBody = {id: 201, author: '', url: '', title: '', likes: 1}
+	const expectedStatus = 200
+
+	const {body} = await api
+		.post('/api/blogs')
+		.send(expectedBody)
+		.expect('Content-Type', /application\/json/)
+		.expect(expectedStatus)
+
+	// for status, body: we can do - (*it matches for exact object instead of something like toMatchObject() method from expect).
+	// .expect(expectedStatus, expectedBody)
+
+	// log({body})
+	expect(body).toMatchObject(expectedBody)
 })
 
 //? Add below thing as important..!

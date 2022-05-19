@@ -7,7 +7,7 @@ let dataValues = (data) => data.map((n) => n.dataValues)
 router.get('/api/blogs', async (req, res) => {
 	let blogs
 	blogs = await BlogM.findAll({})
-	log('notes:', dataValues(blogs)) // This is another way of printing values though!
+	// log('notes:', dataValues(blogs)) // This is another way of printing values though!
 	// l('notes:', _dataValues(notes)) // This is another way of printing values though!
 
 	return res.json(blogs) // notes.count is the total number of records(not pages).
