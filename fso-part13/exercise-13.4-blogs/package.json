@@ -23,6 +23,7 @@
 		"nodemon": "^2.0.15"
 	},
 	"dependencies": {
+		"chalk": "^4.1.2",
 		"colors": "^1.4.0",
 		"dotenv": "^10.0.0",
 		"env-cmd": "^10.1.0",

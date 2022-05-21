@@ -37,6 +37,7 @@ const init = (sequelize) => {
 	)
 }
 
+// You should use imported version of models so you get autoomplete for methods in both tests and server code, yikes!
 module.exports.BlogM = BlogM
 module.exports.init = init
 global.BlogM = BlogM

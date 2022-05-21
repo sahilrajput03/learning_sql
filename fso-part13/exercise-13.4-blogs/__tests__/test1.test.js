@@ -1,4 +1,4 @@
-/* global connectToDb, closeDb beforeAll test sequelize BlogM */
+/* global connectToDb, closeDb beforeAll test sequelize */
 //? Use .env.test file for environment.
 const path = require('path')
 const dotenv = require('dotenv')
@@ -13,6 +13,11 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
+const {BlogM} = require('../models/Blog')
+const chalk = require('chalk')
+
+let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
+let js = (...args) => JSON.stringify(...args)
 
 // withSupertest.test
 connectToDb(async () => {
@@ -90,4 +95,11 @@ test('post blog with custom id', async () => {
 	// log({body})
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
+})
+
+test('delete blog post', async () => {
+	let id = 21
+	let expectedStatus = 201
+	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
+	// log('pavement', js({cool: 'biju'}, null, 2))
 })

@@ -1,4 +1,5 @@
 const express = require('express')
+const {BlogM} = require('./models/Blog')
 const router = express.Router()
 require('./initPostgreSql')
 
@@ -28,6 +29,17 @@ router.get('/api/blogs/:id', async (req, res) => {
 	return res.json(blog)
 })
 
+router.delete('/api/blogs/:id', async (req, res) => {
+	const blog = await BlogM.destroy({
+		where: {
+			id: req.params?.id,
+		},
+	})
+	// log('server::', blog)
+	res.status(201).end()
+	return
+})
+
 router.post('/api/blogs', async (req, res) => {
 	try {
 		const blog = await BlogM.create({...req.body, important: true})
@@ -40,7 +52,7 @@ router.post('/api/blogs', async (req, res) => {
 
 router.get('/api/reset/blogs', async (req, res) => {
 	// NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
-	l('?>', BlogM.sync({force: true})) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+	log('?>', BlogM.sync({force: true})) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
 	return res.json({message: 'notes removed!'})
 })
