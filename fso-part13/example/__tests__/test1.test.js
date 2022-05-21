@@ -43,14 +43,18 @@ beforeAll(async () => {
 	await NoteM.sync({force: true})
 })
 
-test('test1', async () => {
-	expect(1).toBe(1)
-})
-
 test('post a note', async () => {
 	const expectedBody = {content: 'very good buddy!'}
 
 	const {body} = await api.post('/api/notes').send(expectedBody).expect(200)
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
+})
+
+test('modify note', async () => {
+	const expectedBody = {content: 'this is new note', important: false}
+
+	let {body} = await api.put('/api/notes/1').send(expectedBody)
+
+	expect(body).toMatchObject(expectedBody)
 })

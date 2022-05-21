@@ -32,6 +32,23 @@ router.get('/api/notes/:id', async (req, res) => {
 	return res.json(note)
 })
 
+router.put('/api/notes/:id', async (req, res, next) => {
+	let note = await NoteM.findByPk(req.params.id)
+
+	if (note) {
+		if (typeof req.body.important !== 'undefined') {
+			note.important = req.body.important
+		}
+		if (typeof req.body.content !== 'undefined') {
+			note.content = req.body.content
+		}
+		await note.save()
+		res.json(note)
+	} else {
+		res(404).end()
+	}
+})
+
 router.post('/api/notes', async (req, res) => {
 	// log(js(req.body))
 	try {
