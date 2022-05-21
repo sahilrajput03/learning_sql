@@ -4,7 +4,7 @@ require('express-async-errors')
 // const BlogM = require('./models/Note')
 const logMw = require('logmw')
 const {l, s, ps, dataValues, _dataValues} = require('./utils')
-const {connection} = require('./initPostgreSql')
+const connection = require('./initPostgreSql')
 const router = require('./routes')
 
 connection.then(() => {

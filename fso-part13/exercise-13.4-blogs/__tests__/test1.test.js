@@ -17,7 +17,7 @@ const {expect} = require('expect')
 // withSupertest.test
 connectToDb(async () => {
 	// await require('../initMongodb.js')
-	const {connection, BlogM} = require('../initPostgreSql')
+	const connection = require('../initPostgreSql')
 	// wait till the connection establishes to postgresql!
 	await connection
 	log('connection to db::SUCCESSFUL')
@@ -57,7 +57,7 @@ test('bad request (with `express-async-errors`)', async () => {
 })
 
 test('post blog', async () => {
-	const expectedBody = {id: 201, author: '', url: '', title: '', likes: 1}
+	const expectedBody = {author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
 	const expectedStatus = 200
 
 	const {body} = await api
@@ -71,4 +71,23 @@ test('post blog', async () => {
 
 	// log({body})
 	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('id')
+})
+
+test('post blog with custom id', async () => {
+	const expectedBody = {id: 21, author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
+	const expectedStatus = 200
+
+	const {body} = await api
+		.post('/api/blogs')
+		.send(expectedBody)
+		.expect('Content-Type', /application\/json/)
+		.expect(expectedStatus)
+
+	// for status, body: we can do - (*it matches for exact object instead of something like toMatchObject() method from expect).
+	// .expect(expectedStatus, expectedBody)
+
+	// log({body})
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('id')
 })

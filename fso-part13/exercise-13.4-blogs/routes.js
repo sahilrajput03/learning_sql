@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {BlogM} = require('./initPostgreSql')
+require('./initPostgreSql')
 
 let dataValues = (data) => data.map((n) => n.dataValues)
 

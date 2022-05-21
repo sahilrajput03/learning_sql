@@ -6,6 +6,7 @@ module.exports = {
 	},
 	globals: {
 		log: 'writable',
+		BlogM: 'writable',
 	},
 	extends: 'eslint:recommended',
 	parserOptions: {

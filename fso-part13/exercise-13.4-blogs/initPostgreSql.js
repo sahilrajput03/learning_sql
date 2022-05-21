@@ -26,7 +26,7 @@ console.log('DATABASE_URL'.bgGreen, DATABASE_URL.green)
 const sequelize = new Sequelize(DATABASE_URL, config)
 
 // Importing models here..
-let {BlogM, init} = require('./models/Blog')
+let {init} = require('./models/Blog')
 // log({sequelize})
 init(sequelize)
 
@@ -38,7 +38,7 @@ let connection = sequelize.authenticate().then(() => {
 		BlogM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	}
 })
-module.exports = {BlogM, connection}
+module.exports = connection
 global.sequelize = sequelize
 
 // .then(() => {
