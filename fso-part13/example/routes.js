@@ -17,33 +17,49 @@ router.get('/api/notes', async (req, res) => {
 	return res.json(notes) // notes.count is the total number of records(not pages).
 })
 
-router.get('/api/notes/:id', async (req, res) => {
-	const note = await NoteM.findByPk(req.params.id)
+const noteFinder = async (req, res, next) => {
+	req.note = await NoteM.findByPk(req.params.id)
+	next()
+}
+
+router.get('/api/notes/:id', noteFinder, async (req, res) => {
+	// added this to `noteFinder` middleware...
+	// const note = await NoteM.findByPk(req.params.id)
 
 	// return if note is not found!
-	if (!note) return res.status(400).json({message: 'note not found!'})
+	if (!req.note) return res.status(400).json({message: 'note not found!'})
 
 	// log('my note::', note.dataValues) //? However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
 	// log('my note::', s(note)) //? indented + no data type syntax highlight
 	// log('my note::', ps(note)) //? no indentation + data type syntax highlight
 
-	note.important = req.body.important
-	await note.save()
-	return res.json(note)
+	req.note.important = req.body.important
+	await req.note.save()
+	return res.json(req.note)
 })
 
-router.put('/api/notes/:id', async (req, res, next) => {
-	let note = await NoteM.findByPk(req.params.id)
+router.put('/api/notes/:id', noteFinder, async (req, res, next) => {
+	// added this to `noteFinder` middleware...
+	// let note = await NoteM.findByPk(req.params.id)
 
-	if (note) {
+	if (req.note) {
 		if (typeof req.body.important !== 'undefined') {
-			note.important = req.body.important
+			req.note.important = req.body.important
 		}
 		if (typeof req.body.content !== 'undefined') {
-			note.content = req.body.content
+			req.note.content = req.body.content
 		}
-		await note.save()
-		res.json(note)
+		await req.note.save()
+		res.json(req.note)
+	} else {
+		res(404).end()
+	}
+})
+
+router.delete('/api/notes/:id', noteFinder, async (req, res, next) => {
+	if (req.note) {
+		await req.note.destroy()
+		res.status(204).end()
 	} else {
 		res(404).end()
 	}

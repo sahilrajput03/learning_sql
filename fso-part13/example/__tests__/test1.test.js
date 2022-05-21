@@ -58,3 +58,8 @@ test('modify note', async () => {
 
 	expect(body).toMatchObject(expectedBody)
 })
+
+test('delete note', async () => {
+	let {status} = await api.delete('/api/notes/1')
+	expect(status).toBe(204)
+})
