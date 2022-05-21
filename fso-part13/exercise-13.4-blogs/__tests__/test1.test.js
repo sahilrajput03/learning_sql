@@ -97,6 +97,12 @@ test('post blog with custom id', async () => {
 	expect(body).toHaveProperty('id')
 })
 
+test('get list of blogs', async () => {
+	let blogs = await api.get('/api/blogs')
+	expect(blogs.body[0].id).toBe(1)
+	expect(blogs.body[1].id).toBe(21)
+})
+
 test('delete blog post', async () => {
 	let id = 21
 	let expectedStatus = 201
