@@ -40,6 +40,26 @@ router.delete('/api/blogs/:id', async (req, res) => {
 	return
 })
 
+router.put('/api/blogs/:id', async (req, res, next) => {
+	const blog = await BlogM.findByPk(req.params.id)
+
+	if (typeof req.body.author !== 'undefined') {
+		blog.author = req.body.author
+	}
+	if (typeof req.body.url !== 'undefined') {
+		blog.url = req.body.url
+	}
+	if (typeof req.body.title !== 'undefined') {
+		blog.title = req.body.title
+	}
+	if (typeof req.body.likes !== 'undefined') {
+		blog.likes = req.body.likes
+	}
+
+	let updatedBlog = await blog.save()
+	res.send(updatedBlog)
+})
+
 router.post('/api/blogs', async (req, res) => {
 	try {
 		const blog = await BlogM.create({...req.body, important: true})

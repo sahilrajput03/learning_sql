@@ -77,6 +77,7 @@ test('post blog', async () => {
 	// log({body})
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
+	expect(body.id).toBe(1)
 })
 
 test('post blog with custom id', async () => {
@@ -97,10 +98,23 @@ test('post blog with custom id', async () => {
 	expect(body).toHaveProperty('id')
 })
 
+test('modify blog', async () => {
+	let expectedBody = {
+		author: 'new author',
+		url: 'fb.com/new_author',
+		title: 'very new blog',
+		likes: 50,
+	}
+
+	let {body} = await api.put('/api/blogs/1').send(expectedBody)
+
+	expect(body).toMatchObject(expectedBody)
+})
+
 test('get list of blogs', async () => {
 	let blogs = await api.get('/api/blogs')
-	expect(blogs.body[0].id).toBe(1)
-	expect(blogs.body[1].id).toBe(21)
+
+	expect(blogs.body.map((b) => b.id)).toContain(1, 21)
 })
 
 test('delete blog post', async () => {
