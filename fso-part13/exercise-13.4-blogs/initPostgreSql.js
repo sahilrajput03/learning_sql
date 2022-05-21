@@ -31,11 +31,11 @@ let {init} = require('./models/Blog')
 init(sequelize)
 
 // exporting a promise
-let connection = sequelize.authenticate().then(() => {
+let connection = sequelize.authenticate().then(async () => {
 	// Dont need to amend below code ever ~ Sahil
 	if (process.env.NODE_ENV !== 'test') {
 		// I am managing this in testing some other way coz this returns promise imo ~ so i should handle it different way with tests.
-		BlogM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+		await BlogM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	}
 })
 module.exports = connection

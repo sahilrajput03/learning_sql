@@ -22,7 +22,7 @@ let config = {
 console.log('DATABASE_URL'.bgGreen, DATABASE_URL.green)
 const sequelize = new Sequelize(DATABASE_URL, config)
 
-sequelize
+let connection = sequelize
 	.authenticate()
 	.then(() => {
 		console.log('Connection has been established successfully.'.mb)
@@ -31,4 +31,6 @@ sequelize
 		console.error('~Sahil: Unable to connect to the database :'.bgRed, err)
 	})
 
-module.exports = sequelize
+module.exports.sequelize = sequelize
+module.exports.connection = connection
+global.sequelize = sequelize

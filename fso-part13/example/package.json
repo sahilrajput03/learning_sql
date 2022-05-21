@@ -5,9 +5,10 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "nodemon index.js",
-		"dev": "env-cmd -f .env.dev nodemon --inspect index.js",
-		"dev2": "nodemon --inspect index.js .env.dev",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"dev": "env-cmd -f .env.dev nodemon --inspect server.js",
+		"dev2": "nodemon --inspect server.js .env.dev",
+		"test": "fr __tests__/test1.test.js",
+		"test:watch": "fr -w __tests__/test1.test.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,9 +21,11 @@
 		"colors": "^1.4.0",
 		"dotenv": "^10.0.0",
 		"env-cmd": "^10.1.0",
+		"expect": "^28.1.0",
 		"express": "^4.17.2",
 		"logmw": "file:middlewares/low-mw.js",
 		"pg": "^8.7.1",
-		"sequelize": "^6.12.0-beta.3"
+		"sequelize": "^6.12.0-beta.3",
+		"supertest": "^6.2.3"
 	}
 }
