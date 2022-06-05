@@ -1,14 +1,13 @@
 const express = require('express')
 const chalk = require('chalk')
-const NoteM = require('./models/Note')
-const {dataValues} = require('./utils')
+const {NoteM} = require('../models/')
+const {dataValues} = require('../utils')
 const router = express.Router()
 
 let js = (...args) => JSON.stringify(...args)
 let log = (...args) => console.log(chalk.yellow.bgRed.bold(...args))
-// let log = console.log
 
-router.get('/api/notes', async (req, res) => {
+router.get('/', async (req, res) => {
 	let notes
 	notes = await NoteM.findAll({})
 	log('notes:', dataValues(notes)) // This is another way of printing values though!
@@ -22,7 +21,7 @@ const noteFinder = async (req, res, next) => {
 	next()
 }
 
-router.get('/api/notes/:id', noteFinder, async (req, res) => {
+router.get('/:id', noteFinder, async (req, res) => {
 	// added this to `noteFinder` middleware...
 	// const note = await NoteM.findByPk(req.params.id)
 
@@ -38,7 +37,7 @@ router.get('/api/notes/:id', noteFinder, async (req, res) => {
 	return res.json(req.note)
 })
 
-router.put('/api/notes/:id', noteFinder, async (req, res, next) => {
+router.put('/:id', noteFinder, async (req, res, next) => {
 	// added this to `noteFinder` middleware...
 	// let note = await NoteM.findByPk(req.params.id)
 
@@ -56,7 +55,7 @@ router.put('/api/notes/:id', noteFinder, async (req, res, next) => {
 	}
 })
 
-router.delete('/api/notes/:id', noteFinder, async (req, res, next) => {
+router.delete('/:id', noteFinder, async (req, res, next) => {
 	if (req.note) {
 		await req.note.destroy()
 		res.status(204).end()
@@ -65,7 +64,7 @@ router.delete('/api/notes/:id', noteFinder, async (req, res, next) => {
 	}
 })
 
-router.post('/api/notes', async (req, res) => {
+router.post('', async (req, res) => {
 	// log(js(req.body))
 	try {
 		const note = await NoteM.create({...req.body, important: true})
