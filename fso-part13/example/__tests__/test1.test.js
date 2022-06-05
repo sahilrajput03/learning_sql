@@ -13,7 +13,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
-const NoteM = require('../models/Note')
+// const NoteM = require('../models/Note')
+const {NoteM, UserM} = require('../models/')
 const chalk = require('chalk')
 
 let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
@@ -35,12 +36,15 @@ closeDb(async () => {
 })
 
 beforeAll(async () => {
+	// Create table if doesn't exist already!
 	// Fix the schema on the fly.
+	// This causes error imo when new tables are created so `alter: true` doesn't create the table at all as it only tries to fix the already existing tables.
+	await UserM.sync({alter: true}) // LEARN: order of syncing these tables has to be like this only!
 	await NoteM.sync({alter: true})
-
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await NoteM.sync({force: true})
+	await UserM.sync({force: true})
 })
 
 test('post a note', async () => {

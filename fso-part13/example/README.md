@@ -1,5 +1,28 @@
 # Readme - FSO Part 13
 
+```bash
+psql -U postgres
+DROP DATABASE IF EXISTS "myDb1_test";
+CREATE DATABASE "myDb1_test";
+exit
+
+## FYI: To view database list use below command:
+\l
+```
+
+```js
+// Finding terminal sequelize errors made easy:
+// 1. Search for `parent:`
+// 2. Search for `original:`
+```
+
+```js
+Note.sync() // create table if not already exist
+Note.sync({alter: true}) // create table and fix the table according to the schema we have defined in current code base
+Note.sync({force: true}) // delete and recreate the table
+// src: https://sequelize.org/docs/v6/core-concepts/model-basics/#model-synchronization
+```
+
 **Note: This file in specific to FSO's content only, for sequelize's refer `README-sequelize.md` file.**
 
 ## Heroku LEARNINGS
@@ -44,6 +67,6 @@ select * from notes;
 ```
 
 - Creating a notes table having notes colmn with array type:
-CREATE TABLE notes (
-    notes TEXT [] NOT NULL
-);
+  CREATE TABLE notes (
+  notes TEXT [] NOT NULL
+  );
