@@ -92,7 +92,8 @@ ALTER DATABASE db_pikachu OWNER TO "array";
 # LEARN: The quotes around user name is necessary.
 
 # Delete a database
-DROP DATABASE IF EXISTS db_pikachu;
+DROP DATABASE IF EXISTS "db_pikachu";
+# Learn: Quotes around db name are necessary!
 ```
 
 ## From cli - heaven is here.. ~ Sahil
