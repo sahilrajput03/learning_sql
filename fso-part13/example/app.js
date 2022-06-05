@@ -1,5 +1,4 @@
 const express = require('express')
-const NoteM = require('./models/Note')
 const logMw = require('logmw')
 const {l, s, ps, dataValues, _dataValues} = require('./utils')
 const router = require('./routes')
