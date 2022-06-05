@@ -10,7 +10,7 @@ let log = (...args) => console.log(chalk.yellow.bgRed.bold(...args))
 router.get('/', async (req, res) => {
 	let notes
 	notes = await NoteM.findAll({})
-	log('notes:', dataValues(notes)) // This is another way of printing values though!
+	// log('notes:', dataValues(notes)) // This is another way of printing values though!
 	// log('notes:', _dataValues(notes)) // This is another way of printing values though!
 
 	return res.json(notes) // notes.count is the total number of records(not pages).
@@ -55,6 +55,14 @@ router.put('/:id', noteFinder, async (req, res, next) => {
 	}
 })
 
+router.delete('/reset', async (req, res) => {
+	// NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+
+	await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+	return res.json({message: 'notes removed!'})
+})
+
+// This is intentionally put below `delete@/reset` route so that below wildcard middleware doesn't catch `delete@/reset` route.
 router.delete('/:id', noteFinder, async (req, res, next) => {
 	if (req.note) {
 		await req.note.destroy()
@@ -64,7 +72,7 @@ router.delete('/:id', noteFinder, async (req, res, next) => {
 	}
 })
 
-router.post('', async (req, res) => {
+router.post('/', async (req, res) => {
 	// log(js(req.body))
 	try {
 		const note = await NoteM.create({...req.body, important: true})
@@ -72,13 +80,6 @@ router.post('', async (req, res) => {
 	} catch (error) {
 		return res.status(400).json({error})
 	}
-})
-
-router.get('/api/reset/notes', async (req, res) => {
-	// NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
-	log('?>', NoteM.sync({force: true})) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
-
-	return res.json({message: 'notes removed!'})
 })
 
 module.exports = router

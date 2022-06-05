@@ -63,3 +63,27 @@ test('delete note', async () => {
 	let {status} = await api.delete('/api/notes/1')
 	expect(status).toBe(204)
 })
+
+test('all notes', async () => {
+	// Clear db
+	await NoteM.sync({force: true})
+
+	const expectedBody = {content: 'very good buddy!'}
+
+	await api.post('/api/notes').send(expectedBody).expect(200)
+	await api.post('/api/notes').send(expectedBody).expect(200)
+
+	const {body} = await api.get('/api/notes').expect(200)
+
+	expect(body.length).toBe(2)
+})
+
+test('reset notes', async () => {
+	const response = await api.delete('/api/notes/reset').expect(200)
+	const expectedResponse = {message: 'notes removed!'}
+	expect(response.body).toMatchObject(expectedResponse)
+
+	// Verify
+	const {body} = await api.get('/api/notes').expect(200)
+	expect(body.length).toBe(0)
+})
