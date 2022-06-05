@@ -13,7 +13,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
-const {BlogM} = require('../models/Blog')
+const {BlogM} = require('../models')
 const chalk = require('chalk')
 
 let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))

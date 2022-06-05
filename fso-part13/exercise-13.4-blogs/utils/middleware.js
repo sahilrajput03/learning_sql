@@ -2,6 +2,7 @@ const unknownEndpoint = (request, response) => {
 	response.status(404).send({error: 'unknown endpoint'})
 }
 
+// Centralize the application error handling in this middleware
 const errorHandler = (error, request, response, next) => {
 	// console.error(error.message)
 

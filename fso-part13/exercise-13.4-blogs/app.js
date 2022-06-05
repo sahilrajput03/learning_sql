@@ -5,7 +5,7 @@ require('express-async-errors')
 const logMw = require('logmw')
 const {l, s, ps, dataValues, _dataValues} = require('./utils')
 const connection = require('./initPostgreSql')
-const router = require('./routes')
+const blogsRouter = require('./controllers/blogs')
 
 connection.then(() => {
 	console.log('Connection to postgres established!')
@@ -23,7 +23,7 @@ app.use(express.json())
 // app.use(logMw)
 
 app.use('/', function (req, res, next) {
-	router(req, res, next)
+	blogsRouter(req, res, next)
 })
 
 app.use(middleware.unknownEndpoint)
