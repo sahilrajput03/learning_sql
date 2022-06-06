@@ -1,5 +1,9 @@
 # Readme - FSO Part 13
 
+What is foreign key?
+
+A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table. Src: https://www.w3schools.com/sql/sql_foreignkey.asp
+
 ```bash
 psql -U postgres
 DROP DATABASE IF EXISTS "myDb1_test";

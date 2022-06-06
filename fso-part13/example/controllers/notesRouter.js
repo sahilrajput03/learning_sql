@@ -1,11 +1,13 @@
 const express = require('express')
 const chalk = require('chalk')
-const {NoteM} = require('../models/')
+const jwt = require('jsonwebtoken')
+
+const {NoteM, UserM} = require('../models/')
 const {dataValues} = require('../utils')
 const router = express.Router()
 
 let js = (...args) => JSON.stringify(...args)
-let log = (...args) => console.log(chalk.yellow.bgRed.bold(...args))
+let log = (...args) => console.log(chalk.yellow.bgRed.bold(JSON.stringify(...args)))
 
 router.get('/', async (req, res) => {
 	let notes
@@ -72,10 +74,29 @@ router.delete('/:id', noteFinder, async (req, res, next) => {
 	}
 })
 
-router.post('/', async (req, res) => {
+// ! The token is retrieved from the request headers, decoded and placed in the req object by the tokenExtractor middleware. When creating a note, a date field is also given indicating the time it was created.
+const tokenExtractor = (req, res, next) => {
+	// log(req.headers)
+	const authorization = req.get('authorization')
+	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+		try {
+			req.decodedToken = jwt.verify(authorization.substring(7), process.env.SECRET || 'secret')
+			next() // ~Sahil
+		} catch {
+			res.status(401).json({error: 'token invalid'})
+		}
+	} else {
+		res.status(401).json({error: 'token missing'})
+	}
+	// next()
+}
+
+router.post('/', tokenExtractor, async (req, res) => {
 	// log(js(req.body))
 	try {
-		const note = await NoteM.create({...req.body, important: true})
+		const user = await UserM.findByPk(req.decodedToken.id)
+		const note = await NoteM.create({...req.body, important: true, userId: user.id, date: new Date()})
+
 		return res.json(note)
 	} catch (error) {
 		return res.status(400).json({error})

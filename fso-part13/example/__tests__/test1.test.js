@@ -48,10 +48,64 @@ beforeAll(async () => {
 	await UserM.sync({force: true})
 })
 
+//! USERS ROUTER TESTS //
+test('post user', async () => {
+	// empty users table
+	await UserM.sync({force: true})
+
+	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+	const {body} = await api.post('/api/users').send(expectedBody)
+
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('id')
+	// console.log({body})
+})
+
+test('get single users', async () => {
+	const expectedBody = {id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
+
+	const {body} = await api.get('/api/users/1')
+
+	expect(body).toMatchObject(expectedBody)
+})
+
+test('get all users', async () => {
+	const {body} = await api.get('/api/users')
+	// log(body)
+})
+
+//! LOGIN ROUTER TEST
+test('login (failed scenario)', async () => {
+	const expectedErr = {
+		error: 'invalid username or password',
+	}
+	const {body, statusCode} = await api.post('/api/login').send({username: 'sahilrajput03'})
+
+	expect(statusCode).toBe(401)
+	expect(body).toMatchObject(expectedErr)
+})
+
+let _token
+test('login', async () => {
+	const cred = {username: 'sahilrajput03', password: 'secret'}
+	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+
+	const {body, statusCode} = await api.post('/api/login').send(cred)
+
+	expect(statusCode).toBe(200)
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('token')
+	_token = 'bearer ' + body.token
+})
+
+//! NOTES ROUTER TESTS //
 test('post a note', async () => {
+	// // create a user
+	// await api.post('/api/users').send({username: 'username001', name: 'alice robert', token: _token})
+
 	const expectedBody = {content: 'very good buddy!'}
 
-	const {body} = await api.post('/api/notes').send(expectedBody).expect(200)
+	const {body} = await api.post('/api/notes').set('Authorization', _token).send(expectedBody).expect(200)
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
 })
@@ -75,11 +129,12 @@ test('all notes', async () => {
 
 	const expectedBody = {content: 'very good buddy!'}
 
-	await api.post('/api/notes').send(expectedBody).expect(200)
-	await api.post('/api/notes').send(expectedBody).expect(200)
+	await api.post('/api/notes').send(expectedBody).set('Authorization', _token).expect(200)
+	await api.post('/api/notes').send(expectedBody).set('Authorization', _token).expect(200)
 
-	const {body} = await api.get('/api/notes').expect(200)
+	const {body, statusCode} = await api.get('/api/notes')
 
+	expect(statusCode).toBe(200)
 	expect(body.length).toBe(2)
 })
 
@@ -91,50 +146,4 @@ test('reset notes', async () => {
 	// Verify
 	const {body} = await api.get('/api/notes').expect(200)
 	expect(body.length).toBe(0)
-})
-
-// USERS ROUTER TESTS //
-
-test('post users', async () => {
-	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
-	const {body} = await api.post('/api/users').send(expectedBody)
-
-	expect(body).toMatchObject(expectedBody)
-	expect(body).toHaveProperty('id')
-	// console.log({body})
-})
-
-test('get single users', async () => {
-	const expectedBody = {id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
-
-	const {body} = await api.get('/api/users/1')
-
-	expect(body).toMatchObject(expectedBody)
-})
-
-test('get all users', async () => {
-	const {body} = await api.get('/api/users')
-	// log(body)
-})
-
-// LOGIN ROUTER TEST
-test('login (failed scenario)', async () => {
-	const expectedErr = {
-		error: 'invalid username or password',
-	}
-	const {body, statusCode} = await api.post('/api/login').send({username: 'sahilrajput03'})
-
-	expect(statusCode).toBe(401)
-	expect(body).toMatchObject(expectedErr)
-})
-
-test('login', async () => {
-	const cred = {username: 'sahilrajput03', password: 'secret'}
-	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
-
-	const {body, statusCode} = await api.post('/api/login').send(cred)
-
-	expect(statusCode).toBe(200)
-	expect(body).toMatchObject(expectedBody)
-	expect(body).toHaveProperty('token')
 })
