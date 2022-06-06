@@ -17,7 +17,8 @@ const {expect} = require('expect')
 const {NoteM, UserM} = require('../models/')
 const chalk = require('chalk')
 
-let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
+let log = (...args) => console.log(chalk.blue.bgRed.bold(JSON.stringify(...args)))
+// let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
 let js = (...args) => JSON.stringify(...args)
 
 // withSupertest.test
@@ -90,4 +91,50 @@ test('reset notes', async () => {
 	// Verify
 	const {body} = await api.get('/api/notes').expect(200)
 	expect(body.length).toBe(0)
+})
+
+// USERS ROUTER TESTS //
+
+test('post users', async () => {
+	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+	const {body} = await api.post('/api/users').send(expectedBody)
+
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('id')
+	// console.log({body})
+})
+
+test('get single users', async () => {
+	const expectedBody = {id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
+
+	const {body} = await api.get('/api/users/1')
+
+	expect(body).toMatchObject(expectedBody)
+})
+
+test('get all users', async () => {
+	const {body} = await api.get('/api/users')
+	// log(body)
+})
+
+// LOGIN ROUTER TEST
+test('login (failed scenario)', async () => {
+	const expectedErr = {
+		error: 'invalid username or password',
+	}
+	const {body, statusCode} = await api.post('/api/login').send({username: 'sahilrajput03'})
+
+	expect(statusCode).toBe(401)
+	expect(body).toMatchObject(expectedErr)
+})
+
+test('login', async () => {
+	const cred = {username: 'sahilrajput03', password: 'secret'}
+	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+
+	const {body, statusCode} = await api.post('/api/login').send(cred)
+
+	expect(statusCode).toBe(200)
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('token')
 })

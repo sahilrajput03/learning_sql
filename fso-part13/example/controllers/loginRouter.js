@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const router = require('express').Router()
-
 const User = require('../models/UserM')
 
 router.post('/', async (request, response) => {
@@ -25,7 +24,7 @@ router.post('/', async (request, response) => {
 		id: user.id,
 	}
 
-	const token = jwt.sign(userForToken, process.env.SECRET)
+	const token = jwt.sign(userForToken, process.env.SECRET || 'secret')
 
 	response.status(200).send({token, username: user.username, name: user.name})
 })

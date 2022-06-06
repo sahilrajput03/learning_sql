@@ -10,6 +10,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
 	try {
 		const user = await UserM.create(req.body)
+		// console.log({user})
 		res.json(user)
 	} catch (error) {
 		return res.status(400).json({error})
