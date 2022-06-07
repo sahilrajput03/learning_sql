@@ -5,7 +5,8 @@ const {UserM, NoteM} = require('../models')
 //?  join query is done using the `include` option as a `query parameter`
 const includeNotes = {
 	include: {
-		model: NoteM,
+		model: NoteM, // This adds notes of the user to `notes` key (array itself).
+		attributes: {exclude: ['userId']}, // Removes `userId` property from each note definition bcoz its redundant as `userId` is simply `user.id` which we save at the time of note creation.
 	},
 }
 

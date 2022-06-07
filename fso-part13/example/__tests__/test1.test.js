@@ -17,7 +17,7 @@ const {expect} = require('expect')
 const {NoteM, UserM} = require('../models/')
 const chalk = require('chalk')
 
-let log = (...args) => console.log(chalk.blue.bgRed.bold(JSON.stringify(...args)))
+let log = (...args) => console.log(chalk.blue.bgRed.bold(JSON.stringify(...args, null, 2)))
 // let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
 let js = (...args) => JSON.stringify(...args)
 
@@ -69,11 +69,6 @@ test('get single users', async () => {
 	expect(body).toMatchObject(expectedBody)
 })
 
-test('get all users', async () => {
-	const {body} = await api.get('/api/users')
-	// log(body)
-})
-
 //! LOGIN ROUTER TEST
 test('login (failed scenario)', async () => {
 	const expectedErr = {
@@ -110,6 +105,12 @@ test('post a note', async () => {
 	expect(body).toHaveProperty('id')
 })
 
+// This test is intentionally put after posting a note so that we see notes attached in the user output.
+test('get all users', async () => {
+	const {body} = await api.get('/api/users')
+	// log(body)
+})
+
 test('modify note', async () => {
 	const expectedBody = {content: 'this is new note', important: false}
 
@@ -133,6 +134,8 @@ test('all notes', async () => {
 	await api.post('/api/notes').send(expectedBody).set('Authorization', _token).expect(200)
 
 	const {body, statusCode} = await api.get('/api/notes')
+
+	// log({body})
 
 	expect(statusCode).toBe(200)
 	expect(body.length).toBe(2)
