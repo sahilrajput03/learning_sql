@@ -103,6 +103,7 @@ router.post('/', tokenExtractor, async (req, res) => {
 	try {
 		const user = await UserM.findByPk(req.decodedToken.id)
 		const note = await NoteM.create({...req.body, important: true, userId: user.id, date: new Date()})
+		// LEARN: In index.js file, we define ```UserM.hasMany(NoteM)``` which applies that - Sequelize will automatically create an attribute called `userId` on the Note model to which, when referenced gives access to the database column `user_id`.  ~ FSO
 
 		return res.json(note)
 	} catch (error) {
@@ -111,3 +112,16 @@ router.post('/', tokenExtractor, async (req, res) => {
 })
 
 module.exports = router
+
+// LEARN: Instead of using NoteM.create method we can use: NoteM.build method as well to save a note:
+// Src: FSO: https://fullstackopen.com/en/part13/join_tables_and_queries#attention-to-the-definition-of-the-models
+async function anotherWay() {
+	// create a note without saving it yet
+	const note = NoteM.build({...req.body, date: new Date()}) // eslint-disable-line no-undef
+
+	// put the user id in the userId property of the created note
+	note.userId = user.id // eslint-disable-line no-undef
+
+	// store the note object in the database
+	await note.save()
+}
