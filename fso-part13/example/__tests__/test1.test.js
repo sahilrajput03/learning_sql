@@ -69,6 +69,11 @@ test('get single users', async () => {
 	expect(body).toMatchObject(expectedBody)
 })
 
+test('get all users', async () => {
+	const {body} = await api.get('/api/users')
+	// log(body)
+})
+
 //! LOGIN ROUTER TEST
 test('login (failed scenario)', async () => {
 	const expectedErr = {
@@ -106,7 +111,7 @@ test('post a note', async () => {
 })
 
 // This test is intentionally put after posting a note so that we see notes attached in the user output.
-test('get all users', async () => {
+test('get all users with some linked notes', async () => {
 	const {body} = await api.get('/api/users')
 	// log(body)
 })
