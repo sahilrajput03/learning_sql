@@ -65,8 +65,16 @@ test('get single users', async () => {
 })
 
 test('get all users', async () => {
+	const expectedBody = [{notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}]
 	const {body} = await api.get('/api/users')
-	// log(body)
+
+	expect(body).toEqual(expect.arrayContaining(expectedBody))
+})
+
+test('LEARN: array containing an object', () => {
+	const expected = [{name: 'Sahil'}]
+	const received = [{name: 'Sahil'}, {name: 'Rohit'}]
+	expect(received).toEqual(expect.arrayContaining(expected))
 })
 
 //! LOGIN ROUTER TEST

@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
 	// FROM "users" AS "User" LEFT OUTER JOIN "notes" AS "Notes" ON "User". "id" = "Notes". "user_id";
 
 	res.json(users)
+	// res.jso(users)
 })
 
 router.post('/', async (req, res) => {

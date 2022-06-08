@@ -1,6 +1,8 @@
 const express = require('express')
 const logMw = require('logmw')
 const {l, s, ps, dataValues, _dataValues} = require('./utils')
+require('express-async-errors')
+
 const notesRouter = require('./controllers/notesRouter')
 const usersRouter = require('./controllers/usersRouter')
 const loginRouter = require('./controllers/loginRouter')

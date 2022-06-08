@@ -23,6 +23,7 @@
 		"env-cmd": "^10.1.0",
 		"expect": "^28.1.0",
 		"express": "^4.17.2",
+		"express-async-errors": "^3.1.1",
 		"jsonwebtoken": "^8.5.1",
 		"logmw": "file:middlewares/low-mw.js",
 		"pg": "^8.7.1",
