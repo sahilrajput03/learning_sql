@@ -11,6 +11,17 @@ const app = require('./app')
 
 const PORT = process.env.PORT || 3001
 
-app.listen(PORT, () => {
-	log(`Server running on port ${PORT}`)
-})
+async function main() {
+	try {
+		const {connection} = require('./db')
+		await connection
+
+		app.listen(PORT, () => {
+			log(`Server running on port ${PORT}`)
+		})
+	} catch (error) {
+		log('Sorry, failed to connect to database!!')
+		process.exit(1)
+	}
+}
+main()

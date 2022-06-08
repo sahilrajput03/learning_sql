@@ -11,9 +11,9 @@ const setupAssociations = () => {
 	// FYI: From docs foreign key will be defined in target model, i.e., in `NoteM` as `userId` property.
 	UserM.hasMany(NoteM, {
 		// By default, the association is considered optional. In other words, in our example, the fooId is allowed to be null, meaning that one Bar can exist without a Foo. Changing this is just a matter of specifying allowNull: false in the foreign key options: src: https://sequelize.org/docs/v6/core-concepts/assocs/#mandatory-versus-optional-associations
-		foreignKey: {
-			allowNull: false,
-		},
+		// foreignKey: {
+		// 	allowNull: false,
+		// },
 	}) // LEARN: Sequelize will automatically create an attribute called `userId` on the Note model to which, when referenced gives access to the database column `user_id`.
 	// Official Docs: The A.hasMany(B) association means that a One-To-Many relationship exists between A and B, with the foreign key being defined in the target model (B). Source: https://sequelize.org/docs/v6/core-concepts/assocs/
 	// The A.hasMany(B) association means that a One-To-Many relationship exists between A and B, with the foreign key being defined in the target model (B).

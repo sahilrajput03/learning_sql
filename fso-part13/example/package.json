@@ -4,7 +4,7 @@
 	"description": "## Heroku:",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon index.js",
+		"start": "nodemon server.js",
 		"dev": "env-cmd -f .env.dev nodemon --inspect server.js",
 		"dev2": "nodemon --inspect server.js .env.dev",
 		"test": "fr __tests__/test1.test.js",

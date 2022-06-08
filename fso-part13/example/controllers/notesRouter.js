@@ -11,14 +11,14 @@ let log = (...args) => console.log(chalk.yellow.bgRed.bold(JSON.stringify(...arg
 
 router.get('/', async (req, res) => {
 	let notes
-	// notes = await NoteM.findAll({}) // LEARN: Shape of notes is: [{id: Int(1), content: String, important: Boolean, date: String, userId: Int(1)}]
-	notes = await NoteM.findAll({
-		attributes: {exclude: ['userId']}, // userId is case-sensitive, it removes `userId` from each `note`, fyi: `userId` is not in schema of NoteM either but still its saved in each note bcoz we save it in `POST` route of note saving.
-		include: {
-			model: UserM, // LEARN: this adds `user: {id: Int, username: String, name: String}` property to each note object.
-			attributes: ['name'], // LEARN: This removes all properties in `user` key but keeps `name` property.
-		},
-	})
+	notes = await NoteM.findAll({}) // LEARN: Shape of notes is: [{id: Int(1), content: String, important: Boolean, date: String, userId: Int(1)}]
+	// notes = await NoteM.findAll({
+	// 	attributes: {exclude: ['userId']}, // userId is case-sensitive, it removes `userId` from each `note`, fyi: `userId` is not in schema of NoteM either but still its saved in each note bcoz we save it in `POST` route of note saving.
+	// 	include: {
+	// 		model: UserM, // LEARN: this adds `user: {id: Int, username: String, name: String}` property to each note object.
+	// 		attributes: ['name'], // LEARN: This removes all properties in `user` key but keeps `name` property.
+	// 	},
+	// })
 	// log('notes:', dataValues(notes)) // This is another way of printing values though!
 	// log('notes:', _dataValues(notes)) // This is another way of printing values though!
 
