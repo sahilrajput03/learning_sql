@@ -37,11 +37,6 @@ closeDb(async () => {
 })
 
 beforeAll(async () => {
-	// Create table if doesn't exist already!
-	// Fix the schema on the fly.
-	// This causes error imo when new tables are created so `alter: true` doesn't create the table at all as it only tries to fix the already existing tables.
-	await UserM.sync({alter: true}) // LEARN: order of syncing these tables has to be like this only!
-	await NoteM.sync({alter: true})
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await NoteM.sync({force: true})
@@ -108,6 +103,7 @@ test('post a note', async () => {
 	const {body} = await api.post('/api/notes').set('Authorization', _token).send(expectedBody).expect(200)
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
+	log(body)
 })
 
 // This test is intentionally put after posting a note so that we see notes attached in the user output.

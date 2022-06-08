@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken')
 const router = require('express').Router()
-const User = require('../models/UserM')
+const {UserM} = require('../models/UserM')
 
 router.post('/', async (request, response) => {
 	const body = request.body
 
-	const user = await User.findOne({
+	const user = await UserM.findOne({
 		where: {
 			username: body.username,
 		},

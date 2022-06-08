@@ -1,6 +1,16 @@
 # Readme - FSO Part 13
 
-What is foreign key?
+- You can define define foreign key to be UUID instead as well. Src: https://sequelize.org/docs/v6/core-concepts/assocs/#customizing-the-foreign-key
+
+Source: wikipedia
+
+In systems analysis, **one-to-one relationship** is a type of cardinality that refers to the relationship between two entities (see also entity–relationship model) A and B in which one element of A may only be linked to one element of B, and vice versa.
+
+In systems analysis, a **one-to-many relationship** is a type of cardinality that refers to the relationship between two entities (see also entity–relationship model) A and B in which an element of A may be linked to many elements of B, but a member of B is linked to only one element of A.
+
+In systems analysis, a **many-to-many relationship** is a type of cardinality that refers to the relationship between two entities,[1] say, A and B, where A may contain a parent instance for which there are many children in B and vice versa.
+
+**What is foreign key?**
 
 A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table. Src: https://www.w3schools.com/sql/sql_foreignkey.asp
 
