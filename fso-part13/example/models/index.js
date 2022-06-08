@@ -3,6 +3,9 @@ const {UserM, initUserM} = require('./UserM')
 
 const setupAssociations = () => {
 	// Amazing ``one to many philosophy`` (official docs): https://sequelize.org/docs/v6/core-concepts/assocs/#one-to-many-relationships
+	// ^^: One-To-Many associations are connecting one source with multiple targets, while all these targets are connected only with this single source.
+	// This means that, unlike the One-To-One association, in which we had to choose where the foreign key would be placed, there is only one option in One-To-Many associations. For example, if one Foo has many Bars (and this way each Bar belongs to one Foo), then the only sensible implementation is to have a fooId column in the Bar table. The opposite is impossible, since one Foo has many Bars.
+
 	// SEQUEALIZE Associations are always used in pairs like below ``hasMany+belongsTo``. Src: https://sequelize.org/docs/v6/core-concepts/assocs/#goal-1
 	// Now let's make every insertion of a new note be associated to a user, i.e., one user has association with multiple notes.
 	// FYI: From docs foreign key will be defined in target model, i.e., in `NoteM` as `userId` property.
