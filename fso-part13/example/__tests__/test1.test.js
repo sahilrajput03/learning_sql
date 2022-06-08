@@ -72,8 +72,10 @@ test('get all users', async () => {
 })
 
 test('LEARN: array containing an object', () => {
+	// src: https://jestjs.io/docs/expect#expectarraycontainingarray
 	const expected = [{name: 'Sahil'}]
 	const received = [{name: 'Sahil'}, {name: 'Rohit'}]
+
 	expect(received).toEqual(expect.arrayContaining(expected))
 })
 
