@@ -10,6 +10,7 @@ const setupAssociations = () => {
 	// Now let's make every insertion of a new note be associated to a user, i.e., one user has association with multiple notes.
 	// FYI: From docs foreign key will be defined in target model, i.e., in `NoteM` as `userId` property.
 	UserM.hasMany(NoteM, {
+		// LEARN: Below can cause error on database startup if there are some notes which have null property set for userId property i.e., foreign key.
 		// By default, the association is considered optional. In other words, in our example, the fooId is allowed to be null, meaning that one Bar can exist without a Foo. Changing this is just a matter of specifying allowNull: false in the foreign key options: src: https://sequelize.org/docs/v6/core-concepts/assocs/#mandatory-versus-optional-associations
 		// foreignKey: {
 		// 	allowNull: false,
