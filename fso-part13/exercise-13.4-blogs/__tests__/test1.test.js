@@ -148,3 +148,12 @@ test('get all users', async () => {
 
 	expect(body).toMatchObject(expectedBody)
 })
+
+test('SAMPLE: toMatchObject works for arrays as well', () => {
+	const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
+	const expected = [{username: 'sahilrajput03'}]
+	// Fyi: Below received value will to match though. Weird, right? ~Sahil
+	// const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
+
+	expect(received).toMatchObject(expected)
+})
