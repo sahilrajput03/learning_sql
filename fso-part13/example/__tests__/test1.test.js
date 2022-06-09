@@ -113,7 +113,7 @@ test('post a note', async () => {
 	const {body} = await api.post('/api/notes').set('Authorization', _token).send(expectedBody).expect(200)
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
-	log(body)
+	// log(body)
 })
 
 // This test is intentionally put after posting a note so that we see notes attached in the user output.
