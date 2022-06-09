@@ -3,7 +3,7 @@ const {Model, DataTypes} = require('sequelize')
 
 class BlogM extends Model {}
 
-const init = (sequelize) => {
+const initBlogM = (sequelize) => {
 	BlogM.init(
 		{
 			id: {
@@ -31,15 +31,15 @@ const init = (sequelize) => {
 		{
 			sequelize,
 			underscored: true,
-			timestamps: false,
+			// LEARN: By default, Sequelize automatically adds the fields createdAt and updatedAt to every model, using the data type DataTypes.DATE. Src: https://sequelize.org/docs/v6/core-concepts/model-basics/#timestamps
+			// timestamps: false,
 			modelName: 'blogs', // this is table name the model is associated to.
 		}
 	)
 }
 
 // You should use imported version of models so you get autoomplete for methods in both tests and server code, yikes!
-module.exports.BlogM = BlogM
-module.exports.init = init
+module.exports = {BlogM, initBlogM}
 
 // Using global is not a good programming technique at all
 // global.BlogM = BlogM

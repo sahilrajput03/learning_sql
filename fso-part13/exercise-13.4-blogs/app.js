@@ -4,8 +4,11 @@ require('express-async-errors')
 // const BlogM = require('./models/Note')
 const logMw = require('logmw')
 const {l, s, ps, dataValues, _dataValues} = require('./utils')
-const connection = require('./initPostgreSql')
-const blogsRouter = require('./controllers/blogs')
+const {connection} = require('./initPostgreSql')
+const blogsRouter = require('./controllers/blogsRouter')
+const usersRouter = require('./controllers/usersRouter')
+const loginRouter = require('./controllers/loginRouter')
+const buggedRouter = require('./controllers/buggedRouter')
 
 connection.then(() => {
 	console.log('Connection to postgres established!')
@@ -22,9 +25,10 @@ app.use(express.json())
 // Disable logMw for a while
 // app.use(logMw)
 
-app.use('/', function (req, res, next) {
-	blogsRouter(req, res, next)
-})
+app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
+app.use('/api/bugged', buggedRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

@@ -13,7 +13,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
-const {BlogM} = require('../models')
+const {BlogM, UserM} = require('../models')
 const chalk = require('chalk')
 
 let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
@@ -22,7 +22,7 @@ let js = (...args) => JSON.stringify(...args)
 // withSupertest.test
 connectToDb(async () => {
 	// await require('../initMongodb.js')
-	const connection = require('../initPostgreSql')
+	const {connection} = require('../initPostgreSql')
 	// wait till the connection establishes to postgresql!
 	await connection
 	log('connection to db::SUCCESSFUL')
@@ -46,7 +46,7 @@ beforeAll(async () => {
 test('bad request ', async () => {
 	// Please read code of ``CAUTION`` in `middleware/errorHandler` function to know why I have disabled error logging for `test` mode in backend by default but still you can enable it very easily enable it.
 	let expectedError
-	const res = await api.get('/bugged_api')
+	const res = await api.get('/api/bugged/bugged_api')
 
 	expect(res.body.error).toBeDefined()
 	expect(res.body.error).toBe('Some stupid error..')
@@ -55,7 +55,7 @@ test('bad request ', async () => {
 test('bad request (with `express-async-errors`)', async () => {
 	// Please read code of ``CAUTION`` in `middleware/errorHandler` function to know why I have disabled error logging for `test` mode in backend by default but still you can enable it very easily enable it.
 	let expectedError
-	const res = await api.get('/bugged_api_2')
+	const res = await api.get('/api/bugged/bugged_api_2')
 
 	expect(res.body.error).toBeDefined()
 	expect(res.body.error).toBe('Some stupid error..')
@@ -122,4 +122,29 @@ test('delete blog post', async () => {
 	let expectedStatus = 201
 	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
 	// log('pavement', js({cool: 'biju'}, null, 2))
+})
+
+//! USERS ROUTER TESTS //
+test('post user', async () => {
+	// empty users table
+	await UserM.sync({force: true})
+
+	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+	const {body} = await api.post('/api/users').send(expectedBody)
+
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('id')
+	// console.log({body})
+})
+
+test('get all users', async () => {
+	const expectedBody = [{blogs: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}]
+	const {body} = await api.get('/api/users')
+
+	body.forEach((blog) => {
+		expect(blog).toHaveProperty('createdAt')
+		expect(blog).toHaveProperty('updatedAt')
+	})
+
+	expect(body).toMatchObject(expectedBody)
 })

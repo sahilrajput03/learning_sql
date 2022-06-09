@@ -2,6 +2,13 @@
 
 **Note: This file in specific to FSO's content only, for sequelize's refer `README-sequelize.md` file.**
 
+```bash
+psql -U postgres
+DROP DATABASE IF EXISTS "myDb1_blogs_test";
+CREATE DATABASE "myDb1_blogs_test";
+exit
+```
+
 ## Heroku LEARNINGS
 
 ```bash
@@ -44,6 +51,6 @@ select * from notes;
 ```
 
 - Creating a notes table having notes colmn with array type:
-CREATE TABLE notes (
-    notes TEXT [] NOT NULL
-);
+  CREATE TABLE notes (
+  notes TEXT [] NOT NULL
+  );

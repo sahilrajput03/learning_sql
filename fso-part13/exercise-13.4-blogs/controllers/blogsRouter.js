@@ -1,11 +1,11 @@
 const express = require('express')
-const {BlogM} = require('../models/Blog')
+const {BlogM} = require('../models/BlogM')
 const router = express.Router()
 require('../initPostgreSql')
 
 let dataValues = (data) => data.map((n) => n.dataValues)
 
-router.get('/api/blogs', async (req, res) => {
+router.get('/', async (req, res) => {
 	let blogs
 	blogs = await BlogM.findAll({})
 	// log('notes:', dataValues(blogs)) // This is another way of printing values though!
@@ -14,7 +14,7 @@ router.get('/api/blogs', async (req, res) => {
 	return res.json(blogs) // notes.count is the total number of records(not pages).
 })
 
-router.get('/api/blogs/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
 	const blog = await BlogM.findByPk(req.params.id)
 
 	// return if note is not found!
@@ -29,7 +29,7 @@ router.get('/api/blogs/:id', async (req, res) => {
 	return res.json(blog)
 })
 
-router.delete('/api/blogs/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
 	const blog = await BlogM.destroy({
 		where: {
 			id: req.params?.id,
@@ -40,7 +40,7 @@ router.delete('/api/blogs/:id', async (req, res) => {
 	return
 })
 
-router.put('/api/blogs/:id', async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
 	const blog = await BlogM.findByPk(req.params.id)
 
 	if (typeof req.body.author !== 'undefined') {
@@ -60,7 +60,7 @@ router.put('/api/blogs/:id', async (req, res, next) => {
 	res.send(updatedBlog)
 })
 
-router.post('/api/blogs', async (req, res) => {
+router.post('/', async (req, res) => {
 	try {
 		const blog = await BlogM.create({...req.body, important: true})
 		const blogJson = blog.toJSON()
@@ -70,27 +70,11 @@ router.post('/api/blogs', async (req, res) => {
 	}
 })
 
-router.get('/api/reset/blogs', async (req, res) => {
+router.delete('/reset', async (req, res) => {
 	// NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	log('?>', BlogM.sync({force: true})) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
 	return res.json({message: 'notes removed!'})
-})
-
-router.get('/bugged_api', async (req, res, next) => {
-	try {
-		// always wrap your controller code with try catch and pass error to next() so error can be handled by errorHandler middleware.
-		// Testing random error handling by errorHandler middleware!
-		throw new Error('Some stupid error..')
-	} catch (error) {
-		next(error)
-	}
-})
-
-router.get('/bugged_api_2', async (req, res, next) => {
-	// always wrap your controller code with try catch and pass error to next() so error can be handled by errorHandler middleware.
-	// Testing random error handling by errorHandler middleware!
-	throw new Error('Some stupid error..')
 })
 
 module.exports = router
