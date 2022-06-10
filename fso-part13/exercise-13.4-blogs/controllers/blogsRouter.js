@@ -1,6 +1,8 @@
 const express = require('express')
 const {BlogM} = require('../models/BlogM')
 const router = express.Router()
+const tokenExtractor = require('../utils/tokenExtractor')
+
 require('../initPostgreSql')
 
 let dataValues = (data) => data.map((n) => n.dataValues)
@@ -60,7 +62,7 @@ router.put('/:id', async (req, res, next) => {
 	res.send(updatedBlog)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', tokenExtractor, async (req, res) => {
 	try {
 		const blog = await BlogM.create({...req.body, important: true})
 		const blogJson = blog.toJSON()

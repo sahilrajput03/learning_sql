@@ -1,6 +1,8 @@
 const router = require('express').Router()
+const tokenExtractor = require('../utils/tokenExtractor')
 
 const {UserM, BlogM} = require('../models')
+const {silog} = require('../utils/logger')
 
 //?  join query is done using the `include` option as a `query parameter`
 const includeBlogs = {
@@ -37,15 +39,29 @@ router.post('/', async (req, res) => {
 
 // ex-13.8
 // The main difference between the PUT and PATCH method is that the PUT method uses the request URI to supply a modified version of the requested resource which replaces the original version of the resource, whereas the PATCH method supplies a set of instructions to modify the resource.
-router.put('/:username', async (req, res) => {
+router.put('/:username', tokenExtractor, async (req, res) => {
 	// const user = await UserM.findByPk(req.params.id)
 	// LEARN: `notes` key doesnt exist if we use above query.
 
 	// Join query
-	const user = await UserM.findByPk(req.params.id, includeBlogs)
+	const user = await UserM.findOne(
+		{
+			where: {
+				username: req.params?.username,
+			},
+		},
+		includeBlogs
+	)
 	// We get `notes` key which is array of notes rows(objects) from User table.
+	// silog(user)
 
 	if (user) {
+		if (typeof req.body.username !== 'undefined') {
+			user.username = req.body.username
+		}
+
+		let updatedUser = await user.save()
+
 		res.json(user)
 	} else {
 		res.status(404).end()

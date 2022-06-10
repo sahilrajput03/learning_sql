@@ -14,9 +14,8 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM} = require('../models')
-const chalk = require('chalk')
+const {tlog, slog, tilog} = require('../utils/logger')
 
-let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
 let js = (...args) => JSON.stringify(...args)
 
 // withSupertest.test
@@ -25,7 +24,7 @@ connectToDb(async () => {
 	const {connection} = require('../initPostgreSql')
 	// wait till the connection establishes to postgresql!
 	await connection
-	log('connection to db::SUCCESSFUL')
+	tlog('connection to db::SUCCESSFUL')
 })
 
 closeDb(async () => {
@@ -61,12 +60,67 @@ test('bad request (with `express-async-errors`)', async () => {
 	expect(res.body.error).toBe('Some stupid error..')
 })
 
+test('delete blog post', async () => {
+	let id = 21
+	let expectedStatus = 201
+	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
+	// log('pavement', js({cool: 'biju'}, null, 2))
+})
+
+//! USERS ROUTER TESTS //
+test('post user', async () => {
+	// empty users table
+	await UserM.sync({force: true})
+
+	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+	const {body} = await api.post('/api/users').send(expectedBody)
+
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('id')
+	// tlog({body})
+})
+
+test('get all users', async () => {
+	const expectedBody = [{blogs: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}]
+	const {body} = await api.get('/api/users')
+
+	body.forEach((blog) => {
+		expect(blog).toHaveProperty('createdAt')
+		expect(blog).toHaveProperty('updatedAt')
+	})
+
+	expect(body).toMatchObject(expectedBody)
+})
+
+test('SAMPLE: toMatchObject works for arrays as well', () => {
+	const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
+	const expected = [{username: 'sahilrajput03'}]
+	// Fyi: Below received value will to match though. Weird, right? ~Sahil
+	// const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
+
+	expect(received).toMatchObject(expected)
+})
+
+let _token
+test('login', async () => {
+	const cred = {username: 'sahilrajput03', password: 'secret'}
+	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+
+	const {body, statusCode} = await api.post('/api/login').send(cred)
+
+	expect(statusCode).toBe(200)
+	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('token')
+	_token = 'bearer ' + body.token
+})
+
 test('post blog', async () => {
 	const expectedBody = {author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
 	const expectedStatus = 200
 
 	const {body} = await api
 		.post('/api/blogs')
+		.set('Authorization', _token)
 		.send(expectedBody)
 		.expect('Content-Type', /application\/json/)
 		.expect(expectedStatus)
@@ -74,7 +128,7 @@ test('post blog', async () => {
 	// for status, body: we can do - (*it matches for exact object instead of something like toMatchObject() method from expect).
 	// .expect(expectedStatus, expectedBody)
 
-	// log({body})
+	// tlog({body})
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
 	expect(body.id).toBe(1)
@@ -86,6 +140,7 @@ test('post blog with custom id', async () => {
 
 	const {body} = await api
 		.post('/api/blogs')
+		.set('Authorization', _token)
 		.send(expectedBody)
 		.expect('Content-Type', /application\/json/)
 		.expect(expectedStatus)
@@ -117,43 +172,10 @@ test('get list of blogs', async () => {
 	expect(blogs.body.map((b) => b.id)).toContain(1, 21)
 })
 
-test('delete blog post', async () => {
-	let id = 21
-	let expectedStatus = 201
-	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
-	// log('pavement', js({cool: 'biju'}, null, 2))
-})
+test('update username', async () => {
+	const expectedBody = {username: 'sahil03'}
+	let {body} = await api.put('/api/users/sahilrajput03').set('Authorization', _token).send(expectedBody)
 
-//! USERS ROUTER TESTS //
-test('post user', async () => {
-	// empty users table
-	await UserM.sync({force: true})
-
-	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
-	const {body} = await api.post('/api/users').send(expectedBody)
-
+	// tlog(body)
 	expect(body).toMatchObject(expectedBody)
-	expect(body).toHaveProperty('id')
-	// console.log({body})
-})
-
-test('get all users', async () => {
-	const expectedBody = [{blogs: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}]
-	const {body} = await api.get('/api/users')
-
-	body.forEach((blog) => {
-		expect(blog).toHaveProperty('createdAt')
-		expect(blog).toHaveProperty('updatedAt')
-	})
-
-	expect(body).toMatchObject(expectedBody)
-})
-
-test('SAMPLE: toMatchObject works for arrays as well', () => {
-	const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
-	const expected = [{username: 'sahilrajput03'}]
-	// Fyi: Below received value will to match though. Weird, right? ~Sahil
-	// const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
-
-	expect(received).toMatchObject(expected)
 })
