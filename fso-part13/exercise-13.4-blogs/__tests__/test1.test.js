@@ -60,7 +60,7 @@ test('bad request (with `express-async-errors`)', async () => {
 	expect(res.body.error).toBe('Some stupid error..')
 })
 
-test('delete blog post', async () => {
+test('delete BLOG post', async () => {
 	let id = 21
 	let expectedStatus = 201
 	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
@@ -68,7 +68,7 @@ test('delete blog post', async () => {
 })
 
 //! USERS ROUTER TESTS //
-test('post user', async () => {
+test('post USER', async () => {
 	// empty users table
 	await UserM.sync({force: true})
 
@@ -76,11 +76,14 @@ test('post user', async () => {
 	const {body} = await api.post('/api/users').send(expectedBody)
 
 	expect(body).toMatchObject(expectedBody)
+
 	expect(body).toHaveProperty('id')
+	expect(body).toHaveProperty('createdAt')
+	expect(body).toHaveProperty('updatedAt')
 	// tlog({body})
 })
 
-test('get all users', async () => {
+test('get all USERS', async () => {
 	const expectedBody = [{blogs: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}]
 	const {body} = await api.get('/api/users')
 
@@ -95,14 +98,14 @@ test('get all users', async () => {
 test('SAMPLE: toMatchObject works for arrays as well', () => {
 	const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
 	const expected = [{username: 'sahilrajput03'}]
-	// Fyi: Below received value will to match though. Weird, right? ~Sahil
+	// Fyi: Below received value will *not* match (test will fail) though. Weird, right? ~Sahil
 	// const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
 
 	expect(received).toMatchObject(expected)
 })
 
 let _token
-test('login', async () => {
+test('login USER', async () => {
 	const cred = {username: 'sahilrajput03', password: 'secret'}
 	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
 
@@ -114,7 +117,7 @@ test('login', async () => {
 	_token = 'bearer ' + body.token
 })
 
-test('post blog', async () => {
+test('post BLOG', async () => {
 	const expectedBody = {author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
 	const expectedStatus = 200
 
@@ -134,7 +137,7 @@ test('post blog', async () => {
 	expect(body.id).toBe(1)
 })
 
-test('post blog with custom id', async () => {
+test('post BLOG with custom id', async () => {
 	const expectedBody = {id: 21, author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
 	const expectedStatus = 200
 
@@ -153,7 +156,7 @@ test('post blog with custom id', async () => {
 	expect(body).toHaveProperty('id')
 })
 
-test('modify blog', async () => {
+test('modify BLOG', async () => {
 	let expectedBody = {
 		author: 'new author',
 		url: 'fb.com/new_author',
@@ -166,13 +169,13 @@ test('modify blog', async () => {
 	expect(body).toMatchObject(expectedBody)
 })
 
-test('get list of blogs', async () => {
+test('get list of BLOGS', async () => {
 	let blogs = await api.get('/api/blogs')
 
 	expect(blogs.body.map((b) => b.id)).toContain(1, 21)
 })
 
-test('update username', async () => {
+test("modify USER's username", async () => {
 	const expectedBody = {username: 'sahil03'}
 	let {body} = await api.put('/api/users/sahilrajput03').set('Authorization', _token).send(expectedBody)
 
