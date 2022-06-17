@@ -1,0 +1,4 @@
+{
+	"refresh": ["initPostgreSql.js", "models"],
+	"debug": "--inspect"
+}
