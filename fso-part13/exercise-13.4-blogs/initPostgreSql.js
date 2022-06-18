@@ -37,11 +37,6 @@ const sequelize = new Sequelize(DATABASE_URL, config)
 let connect = async () => {
 	await sequelize.authenticate()
 	logger.success('CONNECTION TO DB::SUCCESSFUL')
-	log('other logs')
-
-	logger.success('my object', {car: 10})
-	logger.success('my array', ['bar', 20])
-	logger.success('my string', 'foo is bar')
 
 	// Setup models
 	initBlogM(sequelize)

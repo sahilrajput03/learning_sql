@@ -27,6 +27,8 @@ module.exports = {tlog, tilog, slog, silog, logger}
 / General way to use chalk library (not a good way to use for object and array).
 console.log(chalk.bgGreen.yellow.bold(args))
 
+/ Why printer function? Ans. https://github.com/chalk/chalk/issues/427#issuecomment-757442108
+
 / My advanced way to use chalk which works with strings, objects and arrays.
 printer(args, chalk.bgGreen.yellow.bold)
 
