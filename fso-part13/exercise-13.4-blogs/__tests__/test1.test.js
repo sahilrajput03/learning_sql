@@ -14,23 +14,25 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM} = require('../models')
-const {tlog, slog, tilog, logger} = require('../utils/logger')
+const {tlog, slog, tilog, lg} = require('../utils/logger')
 
 let js = (...args) => JSON.stringify(...args)
 
-// withSupertest.test
-connectToDb(async () => {
-	// await require('../initMongodb.js')
-	const {connection} = require('../initPostgreSql')
-	// wait till the connection establishes to postgresql!
-	await connection
-})
+if (global.isFlashRunner) {
+	// withSupertest.test
+	connectToDb(async () => {
+		// await require('../initMongodb.js')
+		const {connection} = require('../initPostgreSql')
+		// wait till the connection establishes to postgresql!
+		await connection
+	})
 
-closeDb(async () => {
-	// await mongoose.connection.close()
-	const db = sequelize
-	await db.close() // close the connection.
-})
+	closeDb(async () => {
+		// await mongoose.connection.close()
+		const db = sequelize
+		await db.close() // close the connection.
+	})
+}
 
 beforeAll(async () => {
 	// Fix the schema on the fly.
@@ -63,7 +65,7 @@ test('delete BLOG post', async () => {
 	let id = 21
 	let expectedStatus = 201
 	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
-	logger.success('pavement', {cool: 'biju'})
+	lg.success('pavement', {cool: 'biju'})
 })
 
 //! USERS ROUTER TESTS //
