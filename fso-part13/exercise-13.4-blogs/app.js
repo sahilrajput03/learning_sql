@@ -10,10 +10,6 @@ const usersRouter = require('./controllers/usersRouter')
 const loginRouter = require('./controllers/loginRouter')
 const buggedRouter = require('./controllers/buggedRouter')
 
-connection.then(() => {
-	console.log('Connection to postgres established!')
-})
-
 // let log = console.log
 // log('typeof db', db)
 

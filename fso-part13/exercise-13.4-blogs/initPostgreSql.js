@@ -1,9 +1,10 @@
 const {Sequelize} = require('sequelize')
 const {initUserM, UserM, initBlogM, BlogM, setupAssociations} = require('./models')
+const {silog, tlog, slog, logger} = require('./utils/logger')
 
 let {DATABASE_URL, NODE_ENV} = process.env
-// console.log({DATABASE_URL, NODE_ENV})
 let log = console.log
+// log({DATABASE_URL, NODE_ENV})
 
 let isDev = NODE_ENV === 'dev'
 let isTesting = NODE_ENV === 'test'
@@ -23,7 +24,10 @@ let config = {
 
 // config = null; // Its must be null(can't send undefined).
 
-console.log('DATABASE_URL'.bgGreen, DATABASE_URL.green)
+const {inspect} = require('util')
+
+logger.success('DATABASE_URL', DATABASE_URL)
+
 const sequelize = new Sequelize(DATABASE_URL, config)
 
 // log({sequelize})
@@ -32,7 +36,12 @@ const sequelize = new Sequelize(DATABASE_URL, config)
 // TODO: Make it a async function called and export that...!!
 let connect = async () => {
 	await sequelize.authenticate()
-	console.log('Connection has been established successfully.'.mb)
+	logger.success('CONNECTION TO DB::SUCCESSFUL')
+	log('other logs')
+
+	logger.success('my object', {car: 10})
+	logger.success('my array', ['bar', 20])
+	logger.success('my string', 'foo is bar')
 
 	// Setup models
 	initBlogM(sequelize)
@@ -54,7 +63,7 @@ module.exports = {connection, sequelize}
 global.sequelize = sequelize
 
 // .then(() => {
-// 	console.log('Connection has been established successfully.'.mb)
+// 	log('Connection has been established successfully.'.mb)
 // })
 // .catch((err) => {
 // 	console.error('~Sahil: Unable to connect to the database :'.bgRed, err)

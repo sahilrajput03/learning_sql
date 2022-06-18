@@ -14,7 +14,7 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM} = require('../models')
-const {tlog, slog, tilog} = require('../utils/logger')
+const {tlog, slog, tilog, logger} = require('../utils/logger')
 
 let js = (...args) => JSON.stringify(...args)
 
@@ -24,7 +24,6 @@ connectToDb(async () => {
 	const {connection} = require('../initPostgreSql')
 	// wait till the connection establishes to postgresql!
 	await connection
-	tlog('connection to db::SUCCESSFUL')
 })
 
 closeDb(async () => {
@@ -64,7 +63,7 @@ test('delete BLOG post', async () => {
 	let id = 21
 	let expectedStatus = 201
 	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
-	// log('pavement', js({cool: 'biju'}, null, 2))
+	logger.success('pavement', {cool: 'biju'})
 })
 
 //! USERS ROUTER TESTS //
