@@ -1,6 +1,6 @@
 const {Sequelize} = require('sequelize')
 const {initUserM, UserM, initBlogM, BlogM, setupAssociations} = require('./models')
-const {silog, tlog, slog, lg} = require('./utils/logger')
+const {silog, tlog, slog, logger} = require('./utils/logger')
 
 let {DATABASE_URL, NODE_ENV} = process.env
 let log = console.log
@@ -26,7 +26,7 @@ let config = {
 
 const {inspect} = require('util')
 
-lg.success('DATABASE_URL', DATABASE_URL)
+logger.success('DATABASE_URL', DATABASE_URL)
 
 const sequelize = new Sequelize(DATABASE_URL, config)
 
@@ -36,7 +36,7 @@ const sequelize = new Sequelize(DATABASE_URL, config)
 // TODO: Make it a async function called and export that...!!
 let connect = async () => {
 	await sequelize.authenticate()
-	lg.success('CONNECTION TO DB::SUCCESSFUL')
+	logger.success('CONNECTION TO DB::SUCCESSFUL')
 
 	// Setup models
 	initBlogM(sequelize)

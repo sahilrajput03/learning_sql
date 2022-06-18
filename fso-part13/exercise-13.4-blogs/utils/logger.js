@@ -8,11 +8,11 @@ let tilog = (...args) => printer(args, chalk.cyan.bold)
 let slog = (...args) => printer(args, chalk.yellow.bgRed.bold)
 let silog = (...args) => printer(args, chalk.cyan.bold)
 
-let lg = {
+let logger = {
 	success: (...args) => printer(args, chalk.bgGreen.yellow.bold),
 }
 
-module.exports = {tlog, tilog, slog, silog, lg}
+module.exports = {tlog, tilog, slog, silog, logger}
 
 // :levels => {
 //   :debug => :blue,

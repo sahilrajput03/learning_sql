@@ -14,7 +14,7 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM} = require('../models')
-const {tlog, slog, tilog, lg} = require('../utils/logger')
+const {tlog, slog, tilog, logger} = require('../utils/logger')
 
 let js = (...args) => JSON.stringify(...args)
 
@@ -65,7 +65,7 @@ test('delete BLOG post', async () => {
 	let id = 21
 	let expectedStatus = 201
 	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
-	lg.success('pavement', {cool: 'biju'})
+	logger.success('pavement', {cool: 'biju'})
 })
 
 //! USERS ROUTER TESTS //
