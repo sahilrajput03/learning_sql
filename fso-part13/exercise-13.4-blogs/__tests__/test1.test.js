@@ -68,13 +68,6 @@ test('bad request (with `express-async-errors`)', async () => {
 	expect(res.body.error.message).toBe('Some stupid error..')
 })
 
-test('delete BLOG post', async () => {
-	let id = 21
-	let expectedStatus = 201
-	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
-	loggert.success('pavement', {cool: 'biju'})
-})
-
 //! USERS ROUTER TESTS //
 test('post USER', async () => {
 	// empty users table
@@ -88,18 +81,6 @@ test('post USER', async () => {
 	expect(body).toHaveProperty('id')
 	expect(body).toHaveProperty('createdAt')
 	expect(body).toHaveProperty('updatedAt')
-})
-
-test('get all USERS', async () => {
-	const expectedBody = [{blogs: [], id: 1, username: 'sahilrajput03@gmail.com', name: 'Sahil Rajput'}]
-	const {body} = await api.get('/api/users')
-
-	body.forEach((blog) => {
-		expect(blog).toHaveProperty('createdAt')
-		expect(blog).toHaveProperty('updatedAt')
-	})
-
-	expect(body).toMatchObject(expectedBody)
 })
 
 test('SAMPLE: toMatchObject works for arrays as well', () => {
@@ -124,7 +105,7 @@ test('login USER', async () => {
 	_token = 'bearer ' + body.token
 })
 
-test('post BLOG + blog is associated with logged-in user', async () => {
+test('post BLOG + assure blog is associated with logged-in user', async () => {
 	const expectedBody = {author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
 	const expectedStatus = 200
 
@@ -146,6 +127,37 @@ test('post BLOG + blog is associated with logged-in user', async () => {
 	// blog is associated with a user
 	expect(body.userId).not.toBeNull()
 	expect(typeof body.userId).toBe('number')
+})
+
+test('get all USERS', async () => {
+	const expectedBody = [{id: 1, username: 'sahilrajput03@gmail.com', name: 'Sahil Rajput'}]
+	const {body} = await api.get('/api/users')
+
+	body.forEach((blog) => {
+		expect(blog).toHaveProperty('createdAt')
+		expect(blog).toHaveProperty('updatedAt')
+	})
+
+	expect(body).toMatchObject(expectedBody)
+	// Assure the blogs are returned, exercise: 13.12
+	expect(body[0].blogs.length).toBeGreaterThan(0)
+})
+
+test('delete BLOG post (only feasible by the user who created it)', async () => {
+	// Create blog with id 7
+	const expectedBody = {id: 7, author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
+	await api
+		.post('/api/blogs')
+		.set('Authorization', _token)
+		.send(expectedBody)
+		.expect('Content-Type', /application\/json/)
+		.expect(200)
+
+	// Delete the blog with id 7
+	let id = 7
+	let expectedStatus = 201
+	let {statusCode} = await api.delete(`/api/blogs/${id}`).set('Authorization', _token).expect(expectedStatus)
+	// loggert.info(statusCode)
 })
 
 test('post BLOG with custom id', async () => {
@@ -187,7 +199,7 @@ test('modify BLOG', async () => {
 	expect(body).toMatchObject(expectedBody)
 })
 
-test('get list of BLOGS', async () => {
+test('get all BLOGS + assure that username is returned for each blog', async () => {
 	let blogs = await api.get('/api/blogs')
 
 	// loggert.info('blogs', blogs.body)
@@ -195,6 +207,14 @@ test('get list of BLOGS', async () => {
 	// loggert.info('idList', idList)
 	expect(idList).toContain(1)
 	expect(idList).toContain(21)
+
+	// Assure username is returned for each blog
+	let usernameList = blogs.body.map((b) => b.username)
+
+	// Expect that username is returned for each blog
+	usernameList.forEach((element) => {
+		expect(typeof element).toBe('string')
+	})
 })
 
 test("modify USER's username", async () => {

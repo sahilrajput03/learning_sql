@@ -1,4 +1,5 @@
 const express = require('express')
+const {UserM} = require('../models')
 const {BlogM} = require('../models/BlogM')
 const {logger} = require('../utils/logger')
 const router = express.Router()
@@ -8,11 +9,22 @@ require('../initPostgreSql')
 
 let dataValues = (data) => data.map((n) => n.dataValues)
 
+// Works pretty well too!
+const includeUser = {
+	include: {
+		model: UserM, // This adds User of the blog to `user` key ( in each blog item in the array).
+		// attributes: {exclude: ['blogs']}, // Removes `userId` property from each note definition bcoz its redundant as `userId` is simply `user.id` which we save at the time of note creation.
+	},
+}
+
 router.get('/', async (req, res) => {
 	let blogs
-	blogs = await BlogM.findAll({})
+	blogs = await BlogM.findAll(includeUser)
 	// log('notes:', dataValues(blogs)) // This is another way of printing values though!
 	// l('notes:', _dataValues(notes)) // This is another way of printing values though!
+
+	// Make user undefined and only send username for each blog item.
+	blogs = blogs.map((b) => ({...b.dataValues, user: undefined, username: b.dataValues.user.username}))
 
 	return res.json(blogs) // notes.count is the total number of records(not pages).
 })
@@ -32,15 +44,24 @@ router.get('/:id', async (req, res) => {
 	return res.json(blog)
 })
 
-router.delete('/:id', async (req, res) => {
-	const blog = await BlogM.destroy({
-		where: {
-			id: req.params?.id,
-		},
-	})
-	// log('server::', blog)
-	res.status(201).end()
-	return
+router.delete('/:id', tokenExtractor, async (req, res) => {
+	const blog = await BlogM.findByPk(req.params.id)
+	let blogBelongsToUser = blog.userId == req.decodedToken.id
+
+	if (blogBelongsToUser) {
+		const result = await BlogM.destroy({
+			where: {
+				id: req.params?.id,
+			},
+		})
+		// log('server::', result)
+		res.status(201).end()
+
+		return
+	} else {
+		logger.err('You are not authorized to delete this note!')
+		res.status(401).end()
+	}
 })
 
 router.put('/:id', async (req, res, next) => {
