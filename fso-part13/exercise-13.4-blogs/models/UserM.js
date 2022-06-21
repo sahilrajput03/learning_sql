@@ -14,6 +14,10 @@ const initUserM = (sequelize) =>
 				type: DataTypes.STRING,
 				unique: true,
 				allowNull: false,
+				// exercise: 13.9
+				validate: {
+					isEmail: true,
+				},
 			},
 			name: {
 				type: DataTypes.STRING,

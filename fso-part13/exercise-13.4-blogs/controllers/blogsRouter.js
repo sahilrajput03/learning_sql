@@ -1,5 +1,6 @@
 const express = require('express')
 const {BlogM} = require('../models/BlogM')
+const {logger} = require('../utils/logger')
 const router = express.Router()
 const tokenExtractor = require('../utils/tokenExtractor')
 
@@ -63,13 +64,15 @@ router.put('/:id', async (req, res, next) => {
 })
 
 router.post('/', tokenExtractor, async (req, res) => {
-	try {
-		const blog = await BlogM.create({...req.body, important: true})
-		const blogJson = blog.toJSON()
-		return res.json(blogJson)
-	} catch (error) {
-		return res.status(400).json({error})
-	}
+	let userId = req.decodedToken.id
+	// logger.success('userId', userId)
+	const blog = await BlogM.create({...req.body, important: true, userId})
+	const blogJson = blog.toJSON()
+	return res.json(blogJson)
+	// try {
+	// } catch (error) {
+	// 	return res.status(400).json({error})
+	// }
 })
 
 router.delete('/reset', async (req, res) => {

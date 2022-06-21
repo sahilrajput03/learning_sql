@@ -15,7 +15,7 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM} = require('../models')
-const {loggert} = require('../utils/logger') // Only import loggert (testing) from logger file.
+const {loggert, logger} = require('../utils/logger') // Only import loggert (testing) from logger file.
 
 // Reuired bcoz I am using @ts-check and it complains via vscode.
 let isFlashRunner = global.isFlashRunner,
@@ -56,7 +56,7 @@ test('bad request ', async () => {
 	const res = await api.get('/api/bugged/bugged_api')
 
 	expect(res.body.error).toBeDefined()
-	expect(res.body.error).toBe('Some stupid error..')
+	expect(res.body.error.message).toBe('Some stupid error..')
 })
 
 test('bad request (with `express-async-errors`)', async () => {
@@ -64,8 +64,8 @@ test('bad request (with `express-async-errors`)', async () => {
 	let expectedError
 	const res = await api.get('/api/bugged/bugged_api_2')
 
-	expect(res.body.error).toBeDefined()
-	expect(res.body.error).toBe('Some stupid error..')
+	expect(res.body.error.message).toBeDefined()
+	expect(res.body.error.message).toBe('Some stupid error..')
 })
 
 test('delete BLOG post', async () => {
@@ -80,7 +80,7 @@ test('post USER', async () => {
 	// empty users table
 	await UserM.sync({force: true})
 
-	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+	const expectedBody = {username: 'sahilrajput03@gmail.com', name: 'Sahil Rajput'}
 	const {body} = await api.post('/api/users').send(expectedBody)
 
 	expect(body).toMatchObject(expectedBody)
@@ -91,7 +91,7 @@ test('post USER', async () => {
 })
 
 test('get all USERS', async () => {
-	const expectedBody = [{blogs: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}]
+	const expectedBody = [{blogs: [], id: 1, username: 'sahilrajput03@gmail.com', name: 'Sahil Rajput'}]
 	const {body} = await api.get('/api/users')
 
 	body.forEach((blog) => {
@@ -103,18 +103,18 @@ test('get all USERS', async () => {
 })
 
 test('SAMPLE: toMatchObject works for arrays as well', () => {
-	const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
-	const expected = [{username: 'sahilrajput03'}]
+	const received = [{username: 'sahilrajput03@gmail.com', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
+	const expected = [{username: 'sahilrajput03@gmail.com'}]
 	// Fyi: Below received value will *not* match (test will fail) though. Weird, right? ~Sahil
-	// const received = [{username: 'sahilrajput03', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
+	// const received = [{username: 'sahilrajput03@gmail.com', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
 
 	expect(received).toMatchObject(expected)
 })
 
 let _token
 test('login USER', async () => {
-	const cred = {username: 'sahilrajput03', password: 'secret'}
-	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
+	const cred = {username: 'sahilrajput03@gmail.com', password: 'secret'}
+	const expectedBody = {username: 'sahilrajput03@gmail.com', name: 'Sahil Rajput'}
 
 	const {body, statusCode} = await api.post('/api/login').send(cred)
 
@@ -124,7 +124,7 @@ test('login USER', async () => {
 	_token = 'bearer ' + body.token
 })
 
-test('post BLOG', async () => {
+test('post BLOG + blog is associated with logged-in user', async () => {
 	const expectedBody = {author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
 	const expectedStatus = 200
 
@@ -142,6 +142,10 @@ test('post BLOG', async () => {
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
 	expect(body.id).toBe(1)
+
+	// blog is associated with a user
+	expect(body.userId).not.toBeNull()
+	expect(typeof body.userId).toBe('number')
 })
 
 test('post BLOG with custom id', async () => {
@@ -160,7 +164,10 @@ test('post BLOG with custom id', async () => {
 
 	// log({body})
 	expect(body).toMatchObject(expectedBody)
+	// loggert.info('id', body.id)
 	expect(body).toHaveProperty('id')
+	expect(typeof body.id).toBe('number')
+
 	// logger testing
 	// loggert.info('post-blog', body)
 	// loggert.success('post-blog', body)
@@ -183,14 +190,28 @@ test('modify BLOG', async () => {
 test('get list of BLOGS', async () => {
 	let blogs = await api.get('/api/blogs')
 
+	// loggert.info('blogs', blogs.body)
 	let idList = blogs.body.map((b) => b.id)
+	// loggert.info('idList', idList)
 	expect(idList).toContain(1)
 	expect(idList).toContain(21)
 })
 
 test("modify USER's username", async () => {
-	const expectedBody = {username: 'sahil03'}
-	let {body} = await api.put('/api/users/sahilrajput03').set('Authorization', _token).send(expectedBody)
+	const expectedBody = {username: 's03@gmail.com'}
+	let {body} = await api.put('/api/users/sahilrajput03@gmail.com').set('Authorization', _token).send(expectedBody)
 
 	expect(body).toMatchObject(expectedBody)
+})
+
+test('bad username err on USER creation  ', async () => {
+	const expectedBody = {username: 'some_bad_username', name: 'Sahil Rajput'}
+	const expectedError = {
+		error: ['Validation isEmail on username failed'],
+	}
+	const {body, statusCode} = await api.post('/api/users').send(expectedBody)
+	// loggert.info(body) // { error: { name: 'SequelizeValidationError', errors: [ [Object] ] } }
+	// loggert.info(statusCode)
+	expect(statusCode).toBe(400)
+	expect(body).toMatchObject(expectedError)
 })
