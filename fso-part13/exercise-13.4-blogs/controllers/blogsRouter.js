@@ -1,4 +1,5 @@
 const express = require('express')
+const {Op} = require('sequelize')
 const {UserM} = require('../models')
 const {BlogM} = require('../models/BlogM')
 const {logger} = require('../utils/logger')
@@ -8,15 +9,6 @@ const tokenExtractor = require('../utils/tokenExtractor')
 require('../initPostgreSql')
 
 let dataValues = (data) => data.map((n) => n.dataValues)
-
-// Works pretty well too!
-const includeUser = {
-	include: {
-		model: UserM, // This adds User of the blog to `user` key ( in each blog item in the array).
-		attributes: ['username'], // Only include `username` property from each `user` in each blog definition.
-		// ^^ this works, 100%, Source of above: See stackoverflow answer.
-	},
-}
 
 // src: https://stackoverflow.com/a/64315233/10012446, year: 2020
 // We can do something like that for exclude or include specific attribute with sequelize in Node.js.
@@ -35,7 +27,34 @@ const includeUser = {
 
 router.get('/', async (req, res) => {
 	let blogs
-	blogs = await BlogM.findAll(includeUser)
+	let where = {}
+
+	if (req.query.search) {
+		where = {
+			[Op.or]: [
+				{
+					author: {[Op.substring]: req.query.search},
+				},
+				{
+					title: {[Op.substring]: req.query.search},
+				},
+			],
+		}
+	}
+
+	// Debug where
+	// logger.success({where})
+
+	// [Op.or]: [{ a: 5 }, { b: 6 }],
+
+	blogs = await BlogM.findAll({
+		include: {
+			model: UserM, // This adds User of the blog to `user` key ( in each blog item in the array).
+			attributes: ['username'], // Only include `username` property from each `user` in each blog definition.
+			// ^^ this works, 100%, Source of above: See stackoverflow answer.
+		},
+		where,
+	})
 	// log('notes:', dataValues(blogs)) // This is another way of printing values though!
 	// l('notes:', _dataValues(notes)) // This is another way of printing values though!
 

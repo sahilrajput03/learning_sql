@@ -230,8 +230,26 @@ test('bad username err on USER creation  ', async () => {
 		error: ['Validation isEmail on username failed'],
 	}
 	const {body, statusCode} = await api.post('/api/users').send(expectedBody)
-	loggert.info(body) // { error: { name: 'SequelizeValidationError', errors: [ [Object] ] } }
+	loggert.info('body: ', body) // { error: { name: 'SequelizeValidationError', errors: [ [Object] ] } }
 	// loggert.info(statusCode)
 	expect(statusCode).toBe(400)
 	expect(body).toMatchObject(expectedError)
+})
+
+test('get all blogs + searching', async () => {
+	// Clear all blogs
+	await BlogM.sync({force: true})
+
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 20, title: 'blog abc', author: 'rohan', url: 'www.rohan.com', likes: 32})
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 21, title: 'blog def', author: 'rohan', url: 'www.rohan.com', likes: 32})
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 22, title: 'blog def', author: 'def fernandis', url: 'www.rohan.com', likes: 32})
+
+	// search blogs
+	let search1 = await api.get('/api/blogs?search=def')
+	// logger.info('blogs', search1.body)
+	expect(search1.body.map((blog) => blog.id)).toEqual(expect.arrayContaining([22, 21]))
+
+	let search2 = await api.get('/api/blogs?search=rohan')
+	// logger.info('blogs', search2.body)
+	expect(search2.body.map((blog) => blog.id)).toEqual(expect.arrayContaining([20, 21]))
 })
