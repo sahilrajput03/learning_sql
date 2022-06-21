@@ -25,6 +25,7 @@
 		"express": "^4.17.2",
 		"express-async-errors": "^3.1.1",
 		"jsonwebtoken": "^8.5.1",
+		"logger-sahil": "file:../exercise-13.4-blogs/utils/logger.js",
 		"logmw": "file:middlewares/low-mw.js",
 		"pg": "^8.7.1",
 		"sequelize": "^6.12.0-beta.3",

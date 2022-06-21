@@ -1,5 +1,6 @@
 /* global connectToDb, closeDb beforeAll test sequelize */
 //? Use .env.test file for environment.
+const {loggert} = require('logger-sahil')
 const path = require('path')
 const dotenv = require('dotenv')
 dotenv.config({path: path.join(__dirname, '..', '.env.test')}) // Joining path using path.join and __dirname allows us to execute files withSupertest using `fr withSupertest` from inside __tests__ folder and from the root folder as well.
@@ -117,7 +118,7 @@ test('post a note', async () => {
 })
 
 // This test is intentionally put after posting a note so that we see notes attached in the user output.
-test('get all users with some linked notes', async () => {
+test('get all users with respective linked notes', async () => {
 	const {body} = await api.get('/api/users')
 	// log(body)
 })
@@ -139,7 +140,7 @@ test('all notes', async () => {
 	// Clear db
 	await NoteM.sync({force: true})
 
-	const expectedBody = {content: 'very good buddy!'}
+	const expectedBody = {content: 'very good buddy!', important: true}
 
 	await api.post('/api/notes').send(expectedBody).set('Authorization', _token).expect(200)
 	await api.post('/api/notes').send(expectedBody).set('Authorization', _token).expect(200)
@@ -150,6 +151,26 @@ test('all notes', async () => {
 
 	expect(statusCode).toBe(200)
 	expect(body.length).toBe(2)
+})
+
+test('all notes (with query params)', async () => {
+	// Clear db
+	await NoteM.sync({force: true})
+
+	await api.post('/api/notes').send({content: 'note abc', important: true}).set('Authorization', _token).expect(200)
+	await api.post('/api/notes').send({content: 'note def', important: true}).set('Authorization', _token).expect(200)
+	await api.post('/api/notes').send({content: 'note def 2', important: false}).set('Authorization', _token).expect(200)
+	await api.post('/api/notes').send({content: 'note ghi', important: false}).set('Authorization', _token).expect(200)
+
+	const search1 = await api.get('/api/notes?search=def&important=true')
+	let contentList1 = search1.body.map((note) => note.content)
+	// loggert.info(contentList)
+	expect(contentList1).toEqual(['note def'])
+
+	const search2 = await api.get('/api/notes?search=def')
+	let contentList2 = search2.body.map((note) => note.content)
+	// loggert.info(contentList2)
+	expect(contentList2).toEqual(['note def', 'note def 2'])
 })
 
 test('reset notes', async () => {

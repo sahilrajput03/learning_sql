@@ -1,3 +1,4 @@
+const {Op} = require('sequelize')
 const express = require('express')
 const chalk = require('chalk')
 const jwt = require('jsonwebtoken')
@@ -11,7 +12,33 @@ let log = (...args) => console.log(chalk.yellow.bgRed.bold(JSON.stringify(...arg
 
 router.get('/', async (req, res) => {
 	let notes
-	notes = await NoteM.findAll({}) // LEARN: Shape of notes is: [{id: Int(1), content: String, important: Boolean, date: String, userId: Int(1)}]
+	const where = {}
+
+	if (req.query.important) {
+		where.important = req.query.important === 'true'
+	} else {
+		where.important = {
+			[Op.in]: [true, false],
+		}
+	}
+
+	if (req.query.search) {
+		where.content = {
+			[Op.substring]: req.query.search,
+		}
+	}
+
+	notes = await NoteM.findAll({
+		attributes: {exclude: ['userId']},
+		include: {
+			model: UserM,
+			attributes: ['name'], // only include name field form the user table.
+		},
+		where,
+	})
+
+	// notes = await NoteM.findAll({}) // LEARN: Shape of notes is: [{id: Int(1), content: String, important: Boolean, date: String, userId: Int(1)}]
+
 	// notes = await NoteM.findAll({
 	// 	attributes: {exclude: ['userId']}, // userId is case-sensitive, it removes `userId` from each `note`, fyi: `userId` is not in schema of NoteM either but still its saved in each note bcoz we save it in `POST` route of note saving.
 	// 	include: {
@@ -102,7 +129,7 @@ router.post('/', tokenExtractor, async (req, res) => {
 	// log(js(req.body))
 	try {
 		const user = await UserM.findByPk(req.decodedToken.id)
-		const note = await NoteM.create({...req.body, important: true, userId: user.id, date: new Date()}) // LEARN: If we don't supply `userId` property then `userId` property will be saved as null (unless we have defined ``foreignKey: { allowNull: false }`` in the Association i.e., ```User.hasMany(NoteM, {..HERE..})``` ).
+		const note = await NoteM.create({...req.body, important: req.body.important, userId: user.id, date: new Date()}) // LEARN: If we don't supply `userId` property then `userId` property will be saved as null (unless we have defined ``foreignKey: { allowNull: false }`` in the Association i.e., ```User.hasMany(NoteM, {..HERE..})``` ).
 		// LEARN: In index.js file, we define ```UserM.hasMany(NoteM)``` which applies that - Sequelize will automatically create an attribute called `userId` on the Note model to which, when referenced gives access to the database column `user_id`.  ~ FSO
 
 		return res.json(note)

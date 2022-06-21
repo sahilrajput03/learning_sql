@@ -14,7 +14,7 @@ const includeUser = {
 	include: {
 		model: UserM, // This adds User of the blog to `user` key ( in each blog item in the array).
 		attributes: ['username'], // Only include `username` property from each `user` in each blog definition.
-		// ^^ this works, 100%!
+		// ^^ this works, 100%, Source of above: See stackoverflow answer.
 	},
 }
 
