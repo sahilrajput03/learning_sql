@@ -210,7 +210,7 @@ test('bad username err on USER creation  ', async () => {
 		error: ['Validation isEmail on username failed'],
 	}
 	const {body, statusCode} = await api.post('/api/users').send(expectedBody)
-	// loggert.info(body) // { error: { name: 'SequelizeValidationError', errors: [ [Object] ] } }
+	loggert.info(body) // { error: { name: 'SequelizeValidationError', errors: [ [Object] ] } }
 	// loggert.info(statusCode)
 	expect(statusCode).toBe(400)
 	expect(body).toMatchObject(expectedError)

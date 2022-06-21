@@ -3,7 +3,7 @@ const chalk = require('chalk')
 
 let createLogger = (tag) => ({
 	success: (...args) => printer([tag, ...args], chalk.bgGreen.yellow.bold),
-	info: (...args) => printer([tag, ...args], chalk.yellow.bold.bgCyan),
+	info: (...args) => printer([tag, ...args], chalk.yellowBright.bold.bgCyan),
 	err: (...args) => printer([tag, ...args], chalk.yellow.bgRed.bold),
 })
 
