@@ -208,8 +208,8 @@ test('get all BLOGS + assure that username is returned for each blog', async () 
 	expect(idList).toContain(1)
 	expect(idList).toContain(21)
 
-	// Assure username is returned for each blog
-	let usernameList = blogs.body.map((b) => b.username)
+	// Assure username is returned for each blog, ex 13.12
+	let usernameList = blogs.body.map((b) => b.user.username)
 
 	// Expect that username is returned for each blog
 	usernameList.forEach((element) => {

@@ -13,18 +13,31 @@ let dataValues = (data) => data.map((n) => n.dataValues)
 const includeUser = {
 	include: {
 		model: UserM, // This adds User of the blog to `user` key ( in each blog item in the array).
-		// attributes: {exclude: ['blogs']}, // Removes `userId` property from each note definition bcoz its redundant as `userId` is simply `user.id` which we save at the time of note creation.
+		attributes: ['username'], // Only include `username` property from each `user` in each blog definition.
+		// ^^ this works, 100%!
 	},
 }
+
+// src: https://stackoverflow.com/a/64315233/10012446, year: 2020
+// We can do something like that for exclude or include specific attribute with sequelize in Node.js.
+// Payment.findAll({
+//     where: {
+//         DairyId: req.query.dairyid
+//     },
+//     attributes: {
+//         exclude: ['createdAt', 'updatedAt']
+//     },
+//     include: {
+//         model: Customer,
+//         attributes:['customerName', 'phoneNumber']
+//     }
+// })
 
 router.get('/', async (req, res) => {
 	let blogs
 	blogs = await BlogM.findAll(includeUser)
 	// log('notes:', dataValues(blogs)) // This is another way of printing values though!
 	// l('notes:', _dataValues(notes)) // This is another way of printing values though!
-
-	// Make user undefined and only send username for each blog item.
-	blogs = blogs.map((b) => ({...b.dataValues, user: undefined, username: b.dataValues.user.username}))
 
 	return res.json(blogs) // notes.count is the total number of records(not pages).
 })
