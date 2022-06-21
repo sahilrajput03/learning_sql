@@ -1,3 +1,4 @@
+// @ts-check
 /* global connectToDb, closeDb beforeAll test sequelize */
 //? Use .env.test file for environment.
 const path = require('path')
@@ -14,11 +15,17 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM} = require('../models')
-const {tlog, slog, tilog, logger} = require('../utils/logger')
+const {loggert} = require('../utils/logger') // Only import loggert (testing) from logger file.
 
-let js = (...args) => JSON.stringify(...args)
+// Reuired bcoz I am using @ts-check and it complains via vscode.
+let isFlashRunner = global.isFlashRunner,
+	connectToDb = global.connectToDb,
+	sequelize = global.sequelize,
+	closeDb = global.closeDb,
+	beforeAll = global.beforeAll,
+	test = global.test
 
-if (global.isFlashRunner) {
+if (isFlashRunner) {
 	// withSupertest.test
 	connectToDb(async () => {
 		// await require('../initMongodb.js')
@@ -65,7 +72,7 @@ test('delete BLOG post', async () => {
 	let id = 21
 	let expectedStatus = 201
 	await api.delete(`/api/blogs/${id}`).expect(expectedStatus)
-	logger.success('pavement', {cool: 'biju'})
+	loggert.success('pavement', {cool: 'biju'})
 })
 
 //! USERS ROUTER TESTS //
@@ -81,7 +88,6 @@ test('post USER', async () => {
 	expect(body).toHaveProperty('id')
 	expect(body).toHaveProperty('createdAt')
 	expect(body).toHaveProperty('updatedAt')
-	// tlog({body})
 })
 
 test('get all USERS', async () => {
@@ -155,6 +161,10 @@ test('post BLOG with custom id', async () => {
 	// log({body})
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
+	// logger testing
+	// loggert.info('post-blog', body)
+	// loggert.success('post-blog', body)
+	// loggert.err('post-blog', body)
 })
 
 test('modify BLOG', async () => {
@@ -173,13 +183,14 @@ test('modify BLOG', async () => {
 test('get list of BLOGS', async () => {
 	let blogs = await api.get('/api/blogs')
 
-	expect(blogs.body.map((b) => b.id)).toContain(1, 21)
+	let idList = blogs.body.map((b) => b.id)
+	expect(idList).toContain(1)
+	expect(idList).toContain(21)
 })
 
 test("modify USER's username", async () => {
 	const expectedBody = {username: 'sahil03'}
 	let {body} = await api.put('/api/users/sahilrajput03').set('Authorization', _token).send(expectedBody)
 
-	// tlog(body)
 	expect(body).toMatchObject(expectedBody)
 })

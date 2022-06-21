@@ -1,18 +1,16 @@
+// @ts-check
 const chalk = require('chalk')
 
-// testingLog
-let tlog = (...args) => printer(args, chalk.white.bgBlue.bold)
-let tilog = (...args) => printer(args, chalk.cyan.bold)
+let createLogger = (tag) => ({
+	success: (...args) => printer([tag, ...args], chalk.bgGreen.yellow.bold),
+	info: (...args) => printer([tag, ...args], chalk.yellow.bold.bgCyan),
+	err: (...args) => printer([tag, ...args], chalk.yellow.bgRed.bold),
+})
 
-// serverLog
-let slog = (...args) => printer(args, chalk.yellow.bgRed.bold)
-let silog = (...args) => printer(args, chalk.cyan.bold)
+let logger = createLogger('SERVER:')
+let loggert = createLogger('TESTING:') // logger for testing
 
-let logger = {
-	success: (...args) => printer(args, chalk.bgGreen.yellow.bold),
-}
-
-module.exports = {tlog, tilog, slog, silog, logger}
+module.exports = {logger, loggert}
 
 // :levels => {
 //   :debug => :blue,
