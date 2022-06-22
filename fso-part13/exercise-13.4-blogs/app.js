@@ -16,6 +16,7 @@ const buggedRouter = require('./controllers/buggedRouter')
 
 const app = express()
 const middleware = require('./utils/middleware')
+const {logger} = require('./utils/logger')
 
 app.use(express.json())
 

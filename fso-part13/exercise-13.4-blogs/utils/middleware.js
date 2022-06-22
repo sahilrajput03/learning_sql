@@ -1,9 +1,11 @@
 const {logger, loggert} = require('./logger')
 
 const unknownEndpoint = (request, response) => {
+	logger.err('got here unknownEndpoint', request.path)
 	response.status(404).send({error: 'unknown endpoint'})
 }
 
+// FYI: https://github.com/sahilrajput03/sahilrajput03/blob/master/README.md#did-you-know-we-can-get-the-number-of-parameters-defined-in-its-function-definition-
 // Centralize the application error handling in this middleware
 const errorHandler = (err, request, response, next) => {
 	let customErrorMessage
