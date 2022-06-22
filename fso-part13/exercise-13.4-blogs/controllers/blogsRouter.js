@@ -1,10 +1,14 @@
+// @ts-nocheck
 const express = require('express')
 const {Op} = require('sequelize')
 const {UserM} = require('../models')
 const {BlogM} = require('../models/BlogM')
 const {logger} = require('../utils/logger')
-const router = express.Router()
+const blogsRouter = express.Router()
 const tokenExtractor = require('../utils/tokenExtractor')
+
+// To fix the ts-check warnings.
+let log = global.log
 
 require('../initPostgreSql')
 
@@ -25,11 +29,12 @@ let dataValues = (data) => data.map((n) => n.dataValues)
 //     }
 // })
 
-router.get('/', async (req, res) => {
+blogsRouter.get('/', async (req, res) => {
 	let blogs
 	let where = {}
 
 	if (req.query.search) {
+		// exercise 13.13 + 13.14
 		where = {
 			[Op.or]: [
 				{
@@ -48,6 +53,11 @@ router.get('/', async (req, res) => {
 	// [Op.or]: [{ a: 5 }, { b: 6 }],
 
 	blogs = await BlogM.findAll({
+		// Docs: https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#ordering-and-grouping
+		order: [
+			// Will escape `likes` and validate DESC against a list of valid direction parameters
+			['likes', 'DESC'],
+		],
 		include: {
 			model: UserM, // This adds User of the blog to `user` key ( in each blog item in the array).
 			attributes: ['username'], // Only include `username` property from each `user` in each blog definition.
@@ -61,7 +71,8 @@ router.get('/', async (req, res) => {
 	return res.json(blogs) // notes.count is the total number of records(not pages).
 })
 
-router.get('/:id', async (req, res) => {
+blogsRouter.get('/:id', async (req, res) => {
+	/** @type object */
 	const blog = await BlogM.findByPk(req.params.id)
 
 	// return if note is not found!
@@ -76,8 +87,9 @@ router.get('/:id', async (req, res) => {
 	return res.json(blog)
 })
 
-router.delete('/:id', tokenExtractor, async (req, res) => {
+blogsRouter.delete('/:id', tokenExtractor, async (req, res) => {
 	const blog = await BlogM.findByPk(req.params.id)
+
 	let blogBelongsToUser = blog.userId == req.decodedToken.id
 
 	if (blogBelongsToUser) {
@@ -96,7 +108,7 @@ router.delete('/:id', tokenExtractor, async (req, res) => {
 	}
 })
 
-router.put('/:id', async (req, res, next) => {
+blogsRouter.put('/:id', async (req, res, next) => {
 	const blog = await BlogM.findByPk(req.params.id)
 
 	if (typeof req.body.author !== 'undefined') {
@@ -116,7 +128,7 @@ router.put('/:id', async (req, res, next) => {
 	res.send(updatedBlog)
 })
 
-router.post('/', tokenExtractor, async (req, res) => {
+blogsRouter.post('/', tokenExtractor, async (req, res) => {
 	let userId = req.decodedToken.id
 	// logger.success('userId', userId)
 	const blog = await BlogM.create({...req.body, important: true, userId})
@@ -128,11 +140,11 @@ router.post('/', tokenExtractor, async (req, res) => {
 	// }
 })
 
-router.delete('/reset', async (req, res) => {
+blogsRouter.delete('/reset', async (req, res) => {
 	// NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	log('?>', BlogM.sync({force: true})) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
 	return res.json({message: 'notes removed!'})
 })
 
-module.exports = router
+module.exports = blogsRouter

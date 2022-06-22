@@ -15,3 +15,6 @@ declare global {
 	let connectToDb, closeDb, beforeAll, test, sequelize
 }
 export {}
+
+declare
+BlogM = String

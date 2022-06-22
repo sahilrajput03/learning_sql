@@ -83,14 +83,16 @@ test('post USER', async () => {
 	expect(body).toHaveProperty('updatedAt')
 })
 
-test('SAMPLE: toMatchObject works for arrays as well', () => {
-	const received = [{username: 'sahilrajput03@gmail.com', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
-	const expected = [{username: 'sahilrajput03@gmail.com'}]
-	// Fyi: Below received value will *not* match (test will fail) though. Weird, right? ~Sahil
-	// const received = [{username: 'sahilrajput03@gmail.com', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
-
-	expect(received).toMatchObject(expected)
-})
+/* FOR REFERENCE */
+// test('SAMPLE: toMatchObject works for arrays as well', () => {
+// const received = [{username: 'sahilrajput03@gmail.com', unnecessary: 'values here..', unnecessary_2: 'values here..'}]
+// const expected = [{username: 'sahilrajput03@gmail.com'}]
+// >>>>>
+// Fyi: Below received value will *not* match (test will fail) though. Weird, right? ~Sahil
+// const received = [{username: 'sahilrajput03@gmail.com', unnecessary: 'values here..', unnecessary_2: 'values here..'}, {username: 'otheruser'}]
+// <<<<<
+// 	expect(received).toMatchObject(expected)
+// })
 
 let _token
 test('login USER', async () => {
@@ -240,9 +242,9 @@ test('get all blogs + searching', async () => {
 	// Clear all blogs
 	await BlogM.sync({force: true})
 
-	await api.post('/api/blogs').set('Authorization', _token).send({id: 20, title: 'blog abc', author: 'rohan', url: 'www.rohan.com', likes: 32})
-	await api.post('/api/blogs').set('Authorization', _token).send({id: 21, title: 'blog def', author: 'rohan', url: 'www.rohan.com', likes: 32})
-	await api.post('/api/blogs').set('Authorization', _token).send({id: 22, title: 'blog def', author: 'def fernandis', url: 'www.rohan.com', likes: 32})
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 20, title: 'blog abc', author: 'rohan', url: 'www.rohan.com', likes: 6})
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 21, title: 'blog def', author: 'rohan', url: 'www.rohan.com', likes: 8})
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 22, title: 'blog def', author: 'def fernandis', url: 'www.rohan.com', likes: 11})
 
 	// search blogs
 	let search1 = await api.get('/api/blogs?search=def')
@@ -252,4 +254,39 @@ test('get all blogs + searching', async () => {
 	let search2 = await api.get('/api/blogs?search=rohan')
 	// logger.info('blogs', search2.body)
 	expect(search2.body.map((blog) => blog.id)).toEqual(expect.arrayContaining([20, 21]))
+})
+
+/* FOR REFERENCE
+test('STATIC: ascending order array check', () => {
+	expect([1, 2, 3]).toEqual([1, 2, 3])
+
+	expect(() => {
+		expect([1, 2, 3]).toEqual([3, 2, 1])
+	}).toThrow()
+})
+ */
+
+// exercise 13.15
+test('get all blogs in `likes` descending order', async () => {
+	let search1 = await api.get('/api/blogs')
+	// logger.info(search1.body)
+	let orderedBlogs = search1.body.map((blog) => blog.likes)
+	expect(orderedBlogs).toEqual([11, 8, 6])
+})
+
+test('prepare for next test', async () => {
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 23, title: 'blog def', author: 'Varun Mayya', url: 'www.varyn-mayya.com', likes: 50})
+	await api.post('/api/blogs').set('Authorization', _token).send({id: 24, title: 'blog def', author: 'Varun Mayya', url: 'www.varyn-mayya.com', likes: 5})
+})
+
+// ex: 13.16
+test('get all authors with respected no. of blogs and total no. of likes', async () => {
+	const expectedBody = [
+		{author: 'Varun Mayya', articles: '2', total_likes: '55'},
+		{author: 'rohan', articles: '2', total_likes: '14'},
+		{author: 'def fernandis', articles: '1', total_likes: '11'},
+	]
+	const {body} = await api.get('/api/authors')
+	loggert.info(body)
+	// expect(body).toEqual(expectedBody)
 })

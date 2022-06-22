@@ -1,4 +1,4 @@
-const router = require('express').Router()
+const usersRouter = require('express').Router()
 const tokenExtractor = require('../utils/tokenExtractor')
 
 const {UserM, BlogM} = require('../models')
@@ -13,7 +13,7 @@ const includeBlogs = {
 }
 
 // ex-13.8
-router.get('/', async (req, res) => {
+usersRouter.get('/', async (req, res) => {
 	// const users = await UserM.findAll()
 
 	// Join query (aka populate in mongodb), docs: `include`: https://sequelize.org/docs/v6/core-concepts/assocs/#eager-loading-example
@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
 })
 
 // ex-13.8
-router.post('/', async (req, res) => {
+usersRouter.post('/', async (req, res) => {
 	const user = await UserM.create(req.body)
 	// console.log({user})
 	res.json(user)
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
 // ex-13.8
 // The main difference between the PUT and PATCH method is that the PUT method uses the request URI to supply a modified version of the requested resource which replaces the original version of the resource, whereas the PATCH method supplies a set of instructions to modify the resource.
-router.put('/:username', tokenExtractor, async (req, res) => {
+usersRouter.put('/:username', tokenExtractor, async (req, res) => {
 	// const user = await UserM.findByPk(req.params.id)
 	// LEARN: `notes` key doesnt exist if we use above query.
 
@@ -64,4 +64,4 @@ router.put('/:username', tokenExtractor, async (req, res) => {
 	}
 })
 
-module.exports = router
+module.exports = usersRouter
