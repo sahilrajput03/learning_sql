@@ -1,6 +1,7 @@
 # Readme
 
 **Sequelize Basics:** [Click here](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/)
+
 **Sequelize Cli:** [Click here](https://sequelize.org/docs/v6/other-topics/migrations/)
 
 This repository includes testing for sqlite. Most of sql command of sql are implemented in sql except [few](https://sqlite.org/omitted.html).
