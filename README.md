@@ -4,6 +4,8 @@
 
 **Sequelize Cli:** [Click here](https://sequelize.org/docs/v6/other-topics/migrations/)
 
+**Sequelize Sub Queries:** [Click here](https://sequelize.org/docs/v6/other-topics/sub-queries/)
+
 This repository includes testing for sqlite. Most of sql command of sql are implemented in sql except [few](https://sqlite.org/omitted.html).
 
 - _Npm packages_: `sequelize` ([docs](https://sequelize.org/master/)) and `sqlite3`.
