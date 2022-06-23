@@ -1,4 +1,3 @@
-// @ts-nocheck
 const express = require('express')
 const {Op} = require('sequelize')
 const {UserM} = require('../models')
@@ -88,9 +87,10 @@ blogsRouter.get('/:id', async (req, res) => {
 })
 
 blogsRouter.delete('/:id', tokenExtractor, async (req, res) => {
+	/** @type object */
 	const blog = await BlogM.findByPk(req.params.id)
 
-	let blogBelongsToUser = blog.userId == req.decodedToken.id
+	let blogBelongsToUser = blog.userId == req['decodedToken'].id
 
 	if (blogBelongsToUser) {
 		const result = await BlogM.destroy({
@@ -109,6 +109,7 @@ blogsRouter.delete('/:id', tokenExtractor, async (req, res) => {
 })
 
 blogsRouter.put('/:id', async (req, res, next) => {
+	/** @type {Object.<String, any>} */
 	const blog = await BlogM.findByPk(req.params.id)
 
 	if (typeof req.body.author !== 'undefined') {
@@ -129,7 +130,7 @@ blogsRouter.put('/:id', async (req, res, next) => {
 })
 
 blogsRouter.post('/', tokenExtractor, async (req, res) => {
-	let userId = req.decodedToken.id
+	let userId = req['decodedToken'].id
 	// logger.success('userId', userId)
 	const blog = await BlogM.create({...req.body, important: true, userId})
 	const blogJson = blog.toJSON()

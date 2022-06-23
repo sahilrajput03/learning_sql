@@ -1,4 +1,3 @@
-// @ts-nocheck
 const express = require('express')
 const {Op} = require('sequelize')
 const {sequelize} = require('../initPostgreSql')
@@ -35,12 +34,14 @@ authorsRouter.get('/', async (req, res) => {
 	 */
 
 	// Kalle Ives Solution (WORKS GOOD)!
+	/** @type any */
 	const rows = await sequelize.query(
 		`
 	select author, sum(likes) as like_count, count(author) as blog_count from blogs
 	group by author
 	order by like_count desc
 	`,
+		// @ts-ignore
 		{type: sequelize.QueryTypes.SELECT}
 	)
 
