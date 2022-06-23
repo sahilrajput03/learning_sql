@@ -1,3 +1,4 @@
+const {Umzug, SequelizeStorage} = require('umzug')
 const {Sequelize} = require('sequelize')
 const {NoteM, UserM, initNoteM, initUserM, setupAssociations} = require('./models')
 
@@ -43,6 +44,22 @@ const sequelize = new Sequelize(DATABASE_URL, config)
 // 		console.error('~Sahil: Unable to connect to the database :'.bgRed, err)
 // 	})
 
+const runMigrations = async () => {
+	const migrator = new Umzug({
+		migrations: {
+			glob: 'migrations/*.js',
+		},
+		storage: new SequelizeStorage({sequelize, tableName: 'migrations'}),
+		context: sequelize.getQueryInterface(),
+		logger: console,
+	})
+
+	const migrations = await migrator.up()
+	console.log('Migrations up to date', {
+		files: migrations.map((mig) => mig.name),
+	})
+}
+
 const connect = async () => {
 	try {
 		await sequelize.authenticate()
@@ -58,8 +75,11 @@ const connect = async () => {
 		// Create table if doesn't exist already!
 		// Fix the schema on the fly.
 		// This causes error imo when new tables are created so `alter: true` doesn't create the table at all as it only tries to fix the already existing tables.
-		await NoteM.sync({alter: true}) // LEARN: order of syncing these tables has to be like this only!
-		await UserM.sync({alter: true})
+		// await NoteM.sync({alter: true}) // LEARN: order of syncing these tables has to be like this only!
+		// await UserM.sync({alter: true})
+
+		// LEARN: We are gonna use different way to fix the table migrations now (instead of using `.sync({alter: true})` method coz we want our migrations to be trackable by these migration files over the time, YIKES!)
+		await runMigrations()
 	} catch (err) {
 		console.error('~Sahil: Unable to connect to the database :'.bgRed, err)
 	}

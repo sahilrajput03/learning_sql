@@ -15,6 +15,14 @@ In systems analysis, a **many-to-many relationship** is a type of cardinality th
 A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table. Src: https://www.w3schools.com/sql/sql_foreignkey.asp
 
 ```bash
+## CREATING TABLES (not possible with sequelize way IMO~Sahil) ##
+
+# PRO WAY
+# Both of below command works good, TESTED: 23 Jun, 2022 ~ Sahil (FYI: Single quotes around `myDb1_test` doesn't work.)
+psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_test";'
+psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_test";' -c 'CREATE DATABASE "myDb1_test";'
+
+# Older Manual Way:
 psql -U postgres
 DROP DATABASE IF EXISTS "myDb1_test";
 CREATE DATABASE "myDb1_test";
