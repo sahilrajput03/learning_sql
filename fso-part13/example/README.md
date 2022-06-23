@@ -34,9 +34,35 @@ exit
 \c db_name_here
 # Show relations in connected database
 \d
+# Show relations in particular table in the connected database
+\d table_name
 # Exit
 \q
 ```
+
+## Sample output of relations of a table
+
+```txt
+psql -U postgres
+\c myDb1_test
+\d users
+# :: OUTPUT ::
+                                     Table "public.users"
+  Column  |          Type          | Collation | Nullable |              Default
+----------+------------------------+-----------+----------+-----------------------------------
+ id       | integer                |           | not null | nextval('users_id_seq'::regclass)
+ username | character varying(255) |           | not null |
+ name     | character varying(255) |           | not null |
+ admin    | boolean                |           |          | false
+ disabled | boolean                |           |          | false
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "users_username_key" UNIQUE CONSTRAINT, btree (username)
+Referenced by:
+    TABLE "notes" CONSTRAINT "notes_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL
+```
+
+## Confused on large sized errors from sequelize ?
 
 ```js
 // Finding terminal sequelize errors made easy:
