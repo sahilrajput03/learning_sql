@@ -23,7 +23,7 @@ let config = {
 	},
 }
 
-console.log('DATABASE_URL', DATABASE_URL)
+logger.info('DATABASE_URL', DATABASE_URL)
 const sequelize = new Sequelize(DATABASE_URL, config)
 
 // let connection = sequelize
@@ -65,7 +65,6 @@ const runMigrations = async () => {
 const connect = async () => {
 	try {
 		await sequelize.authenticate()
-		console.log('Connection has been established successfully.')
 		logger.success('connection to db::SUCCESSFUL')
 
 		// Setup models
@@ -84,7 +83,7 @@ const connect = async () => {
 		// LEARN: We are gonna use different way to fix the table migrations now (instead of using `.sync({alter: true})` method coz we want our migrations to be trackable by these migration files over the time, YIKES!)
 		await runMigrations()
 	} catch (err) {
-		console.error('~Sahil: Unable to connect to the database :'.bgRed, err)
+		logger.err('~Sahil: Unable to connect to the database :', err)
 	}
 }
 
