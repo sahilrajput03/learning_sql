@@ -1,6 +1,7 @@
 const {Umzug, SequelizeStorage} = require('umzug') // src: https://github.com/sequelize/umzug
 const {Sequelize} = require('sequelize')
 const {NoteM, UserM, initNoteM, initUserM, setupAssociations} = require('./models')
+// @ts-ignore
 const {logger} = require('logger-sahil')
 
 let {DATABASE_URL, NODE_ENV} = process.env
@@ -22,7 +23,7 @@ let config = {
 	},
 }
 
-console.log('DATABASE_URL'.bgGreen, DATABASE_URL.green)
+console.log('DATABASE_URL', DATABASE_URL)
 const sequelize = new Sequelize(DATABASE_URL, config)
 
 // let connection = sequelize

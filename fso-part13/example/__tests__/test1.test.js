@@ -39,7 +39,7 @@ connectToDb(async () => {
 
 closeDb(async () => {
 	// await mongoose.connection.close()
-	const db = sequelize
+	const db = global.sequelize
 	await db.close() // close the connection.
 })
 

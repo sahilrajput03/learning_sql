@@ -7,11 +7,12 @@ const {NoteM, UserM} = require('../models/')
 const {dataValues} = require('../utils')
 const router = express.Router()
 
-let js = (...args) => JSON.stringify(...args)
-let log = (...args) => console.log(chalk.yellow.bgRed.bold(JSON.stringify(...args)))
+let js = (...args) => JSON.stringify({...args})
+let log = (...args) => console.log(chalk.yellow.bgRed.bold(JSON.stringify({...args})))
 
 router.get('/', async (req, res) => {
 	let notes
+	/** @type {Object.<String, any>} */
 	const where = {}
 
 	if (req.query.important) {
@@ -62,31 +63,36 @@ router.get('/:id', noteFinder, async (req, res) => {
 	// const note = await NoteM.findByPk(req.params.id)
 
 	// return if note is not found!
-	if (!req.note) return res.status(400).json({message: 'note not found!'})
+
+	// Using this way coz ts-check silents for error on errors like 'note' doens't exist on req object.
+	let note = req['note']
+	if (!note) return res.status(400).json({message: 'note not found!'})
 
 	// log('my note::', note.dataValues) //? However, perhaps a better solution is to turn the collection into JSON for printing by using the method JSON.stringify:
 	// log('my note::', s(note)) //? indented + no data type syntax highlight
 	// log('my note::', ps(note)) //? no indentation + data type syntax highlight
 
-	req.note.important = req.body.important
-	await req.note.save()
-	return res.json(req.note)
+	note.important = req.body.important
+	await note.save()
+	return res.json(note)
 })
 
 router.put('/:id', noteFinder, async (req, res, next) => {
 	// added this to `noteFinder` middleware...
 	// let note = await NoteM.findByPk(req.params.id)
 
-	if (req.note) {
+	let note = req['note']
+	if (note) {
 		if (typeof req.body.important !== 'undefined') {
-			req.note.important = req.body.important
+			note.important = req.body.important
 		}
 		if (typeof req.body.content !== 'undefined') {
-			req.note.content = req.body.content
+			note.content = req.body.content
 		}
-		await req.note.save()
-		res.json(req.note)
+		await note.save()
+		res.json(note)
 	} else {
+		// @ts-ignore
 		res(404).end()
 	}
 })
@@ -100,11 +106,12 @@ router.delete('/reset', async (req, res) => {
 
 // This is intentionally put below `delete@/reset` route so that below wildcard middleware doesn't catch `delete@/reset` route.
 router.delete('/:id', noteFinder, async (req, res, next) => {
-	if (req.note) {
-		await req.note.destroy()
+	let note = req['note']
+	if (note) {
+		await note.destroy()
 		res.status(204).end()
 	} else {
-		res(404).end()
+		res.status(404).send("Sorry can't find that!")
 	}
 })
 
@@ -125,11 +132,15 @@ const tokenExtractor = (req, res, next) => {
 	// next()
 }
 
-router.post('/', tokenExtractor, async (req, res) => {
+router.post('/', tokenExtractor, async (request, res) => {
 	// log(js(req.body))
 	try {
+		/** @type {Object.<String, any>} */
+		let req = request
+
+		/** @type {Object.<String, any>} */
 		const user = await UserM.findByPk(req.decodedToken.id)
-		const note = await NoteM.create({...req.body, important: req.body.important, userId: user.id, date: new Date()}) // LEARN: If we don't supply `userId` property then `userId` property will be saved as null (unless we have defined ``foreignKey: { allowNull: false }`` in the Association i.e., ```User.hasMany(NoteM, {..HERE..})``` ).
+		const note = await NoteM.create({...request.body, important: request.body.important, userId: user.id, date: new Date()}) // LEARN: If we don't supply `userId` property then `userId` property will be saved as null (unless we have defined ``foreignKey: { allowNull: false }`` in the Association i.e., ```User.hasMany(NoteM, {..HERE..})``` ).
 		// LEARN: In index.js file, we define ```UserM.hasMany(NoteM)``` which applies that - Sequelize will automatically create an attribute called `userId` on the Note model to which, when referenced gives access to the database column `user_id`.  ~ FSO
 
 		return res.json(note)
@@ -142,13 +153,13 @@ module.exports = router
 
 // LEARN: Instead of using NoteM.create method we can use: NoteM.build method as well to save a note:
 // Src: FSO: https://fullstackopen.com/en/part13/join_tables_and_queries#attention-to-the-definition-of-the-models
-async function anotherWay() {
-	// create a note without saving it yet
-	const note = NoteM.build({...req.body, date: new Date()}) // eslint-disable-line no-undef
+// async function anotherWay() {
+// create a note without saving it yet
+// const note = NoteM.build({...req.body, date: new Date()}) // eslint-disable-line no-undef
 
-	// put the user id in the userId property of the created note
-	note.userId = user.id // eslint-disable-line no-undef
+// put the user id in the userId property of the created note
+// note.userId = user.id // eslint-disable-line no-undef
 
-	// store the note object in the database
-	await note.save()
-}
+// store the note object in the database
+// await note.save()
+// }

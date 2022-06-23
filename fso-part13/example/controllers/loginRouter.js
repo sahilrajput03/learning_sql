@@ -5,6 +5,9 @@ const {UserM} = require('../models/UserM')
 router.post('/', async (request, response) => {
 	const body = request.body
 
+	/**
+	 * @type {Object.<String, any>}
+	 */
 	const user = await UserM.findOne({
 		where: {
 			username: body.username,
