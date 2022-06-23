@@ -72,32 +72,33 @@ test('get single users', async () => {
 })
 
 test('get all users', async () => {
-	const expectedObject = {notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
+	// Test a single user only in the give array of users from backend.
+	const expected = {notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
 
 	let {body} = await api.get('/api/users')
 	// loggert.info(body)
 
 	// ? See below `LEARN:` test to know the minimal working of this and source of learning.
-	expect(body).toEqual(expect.arrayContaining([expect.objectContaining(expectedObject)]))
+	expect(body).toEqual(expect.arrayContaining([expect.objectContaining(expected)]))
 })
 
 test('get all users + {admin, disabled} props <duplicate_of_above>', async () => {
-	const expectedObject = {admin: false, disabled: false, notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
+	const expected = {admin: false, disabled: false, notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
 
 	let {body} = await api.get('/api/users')
 	// loggert.info(body)
 
 	// ? See below `LEARN:` test to know the minimal working of this and source of learning.
-	expect(body).toEqual(expect.arrayContaining([expect.objectContaining(expectedObject)]))
+	expect(body).toEqual(expect.arrayContaining([expect.objectContaining(expected)]))
 })
 
 test('LEARN: array containing an object', () => {
 	// src: https://jestjs.io/docs/expect#expectarraycontainingarray
-	const expectedMatchingObjectInArray = {name: 'sahil'}
+	const expected = {name: 'sahil'}
 	const received = [{name: 'sahil', lastname: 'rajput'}, {otherObjectsAnyShape: 'Rohit'}]
 
 	// Src: https://codewithhugo.com/jest-array-object-match-contain/
-	expect(received).toEqual(expect.arrayContaining([expect.objectContaining(expectedMatchingObjectInArray)]))
+	expect(received).toEqual(expect.arrayContaining([expect.objectContaining(expected)]))
 })
 
 //! LOGIN ROUTER TEST
