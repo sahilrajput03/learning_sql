@@ -1,5 +1,6 @@
 /* global connectToDb, closeDb beforeAll test sequelize */
 //? Use .env.test file for environment.
+// @ts-ignore
 const {loggert} = require('logger-sahil')
 const path = require('path')
 const dotenv = require('dotenv')
@@ -18,8 +19,15 @@ const {expect} = require('expect')
 const {NoteM, UserM} = require('../models/')
 const chalk = require('chalk')
 
-// let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
-let js = (...args) => JSON.stringify(...args)
+let js = (...args) => JSON.stringify({...args})
+
+// Reuired bcoz I am using @ts-check and it complains via vscode.
+let isFlashRunner = global.isFlashRunner,
+	connectToDb = global.connectToDb,
+	sequelize = global.sequelize,
+	closeDb = global.closeDb,
+	beforeAll = global.beforeAll,
+	test = global.test
 
 // withSupertest.test
 connectToDb(async () => {
@@ -64,18 +72,32 @@ test('get single users', async () => {
 })
 
 test('get all users', async () => {
-	const expectedBody = [{notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}]
-	const {body} = await api.get('/api/users')
+	const expectedObject = {notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
 
-	expect(body).toEqual(expect.arrayContaining(expectedBody))
+	let {body} = await api.get('/api/users')
+	// loggert.info(body)
+
+	// ? See below `LEARN:` test to know the minimal working of this and source of learning.
+	expect(body).toEqual(expect.arrayContaining([expect.objectContaining(expectedObject)]))
+})
+
+test('get all users + {admin, disabled} props <duplicate_of_above>', async () => {
+	const expectedObject = {admin: false, disabled: false, notes: [], id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
+
+	let {body} = await api.get('/api/users')
+	// loggert.info(body)
+
+	// ? See below `LEARN:` test to know the minimal working of this and source of learning.
+	expect(body).toEqual(expect.arrayContaining([expect.objectContaining(expectedObject)]))
 })
 
 test('LEARN: array containing an object', () => {
 	// src: https://jestjs.io/docs/expect#expectarraycontainingarray
-	const expected = [{name: 'Sahil'}]
-	const received = [{name: 'Sahil'}, {name: 'Rohit'}]
+	const expectedMatchingObjectInArray = {name: 'sahil'}
+	const received = [{name: 'sahil', lastname: 'rajput'}, {otherObjectsAnyShape: 'Rohit'}]
 
-	expect(received).toEqual(expect.arrayContaining(expected))
+	// Src: https://codewithhugo.com/jest-array-object-match-contain/
+	expect(received).toEqual(expect.arrayContaining([expect.objectContaining(expectedMatchingObjectInArray)]))
 })
 
 //! LOGIN ROUTER TEST
