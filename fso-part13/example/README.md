@@ -30,6 +30,12 @@ exit
 
 ## FYI: To view database list use below command:
 \l
+# Connect to db, src: https://stackoverflow.com/a/69962528/10012446
+\c db_name_here
+# Show relations in connected database
+\d
+# Exit
+\q
 ```
 
 ```js

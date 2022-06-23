@@ -1,6 +1,7 @@
-const {Umzug, SequelizeStorage} = require('umzug')
+const {Umzug, SequelizeStorage} = require('umzug') // src: https://github.com/sequelize/umzug
 const {Sequelize} = require('sequelize')
 const {NoteM, UserM, initNoteM, initUserM, setupAssociations} = require('./models')
+const {logger} = require('logger-sahil')
 
 let {DATABASE_URL, NODE_ENV} = process.env
 // console.log({DATABASE_URL, NODE_ENV})
@@ -63,7 +64,8 @@ const runMigrations = async () => {
 const connect = async () => {
 	try {
 		await sequelize.authenticate()
-		console.log('Connection has been established successfully.'.mb)
+		console.log('Connection has been established successfully.')
+		logger.success('connection to db::SUCCESSFUL')
 
 		// Setup models
 		initNoteM(sequelize)

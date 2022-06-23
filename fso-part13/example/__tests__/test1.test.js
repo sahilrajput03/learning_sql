@@ -18,7 +18,6 @@ const {expect} = require('expect')
 const {NoteM, UserM} = require('../models/')
 const chalk = require('chalk')
 
-let log = (...args) => console.log(chalk.blue.bgRed.bold(JSON.stringify(...args, null, 2)))
 // let log = (...args) => console.log(chalk.blue.bgRed.bold(...args))
 let js = (...args) => JSON.stringify(...args)
 
@@ -28,7 +27,6 @@ connectToDb(async () => {
 	const {connection} = require('../db')
 	// wait till the connection establishes to postgresql!
 	await connection
-	log('connection to db::SUCCESSFUL')
 })
 
 closeDb(async () => {
