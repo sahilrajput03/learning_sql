@@ -42,9 +42,6 @@ if (isFlashRunner) {
 }
 
 beforeAll(async () => {
-	// Fix the schema on the fly.
-	await BlogM.sync({alter: true})
-
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await BlogM.sync({force: true})
@@ -287,6 +284,21 @@ test('get all authors with respected no. of blogs and total no. of likes', async
 		{author: 'def fernandis', articles: '1', total_likes: '11'},
 	]
 	const {body} = await api.get('/api/authors')
-	loggert.info(body)
-	// expect(body).toEqual(expectedBody)
+	// loggert.info(body)
+	expect(body).toEqual(expectedBody)
+})
+
+test('test error thrown for invalid year value while saving a blog', async () => {
+	const expectedBody = {author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32, year: 1800}
+	// const expectedStatus = 200
+
+	const expected = {
+		error: {
+			name: 'SequelizeValidationError',
+			message: 'Validation error: year field must be between 1991 to 2022, but give year value is: 1800.',
+		},
+	}
+	const {body} = await api.post('/api/blogs').set('Authorization', _token).send(expectedBody)
+	// loggert.info(body)
+	expect(body).toEqual(expected)
 })

@@ -27,6 +27,19 @@ const initBlogM = (sequelize) => {
 				type: DataTypes.INTEGER,
 				defaultValue: 0,
 			},
+			year: {
+				type: DataTypes.INTEGER,
+				validate: {
+					// ~my custom validation function, docs: https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/
+					isCorrectYear(value) {
+						// @ts-ignore
+						let currentYear = new Date().getYear() + 1900
+						if (value < 1991 || value > currentYear) {
+							throw new Error('year field must be between 1991 to ' + currentYear + ', but give year value is: ' + value + '.')
+						}
+					},
+				},
+			},
 		},
 		{
 			sequelize,

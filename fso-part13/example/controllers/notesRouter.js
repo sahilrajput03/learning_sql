@@ -98,8 +98,6 @@ router.put('/:id', noteFinder, async (req, res, next) => {
 })
 
 router.delete('/reset', async (req, res) => {
-	// NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
-
 	await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	return res.json({message: 'notes removed!'})
 })
