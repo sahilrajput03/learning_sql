@@ -203,3 +203,38 @@ test('reset notes', async () => {
 	const {body} = await api.get('/api/notes').expect(200)
 	expect(body.length).toBe(0)
 })
+
+test('disable login for a user', async () => {
+	// post user
+	let user = {username: 'jami_kousa', name: 'Jami Kousa', disabled: true}
+	await api.post('/api/users').send(user)
+
+	// try logging in
+	const loginCred = {username: 'jami_kousa', password: 'secret'}
+
+	const {body, statusCode} = await api.post('/api/login').send(loginCred)
+
+	expect(body).toEqual({error: 'account disabled, please contact admin'})
+	expect(statusCode).toBe(401)
+	// loggert.info(body, statusCode)
+})
+
+test('disable user via api call using an admin user', async () => {
+	// post admin user
+	let user = {username: 'new_admin', name: 'I am admin', admin: true}
+	await api.post('/api/users').send(user)
+
+	// Login admin user to get token
+	const cred = {username: 'new_admin', password: 'secret'}
+	const response_login = await api.post('/api/login').send(cred)
+	const admin_token = 'bearer ' + response_login.body.token
+	// loggert.info(admin_token)
+
+	// Disable user
+	let payload = {disabled: true}
+	const {body, statusCode} = await api.put('/api/users/jami_kousa').set('Authorization', admin_token).send(payload)
+	// loggert.info(body)
+	// loggert.info(statusCode)
+	expect(body.disabled).toBe(true)
+	expect(statusCode).toBe(200)
+})

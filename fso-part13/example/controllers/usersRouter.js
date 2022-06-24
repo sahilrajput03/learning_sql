@@ -1,5 +1,5 @@
 const router = require('express').Router()
-
+const {tokenExtractor} = require('../utils/middleware.js')
 const {UserM, NoteM} = require('../models')
 
 //?  join query is done using the `include` option as a `query parameter`
@@ -42,6 +42,33 @@ router.get('/:id', async (req, res) => {
 	// We get `notes` key which is array of notes rows(objects) from User table.
 
 	if (user) {
+		res.json(user)
+	} else {
+		res.status(404).end()
+	}
+})
+
+const isAdmin = async (req, res, next) => {
+	/** @type any */
+	const user = await UserM.findByPk(req.decodedToken.id)
+	if (!user.admin) {
+		return res.status(401).json({error: 'operation not allowed'})
+	}
+	next()
+}
+
+// To be able to disable/enable any user
+router.put('/:username', tokenExtractor, isAdmin, async (req, res) => {
+	/** @type any */
+	const user = await UserM.findOne({
+		where: {
+			username: req.params.username,
+		},
+	})
+
+	if (user) {
+		user.disabled = req.body.disabled
+		await user.save()
 		res.json(user)
 	} else {
 		res.status(404).end()
