@@ -4,6 +4,16 @@
 
 **Sequelize Cli:** [Click here](https://sequelize.org/docs/v6/other-topics/migrations/)
 
+- **Many to many relationship:**
+
+![image](https://user-images.githubusercontent.com/31458531/175762567-9d0cd2e4-9f92-4d50-a9b1-3843c079feec.png)
+
+![image](https://user-images.githubusercontent.com/31458531/175763138-fe9a7e5e-78d4-44c5-85c3-1068a5caf1fb.png)
+
+![image](https://user-images.githubusercontent.com/31458531/175762818-5d6b9cbf-3325-4128-8e1a-419ed7e9b82b.png)
+
+
+
 **Sequelize Sub Queries:** [Click here](https://sequelize.org/docs/v6/other-topics/sub-queries/)
 
 This repository includes testing for sqlite. Most of sql command of sql are implemented in sql except [few](https://sqlite.org/omitted.html).
@@ -14,7 +24,7 @@ This repository includes testing for sqlite. Most of sql command of sql are impl
 
 **My raw sql query notes**
 
-- W3school Notes: [Here](NOTES_sql_w3schools.md).
+- W3school Notes: [Here](NOTES_sql_w3schools.md)
 - Sql bolt Notes: [Here](NOTES_sql_bolt.md)
 
 ## Sqlite:
