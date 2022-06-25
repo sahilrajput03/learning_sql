@@ -7,6 +7,7 @@
 psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_blogs_test";'
 psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_blogs_test";' -c 'CREATE DATABASE "myDb1_blogs_test";'
 
+
 # Older manual way
 psql -U postgres
 DROP DATABASE IF EXISTS "myDb1_blogs_test";

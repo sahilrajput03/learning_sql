@@ -125,6 +125,16 @@ test('login', async () => {
 	_token = 'bearer ' + body.token
 })
 
+// here..
+
+test('get all users (SIMPLY DUPLICATE)', async () => {
+	// post a sample note for the user
+	await api.post('/api/notes').set('Authorization', _token).send({content: 'very good buddy!'}).expect(200)
+
+	let {body} = await api.get('/api/users')
+	loggert.info(body)
+})
+
 //! NOTES ROUTER TESTS //
 test('post a note', async () => {
 	// // create a user

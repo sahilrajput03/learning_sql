@@ -15,12 +15,21 @@ In systems analysis, a **many-to-many relationship** is a type of cardinality th
 A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table. Src: https://www.w3schools.com/sql/sql_foreignkey.asp
 
 ```bash
+# Login to psql
+psql -U postgres -d myDb1_test
+
 ## CREATING TABLES (not possible with sequelize way IMO~Sahil) ##
 
 # PRO WAY
-# Both of below command works good, TESTED: 23 Jun, 2022 ~ Sahil (FYI: Single quotes around `myDb1_test` doesn't work.)
-psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_test";'
-psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_test";' -c 'CREATE DATABASE "myDb1_test";'
+# ~ Sahil (In below commands, using double quotes around case-sensitive database names IS NECESSARY(single quotes does not work) and escaping double quotes around `myDb1_test` is necesssary bcoz we are using double quotes to pass values as a single string to psql's -u option.)
+# Drop table
+psql -U postgres -c "DROP DATABASE IF EXISTS \"myDb1_test\";"
+# Drop table and recreate
+psql -U postgres -c "DROP DATABASE IF EXISTS \"myDb1_test\";" -c "CREATE DATABASE \"myDb1_test\";"
+
+# ::NEVER DROP THE MIGRATIONS TABLE AGAIN UNLESS YOU HAVE DELETE ALL THE TABLES AS WELL:: Dropping `migrations` table from myDb1_test table (TESTED), learn: -d option is to select a table
+psql -U postgres -d myDb1_test -c "DROP TABLE migrations;"
+
 
 # Older Manual Way:
 psql -U postgres
@@ -40,11 +49,76 @@ exit
 \q
 ```
 
+## Input sample values to teams table
+
+```sql
+insert into teams (name) values ('toska');
+insert into teams (name) values ('mosa climbers');
+insert into memberships (user_id, team_id) values (1, 1);
+insert into memberships (user_id, team_id) values (1, 2);
+insert into memberships (user_id, team_id) values (2, 1);
+insert into memberships (user_id, team_id) values (3, 2);
+```
+
+## Delete the `migrations` table and now migrations are not struck?
+
+This could be the case when you accidentally delete the migrations table, and now when the migrations code is run on the server start server throws errors i.e., tables already exists and its bcoz sequelize is tryting to recreate tables from start which is obviously gonna throw error.
+
+So how do you fix that?
+
+Simlly add below rows to the `migrations` tables manually via `psql` via:
+
+```sql
+-- comments in sql
+-- Drop table (for mimication of accidental deletion of table)
+DROP TABLE migrations;
+-- MODERN WAY
+psql -U postgres -d myDb1_test -c "DROP TABLE migrations;"
+
+
+-- MODERN WAY
+psql -U postgres -d myDb1_test -c "CREATE TABLE migrations (name TEXT NOT NULL)" -c "INSERT INTO migrations (name) VALUES ('20211209_00_initialize_notes_and_users.js');" -c "INSERT INTO migrations (name) VALUES ('20211209_01_admin_and_disabled_to_users.js');" -c "INSERT INTO migrations (name) VALUES ('20211209_02_team_support.js');"
+-- Verify:
+psql -U postgres -d myDb1_test -c "select * from migrations;"
+-- OLD SQL SUBSHELL WAY
+-- Create table
+CREATE TABLE migrations (name TEXT NOT NULL);
+INSERT INTO migrations (name) VALUES ('20211209_00_initialize_notes_and_users.js');
+INSERT INTO migrations (name) VALUES ('20211209_01_admin_and_disabled_to_users.js');
+INSERT INTO migrations (name) VALUES ('20211209_02_team_support.js');
+-- Learn: using single quotes with value's value is necessary else psql throws error that column doesn't exist.
+
+# Verify
+select * from migrations;
+```
+
+```txt
+myDb1_test=# \d migrations
+                    Table "public.migrations"
+ Column |          Type          | Collation | Nullable | Default
+--------+------------------------+-----------+----------+---------
+ name   | character varying(255) |           | not null |
+Indexes:
+    "migrations_pkey" PRIMARY KEY, btree (name)
+
+myDb1_test=# select * from migrations ;
+                    name
+--------------------------------------------
+ 20211209_00_initialize_notes_and_users.js
+ 20211209_01_admin_and_disabled_to_users.js
+ 20211209_02_team_support.js
+(3 rows)
+```
+
 ## Sample output of relations of a table
 
 ```txt
 psql -U postgres
+
+# Select database
 \c myDb1_test
+
+# Show relations of users table
 \d users
 # :: OUTPUT ::
                                      Table "public.users"

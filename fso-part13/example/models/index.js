@@ -1,7 +1,14 @@
 const {NoteM, initNoteM} = require('./NoteM')
 const {UserM, initUserM} = require('./UserM')
+const {TeamM, initTeamM} = require('./TeamM')
+const {MembershipM, initMembershipM} = require('./MembershipM')
 
-const setupAssociations = () => {
+const setupModels = (sequelize) => {
+	// Setup models
+	initNoteM(sequelize)
+	initUserM(sequelize)
+	initTeamM(sequelize)
+	initMembershipM(sequelize)
 	// Amazing ``one to many philosophy`` (official docs): https://sequelize.org/docs/v6/core-concepts/assocs/#one-to-many-relationships
 	// ^^: One-To-Many associations are connecting one source with multiple targets, while all these targets are connected only with this single source.
 	// This means that, unlike the One-To-One association, in which we had to choose where the foreign key would be placed, there is only one option in One-To-Many associations. For example, if one Foo has many Bars (and this way each Bar belongs to one Foo), then the only sensible implementation is to have a fooId column in the Bar table. The opposite is impossible, since one Foo has many Bars.
@@ -21,12 +28,16 @@ const setupAssociations = () => {
 
 	NoteM.belongsTo(UserM)
 	// The A.belongsTo(B) association means that a One-To-One relationship exists between A and B, with the foreign key being defined in the source model (A).
+
+	// Many to many relationship:
+	UserM.belongsToMany(TeamM, {through: MembershipM})
+	TeamM.belongsToMany(UserM, {through: MembershipM})
 }
 
 module.exports = {
 	NoteM,
 	UserM,
-	initNoteM,
-	initUserM,
-	setupAssociations,
+	TeamM,
+	MembershipM,
+	setupModels,
 }

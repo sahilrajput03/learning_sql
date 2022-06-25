@@ -47,6 +47,10 @@ printer(args, chalk.bgGreen.yellow.bold)
  logger.success(inspect(['bar', 20]))
 */
 
+// Disable depth limit while printing objects to console (Default value is 2)
+// src: https://nodejs.dev/learn/how-to-log-an-object-in-nodejs
+require('util').inspect.defaultOptions.depth = null
+
 const printer = (args, chalkify) => {
 	if (args.length === 0) throw '::::::error::::: no argument supplied to logger'
 	args.forEach((element) => {

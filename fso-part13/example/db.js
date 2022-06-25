@@ -1,6 +1,6 @@
 const {Umzug, SequelizeStorage} = require('umzug') // src: https://github.com/sequelize/umzug
 const {Sequelize} = require('sequelize')
-const {NoteM, UserM, initNoteM, initUserM, setupAssociations} = require('./models')
+const {NoteM, UserM, setupModels} = require('./models')
 // @ts-ignore
 const {logger} = require('logger-sahil')
 
@@ -74,12 +74,8 @@ const connect = async () => {
 		await sequelize.authenticate()
 		logger.success('connection to db::SUCCESSFUL')
 
-		// Setup models
-		initNoteM(sequelize)
-		initUserM(sequelize)
-
-		// Setup Associations
-		setupAssociations()
+		// Setup Models with sequelize
+		setupModels(sequelize)
 
 		// Create table if doesn't exist already!
 		// Fix the schema on the fly.
