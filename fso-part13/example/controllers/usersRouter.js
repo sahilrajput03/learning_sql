@@ -94,6 +94,7 @@ router.get('/:id', async (req, res) => {
 	}
 
 	/** @type object */
+	// @ts-ignore
 	const user = await UserM.findByPk(req.params.id, queryOptions)
 	// We get `notes` key which is array of notes rows(objects) from User table.
 
