@@ -1,6 +1,10 @@
 # Readme
 
-- Many to many relationship:
+**Sequelize Basics:** [Click here](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/)
+
+**Sequelize Cli:** [Click here](https://sequelize.org/docs/v6/other-topics/migrations/)
+
+- **Many to many relationship:**
 
 ![image](https://user-images.githubusercontent.com/31458531/175762567-9d0cd2e4-9f92-4d50-a9b1-3843c079feec.png)
 
@@ -9,10 +13,6 @@
 ![image](https://user-images.githubusercontent.com/31458531/175762818-5d6b9cbf-3325-4128-8e1a-419ed7e9b82b.png)
 
 
-
-**Sequelize Basics:** [Click here](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/)
-
-**Sequelize Cli:** [Click here](https://sequelize.org/docs/v6/other-topics/migrations/)
 
 **Sequelize Sub Queries:** [Click here](https://sequelize.org/docs/v6/other-topics/sub-queries/)
 
