@@ -1,6 +1,8 @@
 # Readme
 
-- Many to many relationship: ![image](https://user-images.githubusercontent.com/31458531/175762567-9d0cd2e4-9f92-4d50-a9b1-3843c079feec.png)
+- Many to many relationship:
+
+![image](https://user-images.githubusercontent.com/31458531/175762567-9d0cd2e4-9f92-4d50-a9b1-3843c079feec.png)
 
 **Sequelize Basics:** [Click here](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/)
 
