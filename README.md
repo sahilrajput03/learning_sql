@@ -4,6 +4,12 @@
 
 ![image](https://user-images.githubusercontent.com/31458531/175762567-9d0cd2e4-9f92-4d50-a9b1-3843c079feec.png)
 
+![image](https://user-images.githubusercontent.com/31458531/175762802-140d3143-b2fd-46cc-9be8-9a7d2342bf1e.png)
+
+![image](https://user-images.githubusercontent.com/31458531/175762818-5d6b9cbf-3325-4128-8e1a-419ed7e9b82b.png)
+
+
+
 **Sequelize Basics:** [Click here](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/)
 
 **Sequelize Cli:** [Click here](https://sequelize.org/docs/v6/other-topics/migrations/)
@@ -18,7 +24,7 @@ This repository includes testing for sqlite. Most of sql command of sql are impl
 
 **My raw sql query notes**
 
-- W3school Notes: [Here](NOTES_sql_w3schools.md).
+- W3school Notes: [Here](NOTES_sql_w3schools.md)
 - Sql bolt Notes: [Here](NOTES_sql_bolt.md)
 
 ## Sqlite:
