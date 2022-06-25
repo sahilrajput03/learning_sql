@@ -35,8 +35,8 @@ const setupModels = (sequelize) => {
 	// Many to many relationship:
 	// FSO: The User.hasMany(Note) definition therefore attaches a `notes` property to the user object, which gives access to the notes made by the user.
 	// FSO: The User.belongsToMany(Team, { through: Membership })) definition similarly attaches a `teams` property to the user object, which can also be used in the code:
-	UserM.belongsToMany(TeamM, {through: MembershipM})
-	TeamM.belongsToMany(UserM, {through: MembershipM})
+	UserM.belongsToMany(TeamM, {through: MembershipM}) // links `teams` key in `UserM`, TESTED and VERIFIED.
+	TeamM.belongsToMany(UserM, {through: MembershipM}) // links `users` key in `TeamM`, TESTED and VERIFIED.
 
 	// https://fullstackopen.com/en/part13/migrations_many_to_many_relationships#revisiting-many-to-many-relationships
 	UserM.belongsToMany(NoteM, {through: UserNotesM, as: 'marked_notes'})
@@ -52,3 +52,20 @@ module.exports = {
 	UserNotesM,
 	setupModels,
 }
+
+/* 
+? Works good, populates `users` key in teams table and `teams` key in users table.
+test('??', async () => {
+	const t = await TeamM.findAll({
+		include: {model: UserM},
+	})
+	loggert.info(t.map((t) => t.toJSON()))
+})
+
+test('??', async () => {
+	const t = await UserM.findAll({
+		include: {model: TeamM},
+	})
+	loggert.info(t.map((t) => t.toJSON()))
+})
+*/
