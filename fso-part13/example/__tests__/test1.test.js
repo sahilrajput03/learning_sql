@@ -16,7 +16,7 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 // const NoteM = require('../models/Note')
-const {NoteM, UserM} = require('../models/')
+const {NoteM, UserM, TeamM, MembershipM, UserNotesM} = require('../models/')
 const chalk = require('chalk')
 
 let js = (...args) => JSON.stringify({...args})
@@ -48,6 +48,9 @@ beforeAll(async () => {
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await NoteM.sync({force: true})
 	await UserM.sync({force: true})
+	await TeamM.sync({force: true})
+	await MembershipM.sync({force: true})
+	await UserNotesM.sync({force: true})
 })
 
 //! USERS ROUTER TESTS //
@@ -63,12 +66,14 @@ test('post user', async () => {
 	// console.log({body})
 })
 
-test('get single users', async () => {
+test('get single user', async () => {
 	const expectedBody = {id: 1, username: 'sahilrajput03', name: 'Sahil Rajput'}
 
 	const {body} = await api.get('/api/users/1')
+	// loggert.info(body)
 
 	expect(body).toMatchObject(expectedBody)
+	expect(body).toHaveProperty('note_count')
 })
 
 test('get all users', async () => {
@@ -112,7 +117,7 @@ test('login (failed scenario)', async () => {
 	expect(body).toMatchObject(expectedErr)
 })
 
-let _token
+let TOKEN_sahilrajput03
 test('login', async () => {
 	const cred = {username: 'sahilrajput03', password: 'secret'}
 	const expectedBody = {username: 'sahilrajput03', name: 'Sahil Rajput'}
@@ -122,17 +127,7 @@ test('login', async () => {
 	expect(statusCode).toBe(200)
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('token')
-	_token = 'bearer ' + body.token
-})
-
-// here..
-
-test('get all users (SIMPLY DUPLICATE)', async () => {
-	// post a sample note for the user
-	await api.post('/api/notes').set('Authorization', _token).send({content: 'very good buddy!'}).expect(200)
-
-	let {body} = await api.get('/api/users')
-	loggert.info(body)
+	TOKEN_sahilrajput03 = 'bearer ' + body.token
 })
 
 //! NOTES ROUTER TESTS //
@@ -142,7 +137,7 @@ test('post a note', async () => {
 
 	const expectedBody = {content: 'very good buddy!'}
 
-	const {body} = await api.post('/api/notes').set('Authorization', _token).send(expectedBody).expect(200)
+	const {body} = await api.post('/api/notes').set('Authorization', TOKEN_sahilrajput03).send(expectedBody).expect(200)
 	expect(body).toMatchObject(expectedBody)
 	expect(body).toHaveProperty('id')
 	// log(body)
@@ -173,8 +168,8 @@ test('all notes', async () => {
 
 	const expectedBody = {content: 'very good buddy!', important: true}
 
-	await api.post('/api/notes').send(expectedBody).set('Authorization', _token).expect(200)
-	await api.post('/api/notes').send(expectedBody).set('Authorization', _token).expect(200)
+	await api.post('/api/notes').send(expectedBody).set('Authorization', TOKEN_sahilrajput03).expect(200)
+	await api.post('/api/notes').send(expectedBody).set('Authorization', TOKEN_sahilrajput03).expect(200)
 
 	const {body, statusCode} = await api.get('/api/notes')
 
@@ -188,10 +183,10 @@ test('all notes (with query params)', async () => {
 	// Clear db
 	await NoteM.sync({force: true})
 
-	await api.post('/api/notes').send({content: 'note abc', important: true}).set('Authorization', _token).expect(200)
-	await api.post('/api/notes').send({content: 'note def', important: true}).set('Authorization', _token).expect(200)
-	await api.post('/api/notes').send({content: 'note def 2', important: false}).set('Authorization', _token).expect(200)
-	await api.post('/api/notes').send({content: 'note ghi', important: false}).set('Authorization', _token).expect(200)
+	await api.post('/api/notes').send({content: 'note abc', important: true}).set('Authorization', TOKEN_sahilrajput03).expect(200)
+	await api.post('/api/notes').send({content: 'note def', important: true}).set('Authorization', TOKEN_sahilrajput03).expect(200)
+	await api.post('/api/notes').send({content: 'note def 2', important: false}).set('Authorization', TOKEN_sahilrajput03).expect(200)
+	await api.post('/api/notes').send({content: 'note ghi', important: false}).set('Authorization', TOKEN_sahilrajput03).expect(200)
 
 	const search1 = await api.get('/api/notes?search=def&important=true')
 	let contentList1 = search1.body.map((note) => note.content)
@@ -214,20 +209,22 @@ test('reset notes', async () => {
 	expect(body.length).toBe(0)
 })
 
+const CRED_jami_kousa = {username: 'jami_kousa', password: 'secret'}
+
 test('disable login for a user', async () => {
 	// post user
 	let user = {username: 'jami_kousa', name: 'Jami Kousa', disabled: true}
 	await api.post('/api/users').send(user)
 
 	// try logging in
-	const loginCred = {username: 'jami_kousa', password: 'secret'}
-
-	const {body, statusCode} = await api.post('/api/login').send(loginCred)
+	const {body, statusCode} = await api.post('/api/login').send(CRED_jami_kousa)
 
 	expect(body).toEqual({error: 'account disabled, please contact admin'})
 	expect(statusCode).toBe(401)
 	// loggert.info(body, statusCode)
 })
+
+let ADMIN_TOKEN
 
 test('disable user via api call using an admin user', async () => {
 	// post admin user
@@ -237,14 +234,84 @@ test('disable user via api call using an admin user', async () => {
 	// Login admin user to get token
 	const cred = {username: 'new_admin', password: 'secret'}
 	const response_login = await api.post('/api/login').send(cred)
-	const admin_token = 'bearer ' + response_login.body.token
+	ADMIN_TOKEN = 'bearer ' + response_login.body.token
 	// loggert.info(admin_token)
 
 	// Disable user
 	let payload = {disabled: true}
-	const {body, statusCode} = await api.put('/api/users/jami_kousa').set('Authorization', admin_token).send(payload)
+	const {body, statusCode} = await api.put('/api/users/jami_kousa').set('Authorization', ADMIN_TOKEN).send(payload)
 	// loggert.info(body)
 	// loggert.info(statusCode)
 	expect(body.disabled).toBe(true)
 	expect(statusCode).toBe(200)
+})
+
+let TOKEN_jami_kousa
+test('get one/all users (SIMPLY DUPLICATE)', async () => {
+	// Enable login for jami_kousa
+	let payload = {disabled: false}
+	await api.put('/api/users/jami_kousa').set('Authorization', ADMIN_TOKEN).send(payload)
+
+	// Login jami_kousa
+	let loginResponse = await api.post('/api/login').send(CRED_jami_kousa)
+	TOKEN_jami_kousa = 'bearer ' + loginResponse.body.token
+
+	// Post note
+	await api.post('/api/notes').set('Authorization', TOKEN_jami_kousa).send({content: 'very good buddy!'})
+
+	// ADD TEAM AND MEMBERSHIP DETAILS
+	// ===============================
+	// insert into teams (name) values ('toska');
+	// insert into teams (name) values ('mosa climbers');
+	//
+	// insert into memberships (user_id, team_id) values (1, 1);
+	// insert into memberships (user_id, team_id) values (1, 2);
+	// insert into memberships (user_id, team_id) values (2, 1);
+	// insert into memberships (user_id, team_id) values (3, 2);
+	//
+	// INSERT DATA WITH SEQUELIZE
+	await TeamM.create({name: 'toska'})
+	await TeamM.create({name: 'mosa climbers'})
+	//
+	await MembershipM.create({userId: 1, teamId: 1})
+	await MembershipM.create({userId: 1, teamId: 2})
+	await MembershipM.create({userId: 2, teamId: 1})
+	await MembershipM.create({userId: 3, teamId: 2})
+
+	// post a sample note for the user `sahilrajput03`
+	const notePostedResponse = await api.post('/api/notes').set('Authorization', TOKEN_sahilrajput03).send({content: 'This note is created by sahilrajput03!'}).expect(200)
+	// loggert.info('posted by jami:', notePostedResponse.body)
+
+	// MARK A NOTES FOR OTHER USERS
+	// ============================
+	//	insert into user_notes (user_id, note_id) values (1, 4);
+	// insert into user_notes (user_id, note_id) values (1, 5);
+	// await UserNotesM.create({userId: 1, noteId: 1})
+	//
+	// INSERT DATA WITH SEQUELIZE
+	await UserNotesM.create({userId: 1, noteId: 2})
+	await UserNotesM.create({userId: 2, noteId: 2})
+
+	// GET ALL USERS
+	// let response1 = await api.get('/api/users')
+	// loggert.info(response1.body)
+
+	// GET ONE USER
+	const {body} = await api.get('/api/users/2')
+	// loggert.info(body)
+})
+
+test('new', async () => {
+	const user = await UserM.findByPk(1, {
+		include: {
+			model: NoteM,
+		},
+	})
+
+	// @ts-ignore
+	user.notes.forEach((note) => {
+		// loggert.info(note.content)
+	})
+	// loggert.info(user.toJSON())
+	expect(typeof user.toJSON()).toBe('object')
 })

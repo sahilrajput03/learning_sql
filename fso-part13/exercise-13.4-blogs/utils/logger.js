@@ -49,14 +49,15 @@ printer(args, chalk.bgGreen.yellow.bold)
 
 // Disable depth limit while printing objects to console (Default value is 2)
 // src: https://nodejs.dev/learn/how-to-log-an-object-in-nodejs
-require('util').inspect.defaultOptions.depth = null
+// require('util').inspect.defaultOptions.depth = null
+// ^^ THIS IS NOT REQUIRED COZ I PASSED `{depth: null}` as second paramter to the inspect call below.
 
 const printer = (args, chalkify) => {
 	if (args.length === 0) throw '::::::error::::: no argument supplied to logger'
 	args.forEach((element) => {
 		if (typeof element === 'object') {
 			const {inspect} = require('util') // src: https://stackoverflow.com/a/6157569/10012446
-			process.stdout.write(chalkify(inspect(element)))
+			process.stdout.write(chalkify(inspect(element, {depth: null})))
 		} else {
 			process.stdout.write(chalkify(element))
 		}

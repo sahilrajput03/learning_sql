@@ -25,6 +25,7 @@ const queryOptions = {
 			through: {
 				attributes: [],
 			},
+			// Why is `through` used here?
 			// Before :`through.attribute=[]`: user.teams[*].membership[*] = { id: 1, userId: 1, teamId: 1 }
 			// After  :`through.attribute=[]`: user.teams[*].membership[*] = { name: 'toska', id: 1 }
 			// :: Observation: id is removed each membership row entry, we did this coz we don't want it.
@@ -59,11 +60,63 @@ router.get('/:id', async (req, res) => {
 	// LEARN: `notes` key doesnt exist if we use above query.
 
 	// Join query
+	let queryOptions = {
+		include: [
+			{
+				// This will fetch notes (array) owned by the user `notes` key.
+				model: NoteM,
+				attributes: {exclude: ['userId']}, // Removes `userId` from `users[*].notes[*].userId`.
+			},
+			{
+				// This will fetch notes (array) marked for the user in table `user_notes` in `marked_notes` key.
+				model: NoteM,
+				as: 'marked_notes',
+				attributes: {exclude: ['userId']},
+				through: {
+					attributes: [],
+				},
+				// add `user` property
+				include: {
+					model: UserM,
+					attributes: ['name'],
+				},
+			},
+			{
+				// Adds `users[*].teams[*]`
+				model: TeamM,
+				attributes: ['name', 'id'],
+				// "Why is through used here?" [refer older explanation in this file for same topic.]
+				through: {
+					attributes: [],
+				},
+			},
+		],
+	}
+
+	/** @type object */
 	const user = await UserM.findByPk(req.params.id, queryOptions)
 	// We get `notes` key which is array of notes rows(objects) from User table.
 
 	if (user) {
-		res.json(user)
+		// ! THIS would not work with sequelize.
+		// user.note_count = user.notes.length
+		// delete user.notes
+
+		// ? Below works
+		// let userNew = {
+		// 	id: user.id,
+		// 	username: user.username,
+		// 	name: user.name,
+		// 	note_count: user.notes.length,
+		// }
+
+		// ? Learn: Below works as well.
+		let userNew = {
+			// ...user, // < That doesn't work coz sequelize returns special objects.
+			...user.toJSON(), // This is necessary
+			note_count: user.notes.length,
+		}
+		res.json(userNew)
 	} else {
 		res.status(404).end()
 	}
