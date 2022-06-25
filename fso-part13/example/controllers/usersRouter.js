@@ -56,10 +56,8 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-	// const user = await UserM.findByPk(req.params.id)
-	// LEARN: `notes` key doesnt exist if we use above query.
+	// const user = await UserM.findByPk(req.params.id) // LEARN: `notes` key doesnt exist if we use above query.
 
-	// Join query
 	let queryOptions = {
 		include: [
 			{
@@ -70,12 +68,12 @@ router.get('/:id', async (req, res) => {
 			{
 				// This will fetch notes (array) marked for the user in table `user_notes` in `marked_notes` key.
 				model: NoteM,
-				as: 'marked_notes',
+				as: 'marked_notes', // Learn: Using 'marked_notes` key here is NECESSARY coz we linked `many to many realtion` using this key in `models/index.js` key.
 				attributes: {exclude: ['userId']},
 				through: {
 					attributes: [],
 				},
-				// add `user` property
+				// add `user.name` property to each note in marked_notes
 				include: {
 					model: UserM,
 					attributes: ['name'],
@@ -95,26 +93,26 @@ router.get('/:id', async (req, res) => {
 
 	/** @type object */
 	// @ts-ignore
-	const user = await UserM.findByPk(req.params.id, queryOptions)
-	// We get `notes` key which is array of notes rows(objects) from User table.
+	const user = await UserM.findByPk(req.params.id, queryOptions) // We get `notes` key which is array of notes rows(objects) from User table.
 
 	if (user) {
-		// ! THIS would not work with sequelize.
+		// #region
+		// ! BELOW WOULD NOT WORK WITH SEQUELIZE.
 		// user.note_count = user.notes.length
 		// delete user.notes
 
-		// ? Below works
+		// ? BELOW CODE WORKS
 		// let userNew = {
 		// 	id: user.id,
 		// 	username: user.username,
 		// 	name: user.name,
 		// 	note_count: user.notes.length,
 		// }
+		// # endregion
 
-		// ? Learn: Below works as well.
+		// ? BELOW WORKS AS WELL.
 		let userNew = {
-			// ...user, // < That doesn't work coz sequelize returns special objects.
-			...user.toJSON(), // This is necessary
+			...user.toJSON(), // This is necessary coz  `...user` doesn't work coz sequelize returns special objects.
 			note_count: user.notes.length,
 		}
 		res.json(userNew)

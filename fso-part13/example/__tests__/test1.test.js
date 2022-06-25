@@ -298,7 +298,7 @@ test('get one/all users (SIMPLY DUPLICATE)', async () => {
 
 	// GET ONE USER
 	const {body} = await api.get('/api/users/2')
-	// loggert.info(body)
+	loggert.info(body)
 })
 
 test('new', async () => {
