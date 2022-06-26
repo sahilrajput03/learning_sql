@@ -81,6 +81,7 @@ psql -U postgres -d myDb1_test -c "CREATE TABLE migrations (name TEXT NOT NULL)"
 -- Verify:
 psql -U postgres -d myDb1_test -c "select * from migrations;"
 -- OLD SQL SUBSHELL WAY
+psql -U postgres -d myDb1_test
 -- Create table
 CREATE TABLE migrations (name TEXT NOT NULL);
 INSERT INTO migrations (name) VALUES ('20211209_00_initialize_notes_and_users.js');

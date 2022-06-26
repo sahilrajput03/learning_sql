@@ -43,6 +43,7 @@ const initBlogM = (sequelize) => {
 		},
 		{
 			sequelize,
+			// Learn: underscored property: https://sequelize.org/docs/v6/other-topics/naming-strategies/#the-underscored-option
 			underscored: true,
 			// LEARN: By default, Sequelize automatically adds the fields createdAt and updatedAt to every model, using the data type DataTypes.DATE. Src: https://sequelize.org/docs/v6/core-concepts/model-basics/#timestamps
 			// timestamps: false,

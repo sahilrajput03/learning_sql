@@ -1,6 +1,6 @@
 const {Umzug, SequelizeStorage} = require('umzug') // src: https://github.com/sequelize/umzug
 const {Sequelize} = require('sequelize')
-const {initUserM, UserM, initBlogM, BlogM, setupAssociations} = require('./models')
+const {setupModels} = require('./models')
 const {logger} = require('./utils/logger')
 
 let {DATABASE_URL, NODE_ENV} = process.env
@@ -60,12 +60,8 @@ let connect = async () => {
 	await sequelize.authenticate()
 	logger.success('CONNECTION TO DB::SUCCESSFUL')
 
-	// Setup models
-	initBlogM(sequelize)
-	initUserM(sequelize)
-
-	// Setup Association
-	setupAssociations()
+	// Setup Models
+	setupModels(sequelize)
 
 	// Create table if doesn't exist already!
 	// Fix the schema on the fly.
@@ -79,7 +75,7 @@ let connect = async () => {
 
 let connection = connect()
 
-module.exports = {connection, sequelize}
+module.exports = {connection, sequelize, rollbackMigration}
 global.sequelize = sequelize
 
 // .then(() => {

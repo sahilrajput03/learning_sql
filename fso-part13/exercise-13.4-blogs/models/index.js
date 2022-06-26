@@ -1,7 +1,13 @@
 const {BlogM, initBlogM} = require('./BlogM')
 const {UserM, initUserM} = require('./UserM')
+const {ReadingListM, initReadingListM} = require('./ReadingListM')
 
-const setupAssociations = () => {
+const setupModels = (sequelize) => {
+	// Setup models
+	initBlogM(sequelize)
+	initUserM(sequelize)
+	initReadingListM(sequelize)
+
 	// Amazing ``one to many philosophy`` (official docs): https://sequelize.org/docs/v6/core-concepts/assocs/#one-to-many-relationships
 	// ^^: One-To-Many associations are connecting one source with multiple targets, while all these targets are connected only with this single source.
 	// This means that, unlike the One-To-One association, in which we had to choose where the foreign key would be placed, there is only one option in One-To-Many associations. For example, if one Foo has many Bars (and this way each Bar belongs to one Foo), then the only sensible implementation is to have a fooId column in the Bar table. The opposite is impossible, since one Foo has many Bars.
@@ -25,8 +31,7 @@ const setupAssociations = () => {
 
 module.exports = {
 	BlogM,
-	initBlogM,
 	UserM,
-	initUserM,
-	setupAssociations,
+	ReadingListM,
+	setupModels,
 }

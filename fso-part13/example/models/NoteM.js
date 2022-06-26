@@ -23,6 +23,7 @@ const initNoteM = (sequelize) =>
 		},
 		{
 			sequelize,
+			// Learn: underscored property: https://sequelize.org/docs/v6/other-topics/naming-strategies/#the-underscored-option
 			underscored: true,
 			timestamps: false,
 			modelName: 'note',

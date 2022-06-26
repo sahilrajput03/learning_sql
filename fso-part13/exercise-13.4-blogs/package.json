@@ -8,7 +8,8 @@
 		"dev": "env-cmd -f .env.dev nodemon --inspect server.js",
 		"dev2": "nodemon --inspect server.js .env.dev",
 		"test": "fr __tests__/test1.test.js",
-		"test:watch": "fr -w __tests__/test1.test.js"
+		"test:watch": "fr -w __tests__/test1.test.js",
+		"migration:down": "node utils/rollback.js"
 	},
 	"scriptsComments": {
 		"dev": "We pass environment file using env-cmd using -f option.",

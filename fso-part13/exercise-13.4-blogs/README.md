@@ -15,6 +15,20 @@ CREATE DATABASE "myDb1_blogs_test";
 exit
 ```
 
+## Fixing migrations
+
+```sql
+-- OLD SQL SUBSHELL WAY
+psql -U postgres -d myDb1_blogs_test
+-- Create table
+CREATE TABLE migrations (name TEXT NOT NULL);
+INSERT INTO migrations (name) VALUES ('20220624_01_initialize_blogs_and_users.js');
+INSERT INTO migrations (name) VALUES ('20220624_02_add_year_field.js');
+--- verify by
+\d migrations
+select * from migrations;
+```
+
 ## Heroku LEARNINGS
 
 ```bash
