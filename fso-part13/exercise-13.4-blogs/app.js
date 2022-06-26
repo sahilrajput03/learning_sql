@@ -2,6 +2,7 @@ const express = require('express')
 require('express-async-errors')
 
 // const BlogM = require('./models/Note')
+// @ts-ignore
 const logMw = require('logmw')
 const {l, s, ps, dataValues, _dataValues} = require('./utils')
 const {connection} = require('./initPostgreSql')

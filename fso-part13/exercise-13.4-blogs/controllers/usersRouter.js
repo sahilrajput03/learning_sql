@@ -76,17 +76,28 @@ usersRouter.get('/:id', async (req, res) => {
 		},
 	}
 
-	let user = await UserM.findByPk(req.params.id, queryOptions)
-	let jsonUser = user.toJSON()
-	let newjsonUser = {
-		...jsonUser,
-		readings: jsonUser.readings.map((item) => {
-			const readinglist = item.readinglist
-			return {...item, readinglist: {id: readinglist.id, read: readinglist.isRead}}
-		}),
+	let user_sequelize = await UserM.findByPk(req.params.id, queryOptions)
+	let user = user_sequelize.toJSON()
+
+	let userDesiredShape = {
+		...user,
+		readings: user.readings.map((item) => ({...item, readinglist: {id: item.readinglist.id, read: item.readinglist.isRead}})),
 	}
 
-	res.json(newjsonUser)
+	// logger.info('queryRead?', req.query.read)
+	if (!req.query.read) {
+		res.json(userDesiredShape)
+	} else {
+		const queryRead = req.query.read === 'true'
+
+		let newUserDesiredShape = {
+			...userDesiredShape,
+			readings: userDesiredShape.readings.filter((item) => {
+				return item.readinglist.read === queryRead
+			}),
+		}
+		res.json(newUserDesiredShape)
+	}
 })
 
 module.exports = usersRouter

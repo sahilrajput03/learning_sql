@@ -15,7 +15,7 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM, ReadingListM} = require('../models')
-const {loggert} = require('../utils/logger') // Only import loggert (testing) from logger file.
+const {loggert, logger} = require('../utils/logger') // Only import loggert (testing) from logger file.
 
 // Reuired bcoz I am using @ts-check and it complains via vscode.
 let isFlashRunner = global.isFlashRunner,
@@ -351,6 +351,40 @@ describe('readinglist many to many relation', () => {
 		// loggert.info(body)
 		expect(body).toEqual(expected)
 		expect(statusCode).toBe(401)
+	})
+
+	test('return only read: true notes for a user', async () => {
+		// when no query is sent
+		let allNotes = await api.get('/api/users/1')
+		let allNotesReadingList = allNotes.body.readings.map((entity) => entity.readinglist)
+		// loggert.info(allNotesReadingList)
+		const expected = [
+			{id: 1, read: true},
+			{id: 2, read: false},
+		]
+		expect(allNotesReadingList).toEqual(expected)
+
+		let readTrueResponse = await api.get('/api/users/1?read=true')
+		let readingList1 = readTrueResponse.body.readings.map((entity) => entity.readinglist)
+		// loggert.info('readings?', readTrueResponse.body.readings)
+		// loggert.info('all should be true:', readingList1)
+
+		expect(readingList1.length).not.toBe(0)
+		readingList1.forEach((element) => {
+			expect(element).toMatchObject({read: true})
+		})
+
+		//
+		//
+		// now check for false case
+		let readFalseresponse = await api.get('/api/users/1?read=false')
+		let readingList2 = readFalseresponse.body.readings.map((entity) => entity.readinglist)
+		// loggert.info('all should be false:', readingList2)
+
+		expect(readingList2.length).not.toBe(0)
+		readingList2.forEach((element) => {
+			expect(element).toMatchObject({read: false})
+		})
 	})
 })
 

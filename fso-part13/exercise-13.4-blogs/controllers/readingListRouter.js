@@ -15,6 +15,7 @@ readingListRouter.put('/:id', tokenExtractor, async (req, res) => {
 	if (readingListItem) {
 		logger.info('readingListItem:', readingListItem.toJSON())
 
+		// @ts-ignore
 		// If readinList relation doesn't belong to uesr then return error message:
 		if (readingListItem.id !== req.decodedToken.id) return res.status(401).json({error: 'blog does not belong to user'})
 
