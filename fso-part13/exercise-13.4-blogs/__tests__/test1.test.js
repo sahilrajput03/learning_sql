@@ -15,7 +15,7 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM, ReadingListM} = require('../models')
-const {loggert, logger} = require('../utils/logger') // Only import loggert (testing) from logger file.
+const {loggert} = require('../utils/logger') // Only import loggert (testing) from logger file.
 
 // Reuired bcoz I am using @ts-check and it complains via vscode.
 let isFlashRunner = global.isFlashRunner,
@@ -223,7 +223,7 @@ test("modify USER's username", async () => {
 	let {body} = await api.put('/api/users/sahilrajput03@gmail.com').set('Authorization', _token).send(expectedBody)
 
 	expect(body).toMatchObject(expectedBody)
-	loggert.info(body)
+	// loggert.info(body)
 })
 
 test('bad username err on USER creation  ', async () => {
@@ -306,22 +306,52 @@ test('test error thrown for invalid year value while saving a blog', async () =>
 	expect(body).toEqual(expected)
 })
 
-test('prepare', async () => {
-	// 	{
-	//   "blogId": 10,
-	//   "userId": 3
-	// }
+describe('readinglist many to many relation', () => {
+	test('test readinglist many to many relation ', async () => {
+		// 	{
+		//   "blogId": 10,
+		//   "userId": 3
+		// }
 
-	// Check blogs
-	// loggert.info(JSON.stringify(await BlogM.findAll(), null, 2))
+		// Check blogs
+		// loggert.info(JSON.stringify(await BlogM.findAll(), null, 2))
 
-	await ReadingListM.create({blogId: 20, userId: 1})
-	await ReadingListM.create({blogId: 21, userId: 1})
-	// loggert.info(JSON.stringify(await ReadingListM.findAll(), null, 2))
+		await ReadingListM.create({blogId: 20, userId: 1})
+		await ReadingListM.create({blogId: 21, userId: 1})
+		await ReadingListM.create({blogId: 22, userId: 2})
+		// loggert.info(JSON.stringify(await ReadingListM.findAll(), null, 2))
 
-	// let {body} = await api.get('/api/users/1').set('Authorization', _token).send()
-	let {body} = await api.get('/api/users/1')
-	loggert.info(body)
+		// let {body} = await api.get('/api/users/1').set('Authorization', _token).send()
+		let {body} = await api.get('/api/users/1')
+		// loggert.info(body)
+		expect(body).toHaveProperty('id')
+		expect(body).toHaveProperty('username')
+		expect(body).toHaveProperty('name')
+		expect(body).toHaveProperty('readings')
+		expect(Array.isArray(body.readings)).toBe(true)
+
+		const readingItem = body.readings[0].readinglist
+		expect(readingItem).toHaveProperty('id')
+		expect(readingItem).toHaveProperty('read')
+	})
+
+	test('put request to change read status of the relation', async () => {
+		let payload = {read: true}
+		let {body} = await api.put('/api/readinglists/1').set('Authorization', _token).send(payload)
+
+		// loggert.info(body)
+		expect(body.isRead).toBe(payload.read)
+	})
+
+	test("put request to change read status of the different user's relation", async () => {
+		const expected = {error: 'blog does not belong to user'}
+		let payload = {read: true}
+		let {body, statusCode} = await api.put('/api/readinglists/3').set('Authorization', _token).send(payload)
+
+		// loggert.info(body)
+		expect(body).toEqual(expected)
+		expect(statusCode).toBe(401)
+	})
 })
 
 // Adding describe functionality to the test runner as well.

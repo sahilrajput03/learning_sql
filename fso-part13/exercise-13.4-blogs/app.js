@@ -10,6 +10,7 @@ const usersRouter = require('./controllers/usersRouter')
 const authorsRouter = require('./controllers/authorsRouter')
 const loginRouter = require('./controllers/loginRouter')
 const buggedRouter = require('./controllers/buggedRouter')
+const readingListRouter = require('./controllers/readingListRouter')
 
 // let log = console.log
 // log('typeof db', db)
@@ -28,6 +29,7 @@ app.use('/api/authors', authorsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/bugged', buggedRouter)
+app.use('/api/readinglists', readingListRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
