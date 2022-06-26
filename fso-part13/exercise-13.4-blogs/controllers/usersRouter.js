@@ -2,7 +2,7 @@ const usersRouter = require('express').Router()
 const tokenExtractor = require('../utils/tokenExtractor')
 
 const {UserM, BlogM} = require('../models')
-const {silog} = require('../utils/logger')
+const {logger} = require('../utils/logger')
 
 //?  join query is done using the `include` option as a `query parameter`
 const includeBlogs = {
@@ -40,14 +40,13 @@ usersRouter.put('/:username', tokenExtractor, async (req, res) => {
 	// LEARN: `notes` key doesnt exist if we use above query.
 
 	// Join query
-	const user = await UserM.findOne(
-		{
-			where: {
-				username: req.params?.username,
-			},
+	/** @type any */
+	const user = await UserM.findOne({
+		where: {
+			username: req.params?.username,
 		},
-		includeBlogs
-	)
+		// ...includeBlogs, // to include `blogs` array as well.
+	})
 	// We get `notes` key which is array of notes rows(objects) from User table.
 	// silog(user)
 
@@ -62,6 +61,31 @@ usersRouter.put('/:username', tokenExtractor, async (req, res) => {
 	} else {
 		res.status(404).end()
 	}
+})
+
+usersRouter.get('/:id', async (req, res) => {
+	let queryOptions = {
+		include: {
+			model: BlogM,
+			as: 'readings',
+			attributes: {exclude: ['userId']}, // Eliminates `userId` property from each blog entry i.e., `readings[*].userId` key.
+			// through: {
+			// 	attributes: [], // Eliminates `readinglist` key from each blog entry i.e., `readings[*].readinglist` which is an array i.e., rows objects of `readinglists` table.
+			// },
+		},
+	}
+
+	let user = await UserM.findByPk(req.params.id, queryOptions)
+	let jsonUser = user.toJSON()
+	let newjsonUser = {
+		...jsonUser,
+		readings: jsonUser.readings.map((item) => {
+			const readinglist = item.readinglist
+			return {...item, readinglist: {id: readinglist.id, read: readinglist.isRead}}
+		}),
+	}
+
+	res.json(newjsonUser)
 })
 
 module.exports = usersRouter

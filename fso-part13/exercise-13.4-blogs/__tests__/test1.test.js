@@ -14,7 +14,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
-const {BlogM, UserM} = require('../models')
+const {BlogM, UserM, ReadingListM} = require('../models')
 const {loggert, logger} = require('../utils/logger') // Only import loggert (testing) from logger file.
 
 // Reuired bcoz I am using @ts-check and it complains via vscode.
@@ -23,7 +23,8 @@ let isFlashRunner = global.isFlashRunner,
 	sequelize = global.sequelize,
 	closeDb = global.closeDb,
 	beforeAll = global.beforeAll,
-	test = global.test
+	test = global.test,
+	describe = global.describe
 
 if (isFlashRunner) {
 	// withSupertest.test
@@ -45,6 +46,7 @@ beforeAll(async () => {
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await BlogM.sync({force: true})
+	await ReadingListM.sync({force: true})
 })
 
 test('bad request ', async () => {
@@ -221,6 +223,7 @@ test("modify USER's username", async () => {
 	let {body} = await api.put('/api/users/sahilrajput03@gmail.com').set('Authorization', _token).send(expectedBody)
 
 	expect(body).toMatchObject(expectedBody)
+	loggert.info(body)
 })
 
 test('bad username err on USER creation  ', async () => {
@@ -245,11 +248,11 @@ test('get all blogs + searching', async () => {
 
 	// search blogs
 	let search1 = await api.get('/api/blogs?search=def')
-	// logger.info('blogs', search1.body)
+	// loggert.info('blogs', search1.body)
 	expect(search1.body.map((blog) => blog.id)).toEqual(expect.arrayContaining([22, 21]))
 
 	let search2 = await api.get('/api/blogs?search=rohan')
-	// logger.info('blogs', search2.body)
+	// loggert.info('blogs', search2.body)
 	expect(search2.body.map((blog) => blog.id)).toEqual(expect.arrayContaining([20, 21]))
 })
 
@@ -266,7 +269,7 @@ test('STATIC: ascending order array check', () => {
 // exercise 13.15
 test('get all blogs in `likes` descending order', async () => {
 	let search1 = await api.get('/api/blogs')
-	// logger.info(search1.body)
+	// loggert.info(search1.body)
 	let orderedBlogs = search1.body.map((blog) => blog.likes)
 	expect(orderedBlogs).toEqual([11, 8, 6])
 })
@@ -302,3 +305,28 @@ test('test error thrown for invalid year value while saving a blog', async () =>
 	// loggert.info(body)
 	expect(body).toEqual(expected)
 })
+
+test('prepare', async () => {
+	// 	{
+	//   "blogId": 10,
+	//   "userId": 3
+	// }
+
+	// Check blogs
+	// loggert.info(JSON.stringify(await BlogM.findAll(), null, 2))
+
+	await ReadingListM.create({blogId: 20, userId: 1})
+	await ReadingListM.create({blogId: 21, userId: 1})
+	// loggert.info(JSON.stringify(await ReadingListM.findAll(), null, 2))
+
+	// let {body} = await api.get('/api/users/1').set('Authorization', _token).send()
+	let {body} = await api.get('/api/users/1')
+	loggert.info(body)
+})
+
+// Adding describe functionality to the test runner as well.
+// describe('new user tests', async () => {
+// 	test('new user sign up', async () => {
+// 		expect(1).toBe(1)
+// 	})
+// })

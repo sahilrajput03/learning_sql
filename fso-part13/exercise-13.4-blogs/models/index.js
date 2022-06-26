@@ -27,6 +27,11 @@ const setupModels = (sequelize) => {
 
 	BlogM.belongsTo(UserM)
 	// The A.belongsTo(B) association means that a One-To-One relationship exists between A and B, with the foreign key being defined in the source model (A).
+
+	// Many to Many relation via mode ReadingListM (i.e, connection table reading_list)
+	UserM.belongsToMany(BlogM, {through: ReadingListM, as: 'readings'}) // links `readings` key in `UserM`, TESTED and VERIFIED.
+	BlogM.belongsToMany(UserM, {through: ReadingListM, as: 'reading_users'}) // links `reading_users` key in `BlogM`, TESTED and VERIFIED.
+	// Model ReadingListM (Table) will have structure like {userId: 2, blogId: 3}
 }
 
 module.exports = {

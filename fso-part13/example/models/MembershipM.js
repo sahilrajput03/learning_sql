@@ -28,7 +28,7 @@ const initMembershipM = (sequelize) =>
 			// Learn: underscored property: https://sequelize.org/docs/v6/other-topics/naming-strategies/#the-underscored-option
 			underscored: true,
 			timestamps: false,
-			modelName: 'membership',
+			modelName: 'membership', // pluralized to `memberships`, src: https://sequelize.org/docs/v6/core-concepts/model-basics/#table-name-inference
 		}
 	)
 

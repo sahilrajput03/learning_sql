@@ -26,7 +26,7 @@ const initNoteM = (sequelize) =>
 			// Learn: underscored property: https://sequelize.org/docs/v6/other-topics/naming-strategies/#the-underscored-option
 			underscored: true,
 			timestamps: false,
-			modelName: 'note',
+			modelName: 'note', // pluralized to `notes`, src: https://sequelize.org/docs/v6/core-concepts/model-basics/#table-name-inference
 		}
 	)
 

@@ -47,7 +47,7 @@ const initBlogM = (sequelize) => {
 			underscored: true,
 			// LEARN: By default, Sequelize automatically adds the fields createdAt and updatedAt to every model, using the data type DataTypes.DATE. Src: https://sequelize.org/docs/v6/core-concepts/model-basics/#timestamps
 			// timestamps: false,
-			modelName: 'blogs', // this is table name the model is associated to.
+			modelName: 'blog', // pluralized to `blogs`, src: https://sequelize.org/docs/v6/core-concepts/model-basics/#table-name-inference
 		}
 	)
 }

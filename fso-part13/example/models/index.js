@@ -39,6 +39,7 @@ const setupModels = (sequelize) => {
 	// FSO: The User.belongsToMany(Team, { through: Membership })) definition similarly attaches a `teams` property to the user object, which can also be used in the code:
 	UserM.belongsToMany(TeamM, {through: MembershipM}) // links `teams` key in `UserM`, TESTED and VERIFIED.
 	TeamM.belongsToMany(UserM, {through: MembershipM}) // links `users` key in `TeamM`, TESTED and VERIFIED.
+	// Model MembershipM (Table) will have structure like {userId: 2, teamId: 3}
 
 	// https://fullstackopen.com/en/part13/migrations_many_to_many_relationships#revisiting-many-to-many-relationships
 	UserM.belongsToMany(NoteM, {through: UserNotesM, as: 'marked_notes'})
