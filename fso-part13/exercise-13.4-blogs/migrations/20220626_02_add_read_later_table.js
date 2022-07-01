@@ -33,7 +33,7 @@ module.exports = {
 		)
 	},
 	down: async ({context: queryInterface}) => {
-		queryInterface.dropTable('readinglist')
+		queryInterface.dropTable('readinglists')
 	},
 }
 

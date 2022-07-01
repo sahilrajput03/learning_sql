@@ -1,12 +1,14 @@
 const {BlogM, initBlogM} = require('./BlogM')
 const {UserM, initUserM} = require('./UserM')
 const {ReadingListM, initReadingListM} = require('./ReadingListM')
+const {SessionM, initSessionM} = require('./SessionM')
 
 const setupModels = (sequelize) => {
 	// Setup models
 	initBlogM(sequelize)
 	initUserM(sequelize)
 	initReadingListM(sequelize)
+	initSessionM(sequelize)
 
 	// Amazing ``one to many philosophy`` (official docs): https://sequelize.org/docs/v6/core-concepts/assocs/#one-to-many-relationships
 	// ^^: One-To-Many associations are connecting one source with multiple targets, while all these targets are connected only with this single source.
@@ -38,5 +40,6 @@ module.exports = {
 	BlogM,
 	UserM,
 	ReadingListM,
+	SessionM,
 	setupModels,
 }

@@ -26,9 +26,8 @@ const setupModels = (sequelize) => {
 		// foreignKey: {
 		// 	allowNull: false,
 		// },
-	}) // LEARN: Sequelize will automatically create an attribute called `userId` on the Note model to which, when referenced gives access to the database column `user_id`.
+	}) //? LEARN: Sequelize will automatically create an attribute called `userId`(to reference `user_id` column) on the Note model to which, when referenced gives access to the database column `user_id`.
 	// Official Docs: The A.hasMany(B) association means that a One-To-Many relationship exists between A and B, with the foreign key being defined in the target model (B). Source: https://sequelize.org/docs/v6/core-concepts/assocs/
-	// The A.hasMany(B) association means that a One-To-Many relationship exists between A and B, with the foreign key being defined in the target model (B).
 
 	// tl;dr: This is to complete the above `hasMany` relationship (necessary).
 	NoteM.belongsTo(UserM)

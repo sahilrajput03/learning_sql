@@ -1,35 +1,23 @@
 const {Model, DataTypes} = require('sequelize')
 
-class UserM extends Model {}
+class SessionM extends Model {}
 
-const initUserM = (sequelize) =>
-	UserM.init(
+const initSessionM = (sequelize) =>
+	SessionM.init(
 		{
 			id: {
 				type: DataTypes.INTEGER,
-				primaryKey: true, // PRIMARY KEY
+				primaryKey: true,
 				autoIncrement: true,
 			},
-			username: {
-				type: DataTypes.STRING,
-				unique: true,
+			userId: {
+				type: DataTypes.INTEGER,
 				allowNull: false,
-				// exercise: 13.9
-				validate: {
-					isEmail: true,
-				},
+				references: {model: 'users', key: 'id'},
 			},
-			name: {
+			token: {
 				type: DataTypes.STRING,
 				allowNull: false,
-			},
-			admin: {
-				type: DataTypes.BOOLEAN,
-				defaultValue: false,
-			},
-			disabled: {
-				type: DataTypes.BOOLEAN,
-				defaultValue: false,
 			},
 		},
 		{
@@ -37,9 +25,9 @@ const initUserM = (sequelize) =>
 			// Learn: underscored property: https://sequelize.org/docs/v6/other-topics/naming-strategies/#the-underscored-option
 			underscored: true,
 			// LEARN: By default, Sequelize automatically adds the fields createdAt and updatedAt to every model, using the data type DataTypes.DATE. Src: https://sequelize.org/docs/v6/core-concepts/model-basics/#timestamps
-			// timestamps: false,
-			modelName: 'user', // pluralized to `users`, src: https://sequelize.org/docs/v6/core-concepts/model-basics/#table-name-inference
+			timestamps: false,
+			modelName: 'sessions', // pluralized to `sessions`, src: https://sequelize.org/docs/v6/core-concepts/model-basics/#table-name-inference
 		}
 	)
 
-module.exports = {UserM, initUserM}
+module.exports = {SessionM, initSessionM}

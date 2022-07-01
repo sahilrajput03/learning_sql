@@ -14,7 +14,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
-const {BlogM, UserM, ReadingListM} = require('../models')
+const {BlogM, UserM, ReadingListM, SessionM} = require('../models')
 const {loggert, logger} = require('../utils/logger') // Only import loggert (testing) from logger file.
 
 // Reuired bcoz I am using @ts-check and it complains via vscode.
@@ -68,7 +68,7 @@ test('bad request (with `express-async-errors`)', async () => {
 })
 
 //! USERS ROUTER TESTS //
-test('post USER', async () => {
+test('post USER (signup)', async () => {
 	// empty users table
 	await UserM.sync({force: true})
 
@@ -388,9 +388,64 @@ describe('readinglist many to many relation', () => {
 	})
 })
 
-// Adding describe functionality to the test runner as well.
-// describe('new user tests', async () => {
-// 	test('new user sign up', async () => {
-// 		expect(1).toBe(1)
-// 	})
-// })
+describe('user session management', async () => {
+	// Exercise: 13.24
+	// TASK1(DONE): Store token in session table (connection table) in db when a user logs in.
+	// TASK2(DONE): Add a check in `tokenExtractor` middleware that checks if the token is present is `sessions` table after the decoding of token is complete. THIS WILL ENSURE THAT IF THE TOKEN IS VALID COZ ANY ADMIN CAN REMOVE THE ISSUED FROM SESSION TABLE ANYTIME THE ADMIN WANTS.
+
+	let expectedBody1, response1
+	test('deleted token should throw `expired token` error  - ex13.24', async () => {
+		//? POST USER (REGISTER USER/CREATE USER)
+		expectedBody1 = {username: 'u1@site.com', name: 'Nick Morris'}
+		response1 = await api.post('/api/users').send(expectedBody1)
+		// loggert.info(response1.body) //!
+		expect(response1.body).toMatchObject(expectedBody1)
+
+		//? LOGIN NOW:
+		const cred = {username: expectedBody1.username, password: 'secret'}
+		const expectedBody2 = {username: expectedBody1.username}
+		const response2 = await api.post('/api/login').send(cred)
+		// loggert.info(response2.body) //!
+		expect(response2.body).toMatchObject(expectedBody2)
+		expect(response2.body).toHaveProperty('token')
+		const loggedInToken = 'bearer ' + response2.body.token
+
+		//? DELETE ALL ACTIVE SESSIONS FOR THE USER. LEARN: `Model.destroy` DELETES ALL ENTRIES WHICH MATCHES THE FILER.
+		// i.e., logout user
+		const response6 = await api.delete('/api/logout').set('Authorization', loggedInToken)
+		let expected6 = {message: 'logout successful'}
+		expect(response6.body).toMatchObject(expected6)
+
+		//? POST BLOG WHICH REQUIRES (LOGIN) A USER TO BE LOGGED IN
+		const payload = {author: 'rohan ahuja', url: 'www.rohan.com', title: 'rohan is alive', likes: 32}
+		const expectedErrResponse = {error: 'expired token', reason: 'probably token was delete from sessions table via an api action or manually action.'}
+		const expectedErrStatusCode = 402
+
+		const response4 = await api.post('/api/blogs').set('Authorization', loggedInToken).send(payload)
+		expect(response4.body).toMatchObject(expectedErrResponse)
+		expect(response4.statusCode).toBe(expectedErrStatusCode)
+	})
+
+	test('disable user', async () => {
+		//? DISABLE USER
+		// Bcoz in the fso exercise 13.24, its said we can disable user directly via db (so no need to make api for this)
+		let response3 = await UserM.update(
+			// Values to update
+			{
+				disabled: true,
+			},
+			// clause
+			{
+				where: {
+					username: expectedBody1.username,
+				},
+			}
+		)
+		// loggert.info(response3) //!
+		// @ts-ignore
+		expect(response3).toMatchObject([1]) // idk what this value means but on updation this is returned ~Sahil
+		const response5 = await UserM.findByPk(response1.body.id)
+		// loggert.info(response5.toJSON()) //!
+		expect(response5.toJSON().disabled).toBe(true)
+	})
+})

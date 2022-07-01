@@ -32,7 +32,7 @@ const initReadingListM = (sequelize) =>
 			underscored: true,
 			// LEARN: By default, Sequelize automatically adds the fields createdAt and updatedAt to every model, using the data type DataTypes.DATE. Src: https://sequelize.org/docs/v6/core-concepts/model-basics/#timestamps
 			timestamps: false,
-			modelName: 'readinglist', // pluralized to `reading_lists`, src: https://sequelize.org/docs/v6/core-concepts/model-basics/#table-name-inference
+			modelName: 'readinglist', // pluralized to `readinglists`, src: https://sequelize.org/docs/v6/core-concepts/model-basics/#table-name-inference
 		}
 	)
 

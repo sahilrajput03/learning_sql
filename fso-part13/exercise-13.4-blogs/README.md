@@ -3,6 +3,17 @@
 **Note: This file in specific to FSO's content only, for sequelize's refer `README-sequelize.md` file.**
 
 ```bash
+# reference to use psql subshell
+psql -U postgres -d myDb1_blogs_test
+\d # Shows relations
+
+#OR
+psql -U postgres
+\c myDb1_blogs_test
+\d # Shows relations
+```
+
+```bash
 # New modern way
 psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_blogs_test";'
 psql -U postgres -c 'DROP DATABASE IF EXISTS "myDb1_blogs_test";' -c 'CREATE DATABASE "myDb1_blogs_test";'
@@ -42,6 +53,8 @@ select * from migrations;
 ## PSQL LEARNINGS
 
 ```bash
+\l # List of databases ~ FSO
+\c db_name_here # To select a database ~ FSO
 help        # for overalll help guide
 \copyright  # for distribution terms
 \h          # for help with SQL commands

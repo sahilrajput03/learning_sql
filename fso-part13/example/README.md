@@ -167,6 +167,8 @@ Note.sync({force: true}) // delete and recreate the table
 ## PSQL LEARNINGS
 
 ```bash
+\l # List of databases ~ FSO
+\c db_name_here # To select a database ~ FSO
 help        # for overalll help guide
 \copyright  # for distribution terms
 \h          # for help with SQL commands
