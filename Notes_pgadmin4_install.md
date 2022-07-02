@@ -22,6 +22,8 @@ password: password
 
 # Now you can browse @ `localhost:5050` to browse the `pgadmin4`, yikes!!
 
+# if pgadmin asks you password for postgres user, you can enter `postgres` as password as well.
+
 # ~Sahil, If you messed up your above login credentials, you can reset the login credentials like that:
 rm /var/lib/pgadmin/pgadmin4.db
 # src: https://stackoverflow.com/a/58497861/10012446
