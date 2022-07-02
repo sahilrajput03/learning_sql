@@ -39,3 +39,9 @@ pgadmin4
 ![image](https://user-images.githubusercontent.com/31458531/176994861-c2934f9c-9922-4c00-9ce4-5186c1ce7ff4.png)
 
 ## Modify and save values to a table
+
+![image](https://user-images.githubusercontent.com/31458531/176998064-0462a313-81ef-494c-829f-276df9a7247c.png)
+
+## Add a columnt to existing table
+
+![image](https://user-images.githubusercontent.com/31458531/176997978-1c3b6154-40ff-4d08-a768-550752b711ab.png)
