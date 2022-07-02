@@ -26,3 +26,7 @@ password: password
 rm /var/lib/pgadmin/pgadmin4.db
 # src: https://stackoverflow.com/a/58497861/10012446
 ```
+
+## Configuring pgadmin to connect to local postgresql
+
+![image](https://user-images.githubusercontent.com/31458531/176994040-b59dac6c-3392-4794-b68b-c2f98d85c28f.png)
