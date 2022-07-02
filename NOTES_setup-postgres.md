@@ -1,5 +1,7 @@
 ## Common issue i faced so far??
 
+A similar guide by [superjojo140](https://gist.github.com/superjojo140/2a0221d517f356965371b3969f37b29f)
+
 ```bash
 # An old version of the database format was found.
 # ^^^ this error log from `systemctl status postgresql`
