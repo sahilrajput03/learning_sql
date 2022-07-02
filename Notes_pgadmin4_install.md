@@ -55,3 +55,8 @@ After adding the table you need to refresh the columns table to see your newly c
 We can import/export data into/from the table via this:
 
 ![image](https://user-images.githubusercontent.com/31458531/176998566-a0d34b38-440c-41ca-8206-af5473d3a347.png)
+
+Adding a new row to the table:
+
+![image](https://user-images.githubusercontent.com/31458531/176998765-f27985b0-8559-4611-8caa-20642031e23e.png)
+
