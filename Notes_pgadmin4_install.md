@@ -25,6 +25,9 @@ password: password
 # ~Sahil, If you messed up your above login credentials, you can reset the login credentials like that:
 rm /var/lib/pgadmin/pgadmin4.db
 # src: https://stackoverflow.com/a/58497861/10012446
+
+## IN FUTURE YOU CAN RUN pgadmin4 VIA:
+pgadmin4
 ```
 
 ## Configuring pgadmin to connect to local postgresql
@@ -34,3 +37,5 @@ rm /var/lib/pgadmin/pgadmin4.db
 ## View data in a table in pgadmin
 
 ![image](https://user-images.githubusercontent.com/31458531/176994861-c2934f9c-9922-4c00-9ce4-5186c1ce7ff4.png)
+
+## Modify and save values to a table
