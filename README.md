@@ -3,12 +3,12 @@
 **References**
 
 - Setup Postgresql - Archlinux: [Click here](./Notes_setup-postgres.md)
-- Installing pgadmin4 via pip (atleast works for Archlinux): [Click here](./Notes_pgadmin4_install.md)
+- Installing pgadmin4 via pip - Archlinux: [Click here](./Notes_pgadmin4_install.md)
 
 **Course Notes**
 
-- W3school Notes: [Here](./Notes_sql_w3schools.md)
-- Sql bolt Notes: [Here](./Notes_sql_bolt.md)
+- W3school Notes: [Click here](./Notes_sql_w3schools.md)
+- Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
 
 **Sequelize Docs**
 
