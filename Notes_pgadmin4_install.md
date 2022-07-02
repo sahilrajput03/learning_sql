@@ -34,26 +34,25 @@ pgadmin4
 
 ![image](https://user-images.githubusercontent.com/31458531/176994040-b59dac6c-3392-4794-b68b-c2f98d85c28f.png)
 
-- View data in a table in pgadmin
+- View data in a table in pgadmin:
 
 ![image](https://user-images.githubusercontent.com/31458531/176994861-c2934f9c-9922-4c00-9ce4-5186c1ce7ff4.png)
 
-- Modify and save values to a table
+- Modify and save values to a table:
 
 ![image](https://user-images.githubusercontent.com/31458531/176998064-0462a313-81ef-494c-829f-276df9a7247c.png)
 
-- Add a columnt to existing table
+- Add a columnt to existing table:
 
 ![image](https://user-images.githubusercontent.com/31458531/176997978-1c3b6154-40ff-4d08-a768-550752b711ab.png)
 
-- For making a string column field you can select `Data type` as `text`.
+- For making a string column field you can select `Data type` as `text`:
 
 ![image](https://user-images.githubusercontent.com/31458531/176998317-79766122-ea0a-4dc2-8696-8ad8aaf32aa1.png)
 
 - After adding the table you need to refresh the columns table to see your newly created column:
 
 ![image](https://user-images.githubusercontent.com/31458531/176999007-284da171-c137-4c66-acf9-883028f7183c.png)
-
 
 - We can import/export data into/from the table via this:
 
