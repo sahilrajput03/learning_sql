@@ -30,3 +30,7 @@ rm /var/lib/pgadmin/pgadmin4.db
 ## Configuring pgadmin to connect to local postgresql
 
 ![image](https://user-images.githubusercontent.com/31458531/176994040-b59dac6c-3392-4794-b68b-c2f98d85c28f.png)
+
+## View data in a table in pgadmin
+
+![image](https://user-images.githubusercontent.com/31458531/176994861-c2934f9c-9922-4c00-9ce4-5186c1ce7ff4.png)
