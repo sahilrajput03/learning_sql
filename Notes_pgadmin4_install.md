@@ -45,3 +45,7 @@ pgadmin4
 ## Add a columnt to existing table
 
 ![image](https://user-images.githubusercontent.com/31458531/176997978-1c3b6154-40ff-4d08-a768-550752b711ab.png)
+
+For making a string column field you can select `Data type` as `text`.
+
+![image](https://user-images.githubusercontent.com/31458531/176998317-79766122-ea0a-4dc2-8696-8ad8aaf32aa1.png)
