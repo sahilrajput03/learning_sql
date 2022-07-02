@@ -51,3 +51,7 @@ For making a string column field you can select `Data type` as `text`.
 ![image](https://user-images.githubusercontent.com/31458531/176998317-79766122-ea0a-4dc2-8696-8ad8aaf32aa1.png)
 
 After adding the table you need to refresh the columns table to see your newly created column.
+
+We can import/export data into/from the table via this:
+
+![image](https://user-images.githubusercontent.com/31458531/176998566-a0d34b38-440c-41ca-8206-af5473d3a347.png)
