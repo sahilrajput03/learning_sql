@@ -37,6 +37,8 @@ pgadmin4
 Helpful video @ youtube: [Click here](https://youtu.be/Dd2ej-QKrWY)
 
 ```sql
+-- INSPIRATION FOR ALL BELOW QUERIES: https://github.com/sahilrajput03/learning_sql/blob/main/Notes_sql_bolt.md
+
 SELECT *
 FROM BLOGS
 WHERE ID = 21
