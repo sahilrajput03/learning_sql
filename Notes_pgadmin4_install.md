@@ -98,3 +98,17 @@ WHERE TITLE LIKE 'ee'
 - While adding a new row you can skip `id` field as you can see below in grey text `default` is written in the placeholder that means the autoincrement value for the id field will take place:
 
 ![image](https://user-images.githubusercontent.com/31458531/176998938-42641863-49f7-489a-9a15-17fca371e540.png)
+
+- On editing or saving a new row you see a message: 
+
+![image](https://user-images.githubusercontent.com/31458531/177031075-52d6d5ba-1a37-443f-84c1-087a3bbb284c.png)
+
+- Opening **Query Tool** executing a query:
+
+![image](https://user-images.githubusercontent.com/31458531/177031196-3087cd4e-2b21-4502-9c41-2db75a8a0f0f.png)
+
+- Prettify your query with `ctrl+shift+k` or by clicking that button:
+
+![image](https://user-images.githubusercontent.com/31458531/177031327-a25a183c-5bee-4338-be77-b676cdb7de7e.png)
+
+
