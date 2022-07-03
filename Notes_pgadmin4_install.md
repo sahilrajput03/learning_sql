@@ -162,6 +162,12 @@ SELECT * FROM BLOGS
 SELECT *
 FROM BLOGS
 INNER JOIN USERS ON BLOGS.USER_ID = USERS.ID 
+
+-- From `SQL Lesson 7: OUTER JOINs` from file `Notes_sql_bolt.md`:
+
+-- So, its like INNER JOIN (JOIN) vs. LEFT JOIN / RIGHT JOIN / FULL JOIN
+
+-- Like the INNER JOIN these three new joins have to specify which column to join the data on. When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
 ```
 
 ## Configuring pgadmin to connect to local postgresql
