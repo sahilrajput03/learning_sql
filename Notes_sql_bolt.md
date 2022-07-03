@@ -163,7 +163,7 @@ LIMIT num_limit OFFSET num_offset;
 So, its like INNER JOIN (JOIN) vs. LEFT JOIN / RIGHT JOIN / FULL JOIN
 
 Like the INNER JOIN these three new joins have to specify which column to join the data on.
-When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
+***When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.***
 
 When using any of these new joins, you will likely have to write additional logic to deal with NULLs in the result and constraints (more on this in the next lesson).
 
