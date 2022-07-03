@@ -61,6 +61,21 @@ WHERE AUTHOR LIKE 'rohan'
 SELECT *
 FROM BLOGS
 WHERE TITLE LIKE 'ee'
+
+INSERT INTO BLOGS (AUTHOR,
+														URL,
+														TITLE,
+														LIKES,
+														YEAR,
+														USER_ID,
+														"className",
+														CREATED_AT,
+														UPDATED_AT)
+VALUES ('varun', 'https://www.buildonscenes.com/', '10 life lessons', 1221, 2021, 1, 'upper-class', '2022-07-01 22:44:50.129+05:30', '2022-07-01 22:44:50.129+05:30');
+
+SELECT *
+FROM BLOGS
+WHERE ID != 3 --- Notice the != sign in the query.
 ```
 
 ## Configuring pgadmin to connect to local postgresql
