@@ -143,6 +143,7 @@ FROM BLOGS
 ORDER BY ID DESC
 
 -- insert array values say for column `nick_names`
+-- src: https://stackoverflow.com/questions/33335338/inserting-array-values
 INSERT INTO AIRPLANES (ID, NICK_NAMES)
 VALUES (1, '{ "BELA", "CHRILO", "TONY"}')
 ```
