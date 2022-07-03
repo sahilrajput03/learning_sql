@@ -146,6 +146,22 @@ ORDER BY ID DESC
 -- src: https://stackoverflow.com/questions/33335338/inserting-array-values
 INSERT INTO AIRPLANES (ID, NICK_NAMES)
 VALUES (1, '{ "BELA", "CHRILO", "TONY"}')
+
+
+SELECT MAX(ID)
+FROM BLOGS;
+
+SELECT MAX(ID) AS NUMBER_OF_RECORDS
+FROM BLOGS;
+
+
+--- With blogs table
+SELECT * FROM USERS
+SELECT * FROM BLOGS
+
+SELECT *
+FROM BLOGS
+INNER JOIN USERS ON BLOGS.USER_ID = USERS.ID 
 ```
 
 ## Configuring pgadmin to connect to local postgresql
