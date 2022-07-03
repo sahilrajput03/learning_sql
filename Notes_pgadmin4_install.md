@@ -109,6 +109,4 @@ WHERE TITLE LIKE 'ee'
 
 - Prettify your query with `ctrl+shift+k` or by clicking that button:
 
-![image](https://user-images.githubusercontent.com/31458531/177031327-a25a183c-5bee-4338-be77-b676cdb7de7e.png)
-
-
+![image](https://user-images.githubusercontent.com/31458531/177032272-1d52cc04-11d6-4aaf-8028-0af535184577.png)
