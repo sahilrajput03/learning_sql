@@ -569,14 +569,14 @@ First, you would need to calculate the average revenue all the Associates are ge
 ```sql
 SELECT AVG(revenue_generated)
 FROM sales_associates;
-And then using that result, we can then compare the costs of each of the Associates against that value. To use it as a subquery, we can just write it straight into the WHERE clause of the query:
+-- And then using that result, we can then compare the costs of each of the Associates against that value. To use it as a subquery, we can just write it straight into the WHERE clause of the query:
 
 SELECT *
 FROM sales_associates
 WHERE salary >
    (SELECT AVG(revenue_generated)
     FROM sales_associates);
---- As the constraint is executed, each Associate's salary will be tested against the value queried from the inner subquery.
+-- As the constraint is executed, each Associate's salary will be tested against the value queried from the inner subquery.
 ```
 
 A subquery can be referenced anywhere a normal table can be referenced. Inside a FROM clause, you can JOIN subqueries with other tables, inside a WHERE or HAVING constraint, you can test expressions against the results of the subquery, and even in expressions in the SELECT clause, which allow you to return data directly from the subquery. They are generally executed in the same logical order as the part of the query that they appear in, as described in the last lesson.
