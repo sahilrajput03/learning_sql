@@ -67,3 +67,8 @@ pgadmin4
 - While adding a new row you can skip `id` field as you can see below in grey text `default` is written in the placeholder that means the autoincrement value for the id field will take place:
 
 ![image](https://user-images.githubusercontent.com/31458531/176998938-42641863-49f7-489a-9a15-17fca371e540.png)
+
+- On editing or saving a new row you see a message: 
+
+![image](https://user-images.githubusercontent.com/31458531/177031075-52d6d5ba-1a37-443f-84c1-087a3bbb284c.png)
+
