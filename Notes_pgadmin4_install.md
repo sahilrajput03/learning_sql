@@ -34,6 +34,8 @@ pgadmin4
 
 ## Queries syntax examples
 
+Helpful video @ youtube: [Click here](https://youtu.be/Dd2ej-QKrWY)
+
 ```sql
 SELECT *
 FROM BLOGS
@@ -55,9 +57,13 @@ WHERE YEAR = 2342
 
 SELECT *
 FROM BLOGS
+WHERE AUTHOR = 'rohan'
+
+SELECT *
+FROM BLOGS
 WHERE AUTHOR LIKE 'rohan'
 
---- Learn you have to use single quotes only (double quotes throw error like column ee doesn't exist)
+-- Learn you have to use single quotes only (double quotes throw error like column ee doesn't exist)
 SELECT *
 FROM BLOGS
 WHERE TITLE LIKE 'ee'
@@ -75,7 +81,67 @@ VALUES ('varun', 'https://www.buildonscenes.com/', '10 life lessons', 1221, 2021
 
 SELECT *
 FROM BLOGS
-WHERE ID != 3 --- Notice the != sign in the query.
+WHERE ID != 3 -- Notice the != sign in the query.
+
+SELECT *
+FROM BLOGS
+WHERE ID > 5 -- notice the > symbol
+
+SELECT *
+FROM BLOGS
+WHERE ID > 5 -- notice the >= symbol
+
+SELECT *
+FROM BLOGS
+WHERE ID <> 3 -- notice the <> symbol that simply means !=
+
+-- Rename any column
+SELECT AUTHOR WRITER
+FROM BLOGS
+WHERE AUTHOR = 'rohan'
+
+-- like '%' gets all entries i.e., its redundant
+SELECT *
+FROM BLOGS
+WHERE AUTHOR like '%'
+
+-- OR operator
+SELECT *
+FROM BLOGS
+WHERE LIKES = 8
+	OR LIKES = 11
+
+-- AND operator
+SELECT *
+FROM BLOGS
+WHERE LIKES = 8
+	AND AUTHOR = 'rohan'
+
+SELECT *
+FROM BLOGS
+WHERE LIKES = 8
+	OR AUTHOR like 'wow%' -- For % to work you have to use `like` keyword instead of `=` sign.
+
+SELECT *
+FROM BLOGS
+WHERE NOT id = 3 -- notice the NOT keyword
+
+SELECT *
+FROM BLOGS
+ORDER BY ID ASC
+
+SELECT *
+FROM BLOGS
+ORDER BY AUTHOR  -- default is ASC
+
+SELECT *
+FROM BLOGS
+ORDER BY AUTHOR DESC
+
+SELECT *
+FROM BLOGS
+ORDER BY ID DESC
+
 ```
 
 ## Configuring pgadmin to connect to local postgresql
