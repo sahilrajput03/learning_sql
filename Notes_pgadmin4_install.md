@@ -32,6 +32,37 @@ rm /var/lib/pgadmin/pgadmin4.db
 pgadmin4
 ```
 
+## Queries syntax examples
+
+```sql
+SELECT *
+FROM BLOGS
+WHERE ID = 21
+
+SELECT author
+FROM BLOGS
+WHERE ID = 21
+
+SELECT ID,
+	AUTHOR
+FROM BLOGS
+WHERE ID = 21
+
+
+SELECT *
+FROM BLOGS
+WHERE YEAR = 2342
+
+SELECT *
+FROM BLOGS
+WHERE AUTHOR LIKE 'rohan'
+
+--- Learn you have to use single quotes only (double quotes throw error like column ee doesn't exist)
+SELECT *
+FROM BLOGS
+WHERE TITLE LIKE 'ee'
+```
+
 ## Configuring pgadmin to connect to local postgresql
 
 ![image](https://user-images.githubusercontent.com/31458531/176994040-b59dac6c-3392-4794-b68b-c2f98d85c28f.png)
