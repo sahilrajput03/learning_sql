@@ -188,7 +188,7 @@ VALUES (1, '{ "BELA", "CHRILO", "TONY"}')
 
 ![image](https://user-images.githubusercontent.com/31458531/177031075-52d6d5ba-1a37-443f-84c1-087a3bbb284c.png)
 
-- Opening **Query Tool** executing a query:
+- Opening **Query Tool** view, and write any query and press **f5** to execute that a query (***TIP: You can write bunch of quries and press `ctrl+/` to comment non-required quries)***:
 
 ![image](https://user-images.githubusercontent.com/31458531/177031196-3087cd4e-2b21-4502-9c41-2db75a8a0f0f.png)
 
