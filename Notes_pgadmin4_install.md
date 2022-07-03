@@ -72,3 +72,6 @@ pgadmin4
 
 ![image](https://user-images.githubusercontent.com/31458531/177031075-52d6d5ba-1a37-443f-84c1-087a3bbb284c.png)
 
+- Opening **Query Tool** executing a query:
+
+![image](https://user-images.githubusercontent.com/31458531/177031196-3087cd4e-2b21-4502-9c41-2db75a8a0f0f.png)
