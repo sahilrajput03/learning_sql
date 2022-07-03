@@ -163,13 +163,13 @@ SELECT *
 FROM BLOGS
 INNER JOIN USERS ON BLOGS.USER_ID = USERS.ID 
 
--- TOPIC: Group by ex-1
+-- TOPIC: GROUP BY ex-1
 -- Find distinct authors
 SELECT AUTHOR
 FROM BLOGS
 GROUP BY AUTHOR;
 
--- TOPIC: Group by ex-2
+-- TOPIC: GROUP BY ex-2
 -- Find average of likes by author
 SELECT AUTHOR,
 	AVG(LIKES)
