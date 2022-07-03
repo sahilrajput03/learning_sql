@@ -124,6 +124,8 @@ WHERE ID != 3 --- Notice the != sign in the query.
 
 - Prettify your query with `ctrl+shift+k` or by clicking that button:
 
-![image](https://user-images.githubusercontent.com/31458531/177031327-a25a183c-5bee-4338-be77-b676cdb7de7e.png)
+![image](https://user-images.githubusercontent.com/31458531/177032272-1d52cc04-11d6-4aaf-8028-0af535184577.png)
 
+- While querying you can always look at the list of columns you have in the table like that: 
 
+![image](https://user-images.githubusercontent.com/31458531/177032714-c71ffd4d-68bd-42b5-a5cf-b96c4e5a5f06.png)
