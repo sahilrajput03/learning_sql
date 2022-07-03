@@ -75,3 +75,9 @@ pgadmin4
 - Opening **Query Tool** executing a query:
 
 ![image](https://user-images.githubusercontent.com/31458531/177031196-3087cd4e-2b21-4502-9c41-2db75a8a0f0f.png)
+
+- Prettify your query with `ctrl+shift+k` or by clicking that button:
+
+![image](https://user-images.githubusercontent.com/31458531/177031327-a25a183c-5bee-4338-be77-b676cdb7de7e.png)
+
+
