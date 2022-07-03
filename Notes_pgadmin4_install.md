@@ -142,6 +142,9 @@ SELECT *
 FROM BLOGS
 ORDER BY ID DESC
 
+-- insert array values say for column `nick_names`
+INSERT INTO AIRPLANES (ID, NICK_NAMES)
+VALUES (1, '{ "BELA", "CHRILO", "TONY"}')
 ```
 
 ## Configuring pgadmin to connect to local postgresql
