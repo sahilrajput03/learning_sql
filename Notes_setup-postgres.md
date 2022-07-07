@@ -117,8 +117,6 @@ psql -U postgres -c "DROP DATABASE db_pikachu"
 
 1. Set password for `postgres` user
 
-FYI: Original problem with docker setup with hasura: [Official Github issue](https://github.com/hasura/graphql-engine/issues/4498).
-
 Date: 7 July, 2022.
 
 I set password for postgres user via:
@@ -209,6 +207,8 @@ Now you can go to: `http://localhost:8080/console/` > Data > Connect to existing
 - Database URL: `postgresql://postgres:secret@192.168.18.3:5432/myDb1_test`
 
 _Note I have set password for `postgres` user as `secret` and I am connection to db `myDb1_test`_
+
+FYI: Original problem with docker setup with hasura: [Official Github issue](https://github.com/hasura/graphql-engine/issues/4498).
 
 ## Other good seeming link:
 
