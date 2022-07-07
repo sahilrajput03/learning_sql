@@ -115,9 +115,9 @@ psql -U postgres -c "DROP DATABASE db_pikachu"
 
 # Other necessary things to do
 
-1. Set password for `postgres` user
+Update Date: 7 July, 2022.
 
-Date: 7 July, 2022.
+1. Set password for `postgres` user
 
 I set password for postgres user via:
 
