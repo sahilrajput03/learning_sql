@@ -200,7 +200,7 @@ WHERE LIKES <
 
 ## Configuring pgadmin to connect to local postgresql
 
-![image](https://user-images.githubusercontent.com/31458531/176994040-b59dac6c-3392-4794-b68b-c2f98d85c28f.png)
+![image](https://user-images.githubusercontent.com/31458531/177767683-72480bb5-8f74-44cf-ba32-0cab523931bc.png)
 
 - View data in a table in pgadmin:
 
