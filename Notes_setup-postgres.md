@@ -113,7 +113,9 @@ psql -U postgres -c 'ALTER DATABASE db_pikachu OWNER TO "array"'
 psql -U postgres -c "DROP DATABASE db_pikachu"
 ```
 
-# Update - added password for `postgres` user
+# Other necessary things to do
+
+1. Set password for `postgres` user
 
 FYI: Original problem with docker setup with hasura: [Official Github issue](https://github.com/hasura/graphql-engine/issues/4498).
 
@@ -134,12 +136,7 @@ psql -U postgres
 # LEARN: PostgreSQL database passwords are separate from operating system user passwords. The password for each database user is stored in the pg_authid system catalog. Passwords can be managed with the SQL commands CREATE ROLE and ALTER ROLE, e.g., CREATE ROLE foo WITH LOGIN PASSWORD 'secret', or the psql command \password. If no password has been set up for a user, the stored password is null and password authentication will always fail for that user.
 ```
 
-**Other good seeming link:**
-
-- [article - click here](https://chartio.com/resources/tutorials/how-to-set-the-default-user-password-in-postgresql/#:~:text=For%20most%20systems%2C%20the%20default,connect%20as%20the%20postgres%20user.&text=If%20you%20successfully%20connected%20and,the%20Changing%20the%20Password%20section.)
-- [Stackoverflow answer](https://stackoverflow.com/a/15008311/10012446)
-
-## Enable incoming connection requests
+2. Enable incoming connection requests in `/var/lib/postgres/data/postgresql.conf`
 
 ```bash
 psql -h 192.168.18.3 -p 5432 -d myDb1_test -U postgres
@@ -160,17 +157,24 @@ sudo su postgres
 cd /var/lib/postgres/data/
 # Edit this file
 vim postgresql.conf
+
 # Restart the database (~imo this can be optional ~Sahil)
 sudo systemctl restart postgresql.service
 
-
-
+##### Trying again now:
 psql -h 192.168.18.3 -p 5432 -d myDb1_test -U postgres
 # Output: psql: error: connection to server at "192.168.18.3", port 5432 failed: FATAL:  no pg_hba.conf entry for host "192.168.18.3", user "postgres", database "myDb1_test", no encryption
+# OBSERVATION: We fixed the initial error but there is this new error now.., so follow point 3 below to know how to fix that -
 
 #? fyi: below works though (coz we have appropriate subnet)
 psql -h 127.0.0.1 -p 5432 -d myDb1_test -U postgres
-# BUT HOW DO WE FIX ACCESS FOR GLOBAL ACCESS? Ans. Follow below guide:
+
+# OBSERVATION: BUT HOW DO WE FIX ACCESS FOR GLOBAL ACCESS? Ans. Follow below guide:
+```
+
+3. Fixing **ip subnet mask filter** in `/var/lib/postgres/data/pg_hba.conf`
+
+```bash
 
 ######
 # AS YOU CAN SEE WE NOW instead of above "connection refused" error, we get error as: `FATAL:  no pg_hba.conf entry for host "192.168.18.3"`.
@@ -191,12 +195,13 @@ psql -h 192.168.18.3 -p 5432 -d myDb1_test -U postgres
 psql -h 27.255.179.204 -p 5432 -d myDb1_test -U postgres
 ```
 
-## Hasura connect link
+## Hasura: Connecting db
 
-Make sure you have done:
+Make sure you have done: (Below 1, 2 and 3 points referes to points above i.e, in above **Other necessary things to do** seciton, yo!!)
 
-1. https://stackoverflow.com/a/32844024/10012446
-2. https://stackoverflow.com/a/34577754/10012446
+1. Set password for postgres user via psql
+2. https://stackoverflow.com/a/32844024/10012446
+3. https://stackoverflow.com/a/34577754/10012446
 
 Now you can go to: `http://localhost:8080/console/` > Data > Connect to existing table and use below values to connect your table:
 
@@ -204,3 +209,8 @@ Now you can go to: `http://localhost:8080/console/` > Data > Connect to existing
 - Database URL: `postgresql://postgres:secret@192.168.18.3:5432/myDb1_test`
 
 _Note I have set password for `postgres` user as `secret` and I am connection to db `myDb1_test`_
+
+## Other good seeming link:
+
+- [article - click here](https://chartio.com/resources/tutorials/how-to-set-the-default-user-password-in-postgresql/#:~:text=For%20most%20systems%2C%20the%20default,connect%20as%20the%20postgres%20user.&text=If%20you%20successfully%20connected%20and,the%20Changing%20the%20Password%20section.)
+- [Stackoverflow answer](https://stackoverflow.com/a/15008311/10012446)
