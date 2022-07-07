@@ -204,7 +204,7 @@ Make sure you have done: (Below 1, 2 and 3 points referes to points above i.e, i
 Now you can go to: `http://localhost:8080/console/` > Data > Connect to existing table and use below values to connect your table:
 
 - Database Display Name: `myDb1_test`
-- Database URL: `postgresql://postgres:secret@192.168.18.3:5432/myDb1_test`
+- Database URL: `postgresql://postgres:secret@192.168.18.3:5432/myDb1_blogs_test` OR `postgresql://postgres:secret@192.168.18.3:5432/myDb1_test`.
 
 _Note I have set password for `postgres` user as `secret` and I am connection to db `myDb1_test`_
 
