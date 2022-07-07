@@ -112,3 +112,95 @@ psql -U postgres -c 'ALTER DATABASE db_pikachu OWNER TO "array"'
 # Drop database
 psql -U postgres -c "DROP DATABASE db_pikachu"
 ```
+
+# Update - added password for `postgres` user
+
+FYI: Original problem with docker setup with hasura: [Official Github issue](https://github.com/hasura/graphql-engine/issues/4498).
+
+Date: 7 July, 2022.
+
+I set password for postgres user via:
+
+```bash
+psql -U postgres
+\password
+
+# And set password to `secret`.
+
+# I created this password to be able to connect via hasura.
+
+# Src: Official Docs; https://www.postgresql.org/docs/current/auth-password.html
+
+# LEARN: PostgreSQL database passwords are separate from operating system user passwords. The password for each database user is stored in the pg_authid system catalog. Passwords can be managed with the SQL commands CREATE ROLE and ALTER ROLE, e.g., CREATE ROLE foo WITH LOGIN PASSWORD 'secret', or the psql command \password. If no password has been set up for a user, the stored password is null and password authentication will always fail for that user.
+```
+
+**Other good seeming link:**
+
+- [article - click here](https://chartio.com/resources/tutorials/how-to-set-the-default-user-password-in-postgresql/#:~:text=For%20most%20systems%2C%20the%20default,connect%20as%20the%20postgres%20user.&text=If%20you%20successfully%20connected%20and,the%20Changing%20the%20Password%20section.)
+- [Stackoverflow answer](https://stackoverflow.com/a/15008311/10012446)
+
+## Enable incoming connection requests
+
+```bash
+psql -h 192.168.18.3 -p 5432 -d myDb1_test -U postgres
+# Output: psql: error: connection to server at "192.168.18.3", port 5432 failed: Connection refused
+        # Is the server running on that host and accepting TCP/IP connections?
+
+######
+# source: https://stackoverflow.com/a/32844024/10012446
+# WHAT YOU HAVE TO DO ??? Ans. So to fix that you need set listen_addresses='*' in `/var/lib/postgres/data/postgresql.conf` to allow for incoming connections from any ip / all ip.
+######
+
+# FYI(**BE MODERN**): IF YOU DON"T WANT TO LOGIN AS postgres user, you may do like:
+sudo nvim /var/lib/postgres/data/postgresql.conf
+
+# OLD WAY:
+# Login as postgres user
+sudo su postgres
+cd /var/lib/postgres/data/
+# Edit this file
+vim postgresql.conf
+# Restart the database (~imo this can be optional ~Sahil)
+sudo systemctl restart postgresql.service
+
+
+
+psql -h 192.168.18.3 -p 5432 -d myDb1_test -U postgres
+# Output: psql: error: connection to server at "192.168.18.3", port 5432 failed: FATAL:  no pg_hba.conf entry for host "192.168.18.3", user "postgres", database "myDb1_test", no encryption
+
+#? fyi: below works though (coz we have appropriate subnet)
+psql -h 127.0.0.1 -p 5432 -d myDb1_test -U postgres
+# BUT HOW DO WE FIX ACCESS FOR GLOBAL ACCESS? Ans. Follow below guide:
+
+######
+# AS YOU CAN SEE WE NOW instead of above "connection refused" error, we get error as: `FATAL:  no pg_hba.conf entry for host "192.168.18.3"`.
+# source: https://stackoverflow.com/a/34577754/10012446
+# How do I fix ^^ this error ??? Ans. You need to change this line (in file: `/var/lib/postgres/data/pg_hba.conf`):
+host    all        all         192.168.0.1/32        trust # ~original entry ~Sahil
+# to this:
+host    all        all         all                   md5
+######
+
+sudo nvim /var/lib/postgres/data/pg_hba.conf
+
+# Now:
+psql -h 192.168.18.3 -p 5432 -d myDb1_test -U postgres
+# FYI: My password is `secret`
+# works good! yo!!
+### FYI: Now accessing throught pubic ip works as well now, yo!!
+psql -h 27.255.179.204 -p 5432 -d myDb1_test -U postgres
+```
+
+## Hasura connect link
+
+Make sure you have done:
+
+1. https://stackoverflow.com/a/32844024/10012446
+2. https://stackoverflow.com/a/34577754/10012446
+
+Now you can go to: `http://localhost:8080/console/` > Data > Connect to existing table and use below values to connect your table:
+
+- Database Display Name: `myDb1_test`
+- Database URL: `postgresql://postgres:secret@192.168.18.3:5432/myDb1_test`
+
+_Note I have set password for `postgres` user as `secret` and I am connection to db `myDb1_test`_
