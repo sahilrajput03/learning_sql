@@ -37,6 +37,8 @@ pgadmin4
 Helpful video @ youtube: [Click here](https://youtu.be/Dd2ej-QKrWY)
 
 ```sql
+-- INSPIRATION FOR ALL BELOW QUERIES: https://github.com/sahilrajput03/learning_sql/blob/main/Notes_sql_bolt.md
+
 SELECT *
 FROM BLOGS
 WHERE ID = 21
@@ -69,14 +71,14 @@ FROM BLOGS
 WHERE TITLE LIKE 'ee'
 
 INSERT INTO BLOGS (AUTHOR,
-														URL,
-														TITLE,
-														LIKES,
-														YEAR,
-														USER_ID,
-														"className",
-														CREATED_AT,
-														UPDATED_AT)
+					URL,
+					TITLE,
+					LIKES,
+					YEAR,
+					USER_ID,
+					"className",
+					CREATED_AT,
+					UPDATED_AT)
 VALUES ('varun', 'https://www.buildonscenes.com/', '10 life lessons', 1221, 2021, 1, 'upper-class', '2022-07-01 22:44:50.129+05:30', '2022-07-01 22:44:50.129+05:30');
 
 SELECT *
@@ -146,6 +148,54 @@ ORDER BY ID DESC
 -- src: https://stackoverflow.com/questions/33335338/inserting-array-values
 INSERT INTO AIRPLANES (ID, NICK_NAMES)
 VALUES (1, '{ "BELA", "CHRILO", "TONY"}')
+
+
+SELECT MAX(ID)
+FROM BLOGS;
+
+SELECT MAX(ID) AS NUMBER_OF_RECORDS
+FROM BLOGS;
+
+
+--- With blogs table
+SELECT * FROM USERS
+SELECT * FROM BLOGS
+
+-- TOPIC: GROUP BY ex-1
+-- Find distinct authors
+SELECT AUTHOR
+FROM BLOGS
+GROUP BY AUTHOR;
+
+-- TOPIC: GROUP BY ex-2
+-- Find average of likes by author
+SELECT AUTHOR,
+	AVG(LIKES)
+FROM BLOGS
+GROUP BY AUTHOR;
+
+SELECT *
+FROM BLOGS
+INNER JOIN USERS ON BLOGS.USER_ID = USERS.ID 
+
+-- TOPIC:
+-- WHAT THE HECK IS left outer join, right outer join, full outer join?
+-- From `SQL Lesson 7: OUTER JOINs` from file `Notes_sql_bolt.md`:
+-- So, its like INNER JOIN (JOIN) vs. LEFT JOIN / RIGHT JOIN / FULL JOIN
+-- Like the INNER JOIN these three new joins have to specify which column to join the data on. When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
+
+-- TOPIC:
+-- What is subqueries?
+-- From `ADDITIONAL: SQL Topic: Subqueries` from file`Notes_sql_bolt.md`
+-- We can calculate the average likes of all the blogs via query:
+SELECT AVG(LIKES) FROM BLOGS
+-- So if were to calculate all the blogs which have likes less than that value, we can do it via subquery like that:
+SELECT *
+FROM BLOGS
+WHERE LIKES <
+		(SELECT AVG(LIKES)
+			FROM BLOGS)
+-- So ^^ that query will fetch all the blogs table rows which have likes less than the average likes of all the blogs calculated together.
 ```
 
 ## Configuring pgadmin to connect to local postgresql
@@ -188,7 +238,7 @@ VALUES (1, '{ "BELA", "CHRILO", "TONY"}')
 
 ![image](https://user-images.githubusercontent.com/31458531/177031075-52d6d5ba-1a37-443f-84c1-087a3bbb284c.png)
 
-- Opening **Query Tool** executing a query:
+- Opening **Query Tool** view, and write any query and press **f5** to execute that a query (***TIP: You can write bunch of quries and press `ctrl+/` to comment non-required quries)***:
 
 ![image](https://user-images.githubusercontent.com/31458531/177031196-3087cd4e-2b21-4502-9c41-2db75a8a0f0f.png)
 

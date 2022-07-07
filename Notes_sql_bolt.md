@@ -163,7 +163,7 @@ LIMIT num_limit OFFSET num_offset;
 So, its like INNER JOIN (JOIN) vs. LEFT JOIN / RIGHT JOIN / FULL JOIN
 
 Like the INNER JOIN these three new joins have to specify which column to join the data on.
-When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
+**When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.**
 
 When using any of these new joins, you will likely have to write additional logic to deal with NULLs in the result and constraints (more on this in the next lesson).
 
@@ -569,14 +569,14 @@ First, you would need to calculate the average revenue all the Associates are ge
 ```sql
 SELECT AVG(revenue_generated)
 FROM sales_associates;
-And then using that result, we can then compare the costs of each of the Associates against that value. To use it as a subquery, we can just write it straight into the WHERE clause of the query:
+-- And then using that result, we can then compare the costs of each of the Associates against that value. To use it as a subquery, we can just write it straight into the WHERE clause of the query:
 
 SELECT *
 FROM sales_associates
 WHERE salary >
    (SELECT AVG(revenue_generated)
     FROM sales_associates);
---- As the constraint is executed, each Associate's salary will be tested against the value queried from the inner subquery.
+-- As the constraint is executed, each Associate's salary will be tested against the value queried from the inner subquery.
 ```
 
 A subquery can be referenced anywhere a normal table can be referenced. Inside a FROM clause, you can JOIN subqueries with other tables, inside a WHERE or HAVING constraint, you can test expressions against the results of the subquery, and even in expressions in the SELECT clause, which allow you to return data directly from the subquery. They are generally executed in the same logical order as the part of the query that they appear in, as described in the last lesson.
