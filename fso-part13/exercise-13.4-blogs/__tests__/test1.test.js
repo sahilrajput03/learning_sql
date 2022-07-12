@@ -449,3 +449,10 @@ describe('user session management', async () => {
 		expect(response5.toJSON().disabled).toBe(true)
 	})
 })
+
+test('any depth of logs gets printed with the logger module unlike default i.e., depth=2', async () => {
+	console.log('things')
+	let a = {car: {bar: {tar: {mar: 10}}}}
+	console.log(a) // this prints to the level of of only two level nested objects only.
+	loggert.info(a)
+})
