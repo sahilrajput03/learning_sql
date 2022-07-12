@@ -1,5 +1,7 @@
-const {Sequelize, Model, DataTypes} = require('sequelize')
+const {Sequelize} = require('sequelize')
+const {initNoteM, NoteM} = require('./models')
 const dotenv = require('dotenv')
+
 dotenv.config()
 
 let {DATABASE_URL} = process.env
@@ -26,42 +28,19 @@ const sequelize = new Sequelize(DATABASE_URL, config)
 if (!DATABASE_URL.includes('test')) {
 	throw new Error('Please use a database with test in its name for testing... ~ Sahil')
 }
-module.exports = sequelize.authenticate()
-// .then(() => {
-// 	console.log('Connection has been established successfully.'.mb)
-// })
-// .catch((err) => {
-// 	console.error('~Sahil: Unable to connect to the database :'.bgRed, err)
-// })
 
-// NoteModel
-class NoteM extends Model {}
-
-NoteM.init(
-	{
-		id: {
-			type: DataTypes.INTEGER,
-			primaryKey: true,
-			autoIncrement: true,
-		},
-		content: {
-			type: DataTypes.TEXT,
-			allowNull: false,
-		},
-		important: {
-			type: DataTypes.BOOLEAN,
-		},
-		date: {
-			type: DataTypes.DATE,
-		},
-	},
-	{
-		sequelize,
-		underscored: true,
-		timestamps: false,
-		modelName: 'note',
+async function connect() {
+	try {
+		await sequelize.authenticate()
+		console.log('CONNECTION TO DB SUCCESSFULLY.')
+		initNoteM(sequelize)
+		// Autopilot - Fix the schema
+		await NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+	} catch (error) {
+		// 	console.error('~Sahil: Unable to connect to the database :'.bgRed, err)
 	}
-)
+}
 
-global.NoteM = NoteM
+module.exports = connect()
+
 global.sequelize = sequelize

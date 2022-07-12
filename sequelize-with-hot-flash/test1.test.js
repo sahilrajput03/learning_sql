@@ -1,19 +1,24 @@
 require('dotenv').config({
 	path: '.env.test',
 })
-const {Op} = require('sequelize')
-// log('::Available operators::', Object.keys(Op)) // Output: eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,etc
+const {Op} = require('sequelize') // log('::Available operators::', Object.keys(Op)) // Output: eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,etc
 const {expect} = require('expect')
 // expect DOCS (from jest): https://jestjs.io/docs/expect
 // toMatchObject: (src: https://jestjs.io/docs/expect#tomatchobjectobject) Used to check that a JavaScript object matches a subset of the properties of an object
+const {NoteM} = require('./models')
 
 //? Sequelize querying methods (findAll, findByPk, findOne, findOrCreate, findAndCountAll): https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
 
+let connectToDb = global.connectToDb,
+	closeDb = global.closeDb,
+	beforeAll = global.beforeAll,
+	test = global.test,
+	sequelize = global.sequelize,
+	log = global.log
+
 // LEARN: ALL CONNECTION AND MODEL RELATED STUFF GOES HERE..
 connectToDb(async () => {
-	// await require('./initMongodb.js')
 	await require('./initPostgreSql')
-	log('connected to db..')
 })
 
 closeDb(async () => {
@@ -25,15 +30,13 @@ beforeAll(async () => {
 	// What the?They say that all tables get delete within the database:
 	// let k = await sequelize.sync({force: true})
 
-	// Autopilot - Fix the schema
-	await NoteM.sync({alter: true}) // This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model. // src: https://sequelize.org/docs/v6/core-concepts/model-basics/
-
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await NoteM.sync({force: true})
 })
 
 // LEARN: You may never use console.log but simply use debugger to debug values like reply below by placing breakpoint in the functin end brace.
+
 const _note = {
 	// id: '', // You should *not* give id manually coz its always auto assigned.
 	content: 'i am note 1',
@@ -55,7 +58,7 @@ test('save note', async () => {
 	expect(typeof noteObject).toBe('object')
 
 	// Way 2: Sahil
-	expect(note.dataValues).toMatchObject(_note)
+	expect(note.toJSON()).toMatchObject(_note)
 })
 
 test('find a note by primary key', async () => {
@@ -65,11 +68,12 @@ test('find a note by primary key', async () => {
 	expect(note).toMatchObject({..._note, id})
 })
 
+// ! THIS SUCK WITH TIME INCONSISTENSIES.
 test('findOne using filter', async () => {
 	const note = await NoteM.findOne({where: {content: 'i am note 1'}})
 
 	expect(note).toMatchObject(_notes[0])
-	expect(note.dataValues).toMatchObject(_notes[0])
+	expect(note.toJSON()).toMatchObject(_notes[0])
 })
 
 test('a non-existent note/row is null', async () => {
@@ -81,7 +85,7 @@ test('a non-existent note/row is null', async () => {
 test('save note with given id', async () => {
 	const _noteWithId = {..._note, id: 2}
 	const note = await NoteM.create(_noteWithId)
-	expect(note.dataValues).toMatchObject(_noteWithId)
+	expect(note.toJSON()).toMatchObject(_noteWithId)
 })
 
 let dataValues = (data) => data.map((n) => n.dataValues)
