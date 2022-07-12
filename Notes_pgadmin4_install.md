@@ -196,6 +196,16 @@ WHERE LIKES <
 		(SELECT AVG(LIKES)
 			FROM BLOGS)
 -- So ^^ that query will fetch all the blogs table rows which have likes less than the average likes of all the blogs calculated together.
+
+
+-- TOPIC:
+-- Using variables in queries in pgadmin
+-- src: https://stackoverflow.com/a/62993115/10012446
+SET SESSION VARS.AUTHOR = 'rohan';
+
+SELECT *
+FROM BLOGS
+WHERE AUTHOR = CURRENT_SETTING('vars.author');
 ```
 
 ## Configuring pgadmin to connect to local postgresql
