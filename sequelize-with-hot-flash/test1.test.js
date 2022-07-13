@@ -3,6 +3,7 @@ require('dotenv').config({
 })
 const {Op} = require('sequelize')
 const {expect} = require('expect')
+const DUMMY_NOTES = require('./dummyNotes')
 
 /**
  * Docs and Learnings ~Sahil
@@ -198,8 +199,7 @@ test('pagination', async () => {
 	await NoteM.destroy(FILTER_MATCH_ALL)
 
 	// Saving 8 notes from data.js file
-	let NOTES_DATA = require('./data')
-	let __notes = await NoteM.bulkCreate(NOTES_DATA)
+	let __notes = await NoteM.bulkCreate(DUMMY_NOTES)
 
 	// pagination
 	let page = 1 // e.g., 1,2,3...
@@ -224,7 +224,7 @@ test('pagination', async () => {
 	expect(notes.length).toBe(limit)
 
 	// LEARN: count is the total number of results in db!
-	expect(count).toBe(NOTES_DATA.length)
+	expect(count).toBe(DUMMY_NOTES.length)
 })
 
 test('delete a note/row', async () => {
