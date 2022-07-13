@@ -1,20 +1,36 @@
 require('dotenv').config({
 	path: '.env.test',
 })
-const {Op} = require('sequelize') // log('::Available operators::', Object.keys(Op)) // Output: eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,etc
+const {Op} = require('sequelize')
 const {expect} = require('expect')
-// expect DOCS (from jest): https://jestjs.io/docs/expect
-// toMatchObject: (src: https://jestjs.io/docs/expect#tomatchobjectobject) Used to check that a JavaScript object matches a subset of the properties of an object
-const {NoteM} = require('./models')
 
-//? Sequelize querying methods (findAll, findByPk, findOne, findOrCreate, findAndCountAll): https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
+/**
+ * Docs and Learnings ~Sahil
+ * =========================
+ *
+ * DOCS - SEQUELISE
+ * ================
+ * expect : https://jestjs.io/docs/expect
+ * `toMatchObject`: Used to check that a JavaScript object matches a subset of the properties of an object.
+ * src: https://jestjs.io/docs/expect#tomatchobjectobject
+ *
+ * SEQUELIZE QUERYING METHODS:
+ * ===========================
+ * Sequelize querying methods (findAll, findByPk, findOne, findOrCreate, findAndCountAll): https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
+ *
+ * OPERATORS FROM SEQUELIZE:
+ * =========================
+ * log('::Available operators::', Object.keys(Op)) // Output: eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,in etc.
+ */
+
+const {NoteM} = require('./models')
 
 let connectToDb = global.connectToDb,
 	closeDb = global.closeDb,
 	beforeAll = global.beforeAll,
 	test = global.test,
-	sequelize = global.sequelize,
-	log = global.log
+	log = global.log,
+	describe = global.describe
 
 // LEARN: ALL CONNECTION AND MODEL RELATED STUFF GOES HERE..
 connectToDb(async () => {
@@ -22,14 +38,11 @@ connectToDb(async () => {
 })
 
 closeDb(async () => {
-	const db = sequelize
+	const db = global.sequelize // using global.sequelize is necessary ~Sahil
 	await db.close() // close the connection.
 })
 
 beforeAll(async () => {
-	// What the?They say that all tables get delete within the database:
-	// let k = await sequelize.sync({force: true})
-
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await NoteM.sync({force: true})
@@ -37,45 +50,42 @@ beforeAll(async () => {
 
 // LEARN: You may never use console.log but simply use debugger to debug values like reply below by placing breakpoint in the functin end brace.
 
-const _note = {
+const NOTE = {
 	// id: '', // You should *not* give id manually coz its always auto assigned.
 	content: 'i am note 1',
 	important: false,
 	date: new Date(),
 }
 
+const NOTE_WITH_ID = {...NOTE, id: 2}
+
+// Sequelize docs on .toJSON(), https://sequelize.org/docs/v6/core-concepts/model-instances/#note-logging-instances
+// Sequlize object to plain js object, src: https://stackoverflow.com/questions/21961818/sequelize-convert-entity-to-plain-object
+// Issue @ sequelize: https://github.com/sequelize/sequelize/issues/4291
+
 test('save note', async () => {
-	const note = await NoteM.create(_note)
-	expect(note).toMatchObject(_note) // this has lots of unnecessar information so not suitable to send over http request.
+	const note_sqz = await NoteM.create(NOTE)
+	expect(note_sqz).toMatchObject(NOTE) // this has lots of unnecessar information so not suitable to send over http request.
 
-	// Sequelize docs on .toJSON(), https://sequelize.org/docs/v6/core-concepts/model-instances/#note-logging-instances
-	// Sequlize object to plain js object, src: https://stackoverflow.com/questions/21961818/sequelize-convert-entity-to-plain-object
-	// Issue @ sequelize: https://github.com/sequelize/sequelize/issues/4291
-
-	// Way 1: FSO
-	let noteObject = note.toJSON()
-	expect(noteObject).toMatchObject(_note)
-	expect(typeof noteObject).toBe('object')
-
-	// Way 2: Sahil
-	expect(note.toJSON()).toMatchObject(_note)
+	let note = note_sqz.toJSON()
+	expect(note).toMatchObject(NOTE)
+	expect(typeof note).toBe('object')
 })
 
 test('find a note by primary key', async () => {
 	let id = 1
 	const note = await NoteM.findByPk(id)
 
-	expect(note).toMatchObject({..._note, id})
+	expect(note).toMatchObject({...NOTE, id})
 })
 
-// ! THIS SUCK WITH TIME INCONSISTENSIES.
 test('findOne using filter', async () => {
 	const note = await NoteM.findOne({where: {content: 'i am note 1'}})
 
-	const expected = {..._note}
-	delete expected.date // not matching date coz sometimes it causes discrepancies idk why the date saved in db is actually a delayed time IDK
+	const expected = {...NOTE}
+	delete expected.date // ! THIS SUCK WITH TIME INCONSISTENSIES, Not matching date coz sometimes it causes discrepancies idk why the date saved in db is actually a delayed time IDK
 
-	expect(note.toJSON()).toMatchObject(_note)
+	expect(note.toJSON()).toMatchObject(NOTE)
 })
 
 test('a non-existent note/row is null', async () => {
@@ -85,9 +95,9 @@ test('a non-existent note/row is null', async () => {
 })
 
 test('save note with given id', async () => {
-	const _noteWithId = {..._note, id: 2}
-	const note = await NoteM.create(_noteWithId)
-	expect(note.toJSON()).toMatchObject(_noteWithId)
+	const note = await NoteM.create(NOTE_WITH_ID)
+
+	expect(note.toJSON()).toMatchObject(NOTE_WITH_ID)
 })
 
 //?I don't prefer to use this at all. => let dataValues = (data) => data.map((n) => n.dataValues)
@@ -97,7 +107,7 @@ test('saving note with duplicate id should throw unique id error', async () => {
 	let receivedErr
 
 	try {
-		let _noteWithId = {..._note, id: 2}
+		let _noteWithId = {...NOTE, id: 2}
 		let note = await NoteM.create(_noteWithId)
 	} catch (err) {
 		receivedErr = err
@@ -110,9 +120,10 @@ test('saving note with duplicate id should throw unique id error', async () => {
 	expect(receivedErr.errors[0].message).toBe(uniqueIdErr)
 })
 
-test('drop notes table', async () => {
-	// Below method doesn't return anything meaningful ~ imo ~ Sahil
-	await NoteM.sync({force: true}) // This creates the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
+let FILTER_MATCH_ALL = {where: {}}
+
+test('drop notes table (#delete all)', async () => {
+	await NoteM.destroy(FILTER_MATCH_ALL)
 
 	let notes = await NoteM.findAll()
 	expect(notes.length).toBe(0)
@@ -133,7 +144,8 @@ let NOTES = [
 
 test('insert many notes/rows', async () => {
 	// drop notes table
-	await NoteM.sync({force: true})
+	await NoteM.destroy(FILTER_MATCH_ALL)
+
 	let notes_sqz = await NoteM.bulkCreate(NOTES)
 	let notes = notes_sqz.map((n) => n.toJSON())
 
@@ -183,7 +195,7 @@ test('get all notes/rows using for a matching property value', async () => {
 
 test('pagination', async () => {
 	// drop notes table
-	await NoteM.sync({force: true})
+	await NoteM.destroy(FILTER_MATCH_ALL)
 
 	// Saving 8 notes from data.js file
 	let NOTES_DATA = require('./data')
@@ -200,7 +212,7 @@ test('pagination', async () => {
 	const {count, rows} = await NoteM.findAndCountAll({
 		where: {
 			content: {
-				[Op.like]: 'i am note%', // This searchs for any row that entry for content having prefix as `i am note`
+				[Op.like]: 'i am note%', // This searchs for any row that entry for content having prefix as `i am note` // #using like operator, for search indexing
 			},
 		},
 		offset,
@@ -242,26 +254,89 @@ test('delete many notes/rows', async () => {
 		},
 	}
 
-	const notesCount = await NoteM.count(filter)
+	let count = await NoteM.count(filter)
+	expect(count).not.toBe(0)
 
-	expect(notesCount).not.toBe(0)
+	let deletedCount = await NoteM.destroy(filter)
+	expect(deletedCount).toBe(count)
 
-	let deleteCount = await NoteM.destroy(filter)
-
-	expect(deleteCount).toBe(notesCount)
-	// log({deleteCount, notesCount})
-
-	const notesCountLater = await NoteM.count(filter)
-	expect(notesCountLater).toBe(0)
+	count = await NoteM.count(filter)
+	expect(count).toBe(0)
 })
 
-// Learn JEST:
-// expect(async () => {
-// 	let note = await NoteM.create(_noteWithId)
-// }).rejects.toThrow('Validation error')
-// LEARN: `rejects.toThrow` method compares `error.message` property
+const ERROR_NAME = 'SequelizeUniqueConstraintError'
+const ERROR_MESSAGE_UNIQUE = 'Validation error'
 
-// This works buddy in jest though!
-// expect(() => {
-// 	throw new Error('cool')
-// }).toThrow('cool')
+describe('testing errors with sequelize', () => {
+	test('SAMPLE', async () => {
+		expect(() => {
+			throw new Error('cool')
+		}).toThrow('cool')
+	})
+
+	test('validation err', async () => {
+		expect(async () => {
+			await NoteM.destroy({where: {}})
+			await NoteM.create(NOTE_WITH_ID)
+			await NoteM.create(NOTE_WITH_ID)
+		}).rejects.toThrow(ERROR_MESSAGE_UNIQUE) // LEARN: `rejects.toThrow` method compares `error.message` property
+	})
+
+	// ? A simple test to verify sequelize error.
+	test('test validation errors using simple expects', async () => {
+		let err
+		try {
+			await NoteM.create(NOTE_WITH_ID)
+			await NoteM.create(NOTE_WITH_ID)
+		} catch (error) {
+			err = error
+		}
+		expect(err.name).toBe(ERROR_NAME)
+		expect(err.message).toBe(ERROR_MESSAGE_UNIQUE)
+	})
+})
+
+describe('delete multiple of given ids', async () => {
+	let NOTES_WITH_IDS = [
+		{
+			id: 1,
+			content: 'i am note 1',
+			important: false,
+			date: new Date(),
+		},
+		{
+			id: 2,
+			content: 'i am note 2',
+			important: false,
+			date: new Date(),
+		},
+	]
+
+	test('using simple array way', async () => {
+		// Reset and bulkInsert notes
+		await NoteM.destroy(FILTER_MATCH_ALL)
+		let expectedIds = NOTES_WITH_IDS.map((n) => n.id)
+
+		let noteIds = (await NoteM.bulkCreate(NOTES_WITH_IDS)).map((n) => n.toJSON().id)
+		expect(noteIds).toEqual(expectedIds)
+
+		// Delete using filter1
+		let filter1 = {where: {id: noteIds}}
+		let deletedCount = await NoteM.destroy(filter1)
+		expect(deletedCount).toBe(noteIds.length)
+	})
+
+	test('using `Op.in` operator way', async () => {
+		// Reset and bulkInsert notes
+		await NoteM.destroy(FILTER_MATCH_ALL)
+		let expectedIds = NOTES_WITH_IDS.map((n) => n.id)
+
+		let noteIds = (await NoteM.bulkCreate(NOTES_WITH_IDS)).map((n) => n.toJSON().id)
+		expect(noteIds).toEqual(expectedIds)
+
+		// Delete using filter2
+		let filter2 = {where: {id: {[Op.in]: noteIds}}} // Using in operator
+		let deletedCount = await NoteM.destroy(filter2)
+		expect(deletedCount).toBe(noteIds.length)
+	})
+})
