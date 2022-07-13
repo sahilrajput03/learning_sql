@@ -73,7 +73,7 @@ test('findOne using filter', async () => {
 	const note = await NoteM.findOne({where: {content: 'i am note 1'}})
 
 	const expected = {..._note}
-	delete expected.date // not matching date coz sometimes it causes discrepancies idk why the date saved in db is actually a delayed time IDK hell why.!!
+	delete expected.date // not matching date coz sometimes it causes discrepancies idk why the date saved in db is actually a delayed time IDK
 
 	expect(note.toJSON()).toMatchObject(_note)
 })
@@ -90,7 +90,7 @@ test('save note with given id', async () => {
 	expect(note.toJSON()).toMatchObject(_noteWithId)
 })
 
-let dataValues = (data) => data.map((n) => n.dataValues)
+//?I don't prefer to use this at all. => let dataValues = (data) => data.map((n) => n.dataValues)
 
 test('saving note with duplicate id should throw unique id error', async () => {
 	// inspiration: https://stackoverflow.com/a/48707461/10012446
@@ -118,7 +118,7 @@ test('drop notes table', async () => {
 	expect(notes.length).toBe(0)
 })
 
-let _notes = [
+let NOTES = [
 	{
 		content: 'i am note 1',
 		important: false,
@@ -134,14 +134,12 @@ let _notes = [
 test('insert many notes/rows', async () => {
 	// drop notes table
 	await NoteM.sync({force: true})
+	let notes_sqz = await NoteM.bulkCreate(NOTES)
+	let notes = notes_sqz.map((n) => n.toJSON())
 
-	let notes = await NoteM.bulkCreate(_notes)
-	notes = dataValues(notes)
-
-	expect(notes.length).toBe(_notes.length)
-
+	expect(notes.length).toBe(NOTES.length)
 	notes.forEach((note, idx) => {
-		expect(note).toMatchObject(_notes[idx])
+		expect(note).toMatchObject(NOTES[idx])
 	})
 })
 
@@ -149,38 +147,37 @@ test('count document', async () => {
 	const filter = {}
 	let notesCount = await NoteM.count(filter)
 
-	expect(notesCount).toBe(_notes.length)
+	expect(notesCount).toBe(NOTES.length)
 })
 
 test('get all notes/rows', async () => {
-	let notes = await NoteM.findAll()
+	let notes_sqz = await NoteM.findAll()
 
 	// FSO WAY and Sequelize docs way: (actually good way!)
-	let notesArray = notes.map((note) => note.toJSON())
-	notesArray.forEach((row, idx) => {
-		expect(row).toMatchObject(_notes[idx])
-	})
-
-	// Way 2 ~ Sahil
-	dataValues(notes).forEach((row, idx) => {
-		expect(row).toMatchObject(_notes[idx])
+	let notes = notes_sqz.map((note) => note.toJSON())
+	notes.forEach((row, idx) => {
+		expect(row).toMatchObject(NOTES[idx])
 	})
 })
 
 test('get all notes/rows (with empty filter)', async () => {
 	let filter = {}
-	let notes = await NoteM.findAll(filter)
+	let notes_sqz = await NoteM.findAll(filter)
 
-	dataValues(notes).forEach((row, idx) => {
-		expect(row).toMatchObject(_notes[idx])
+	let notes = notes_sqz.map((n) => n.toJSON())
+
+	notes.forEach((row, idx) => {
+		expect(row).toMatchObject(NOTES[idx])
 	})
 })
 
 test('get all notes/rows using for a matching property value', async () => {
-	const notes = await NoteM.findAll({where: {important: false}})
+	const notes_sqz = await NoteM.findAll({where: {important: false}})
 
-	dataValues(notes).forEach((row, idx) => {
-		expect(row).toMatchObject(_notes[idx])
+	let notes = notes_sqz.map((n) => n.toJSON())
+
+	notes.forEach((row, idx) => {
+		expect(row).toMatchObject(NOTES[idx])
 	})
 })
 
@@ -189,8 +186,8 @@ test('pagination', async () => {
 	await NoteM.sync({force: true})
 
 	// Saving 8 notes from data.js file
-	let _notes = require('./data')
-	let notes = await NoteM.bulkCreate(_notes)
+	let NOTES_DATA = require('./data')
+	let __notes = await NoteM.bulkCreate(NOTES_DATA)
 
 	// pagination
 	let page = 1 // e.g., 1,2,3...
@@ -209,10 +206,13 @@ test('pagination', async () => {
 		offset,
 		limit,
 	})
-	expect(dataValues(rows).length).toBe(limit)
+
+	let notes = rows.map((r) => r.toJSON())
+	// console.log(notes)
+	expect(notes.length).toBe(limit)
 
 	// LEARN: count is the total number of results in db!
-	expect(count).toBe(_notes.length)
+	expect(count).toBe(NOTES_DATA.length)
 })
 
 test('delete a note/row', async () => {
