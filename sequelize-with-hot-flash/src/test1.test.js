@@ -49,6 +49,9 @@ beforeAll(async () => {
 	// Create the table, dropping it first if it already existed, src: https://sequelize.org/docs/v6/core-concepts/model-basics/
 	// LEARN: .sync method also returns a promise, how badly sequelize has named this particular naming ~ Sahil. :(
 	await NoteM.sync({force: true})
+	// vs.
+	// await NoteM.destroy({where: {}})
+	// ^^^ This deletes all the notes but keeps the hold on older ids of which were previously created, thus any new notes created will have ids in sequence continuing from the last id of the previous deleted notes.
 })
 
 // LEARN: You may never use console.log but simply use debugger to debug values like reply below by placing breakpoint in the functin end brace.
@@ -123,10 +126,8 @@ test('saving note with duplicate id should throw unique id error', async () => {
 	expect(receivedErr.errors[0].message).toBe(uniqueIdErr)
 })
 
-let FILTER_MATCH_ALL = {where: {}}
-
 test('drop notes table (#delete all)', async () => {
-	await NoteM.destroy(FILTER_MATCH_ALL)
+	await NoteM.sync({force: true})
 
 	let notes = await NoteM.findAll()
 	expect(notes.length).toBe(0)
@@ -147,7 +148,7 @@ let NOTES = [
 
 test('insert many notes/rows', async () => {
 	// drop notes table
-	await NoteM.destroy(FILTER_MATCH_ALL)
+	await NoteM.sync({force: true})
 
 	let notes_sqz = await NoteM.bulkCreate(NOTES)
 	let notes = notes_sqz.map((n) => n.toJSON())
@@ -198,7 +199,7 @@ test('get all notes/rows using for a matching property value', async () => {
 
 test('pagination', async () => {
 	// drop notes table
-	await NoteM.destroy(FILTER_MATCH_ALL)
+	await NoteM.sync({force: true})
 
 	// Saving 8 notes from data.js file
 	let __notes = await NoteM.bulkCreate(DUMMY_NOTES)
@@ -316,7 +317,7 @@ describe('delete multiple of given ids', async () => {
 
 	test('using simple array way', async () => {
 		// Reset and bulkInsert notes
-		await NoteM.destroy(FILTER_MATCH_ALL)
+		await NoteM.sync({force: true})
 		let expectedIds = NOTES_WITH_IDS.map((n) => n.id)
 
 		let noteIds = (await NoteM.bulkCreate(NOTES_WITH_IDS)).map((n) => n.toJSON().id)
@@ -330,7 +331,7 @@ describe('delete multiple of given ids', async () => {
 
 	test('using `Op.in` operator way', async () => {
 		// Reset and bulkInsert notes
-		await NoteM.destroy(FILTER_MATCH_ALL)
+		await NoteM.sync({force: true})
 		let expectedIds = NOTES_WITH_IDS.map((n) => n.id)
 
 		let noteIds = (await NoteM.bulkCreate(NOTES_WITH_IDS)).map((n) => n.toJSON().id)
