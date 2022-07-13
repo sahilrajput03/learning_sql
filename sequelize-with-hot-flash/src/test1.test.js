@@ -2,6 +2,7 @@ const {Op} = require('sequelize')
 const {expect} = require('expect')
 const dotenv = require('dotenv')
 const DUMMY_NOTES = require('./dummyNotes')
+const {NoteM} = require('./models')
 
 // Setting envionment on start of the program is necessary.
 dotenv.config({
@@ -26,8 +27,6 @@ dotenv.config({
  * =========================
  * log('::Available operators::', Object.keys(Op)) // Output: eg,ne,gte,gt,lte,lt,not,is,notIn,notLike,iLike,notILike,in etc.
  */
-
-const {NoteM} = require('./models')
 
 let connectToDb = global.connectToDb,
 	closeDb = global.closeDb,
@@ -170,7 +169,7 @@ test('get all notes/rows', async () => {
 	let notes_sqz = await NoteM.findAll()
 
 	// FSO WAY and Sequelize docs way: (actually good way!)
-	let notes = notes_sqz.map((note) => note.toJSON())
+	let notes = notes_sqz.map((n) => n.toJSON())
 	notes.forEach((row, idx) => {
 		expect(row).toMatchObject(NOTES[idx])
 	})
@@ -222,7 +221,7 @@ test('pagination', async () => {
 		limit,
 	})
 
-	let notes = rows.map((r) => r.toJSON())
+	let notes = rows.map((n) => n.toJSON())
 	// console.log(notes)
 	expect(notes.length).toBe(limit)
 
