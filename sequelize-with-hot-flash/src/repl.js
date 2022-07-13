@@ -1,5 +1,9 @@
 /**
  * USAGE: `rpl repl.js`
+ * FYI: To get case-insensitive autocomplete in nodejs, use:
+ * nvm use 18.5.0
+ * AND to get back to lts version-
+ * nvm use --lts
  */
 
 const {NoteM} = require('./models')
