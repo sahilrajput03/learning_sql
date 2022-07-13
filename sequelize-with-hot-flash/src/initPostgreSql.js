@@ -1,8 +1,5 @@
 const {Sequelize} = require('sequelize')
 const {initNoteM, NoteM} = require('./models')
-const dotenv = require('dotenv')
-
-dotenv.config()
 
 let {DATABASE_URL} = process.env
 // console.log('we got db url as :::', DATABASE_URL)

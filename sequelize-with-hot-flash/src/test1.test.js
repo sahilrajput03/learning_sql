@@ -1,15 +1,18 @@
-require('dotenv').config({
-	path: '.env.test',
-})
 const {Op} = require('sequelize')
 const {expect} = require('expect')
+const dotenv = require('dotenv')
 const DUMMY_NOTES = require('./dummyNotes')
+
+// Setting envionment on start of the program is necessary.
+dotenv.config({
+	path: '.env.test',
+})
 
 /**
  * Docs and Learnings ~Sahil
  * =========================
  *
- * DOCS - SEQUELISE
+ * DOCS - SEQUELIZE
  * ================
  * expect : https://jestjs.io/docs/expect
  * `toMatchObject`: Used to check that a JavaScript object matches a subset of the properties of an object.
