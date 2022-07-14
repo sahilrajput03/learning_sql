@@ -3,6 +3,8 @@ const {expect} = require('expect')
 const dotenv = require('dotenv')
 const DUMMY_NOTES = require('./dummyNotes')
 const {NoteM} = require('./models')
+// @ts-ignore
+const {loggert} = require('@array/logger')
 
 // Setting envionment on start of the program is necessary.
 dotenv.config({
@@ -63,7 +65,7 @@ const NOTE = {
 	date: new Date(),
 }
 
-const NOTE_WITH_ID = {...NOTE, id: 2}
+const NOTE_WITH_ID = {...NOTE, id: 101}
 
 // Sequelize docs on .toJSON(), https://sequelize.org/docs/v6/core-concepts/model-instances/#note-logging-instances
 // Sequlize object to plain js object, src: https://stackoverflow.com/questions/21961818/sequelize-convert-entity-to-plain-object
@@ -71,11 +73,35 @@ const NOTE_WITH_ID = {...NOTE, id: 2}
 
 test('save note', async () => {
 	const note_sqz = await NoteM.create(NOTE)
+	// If you don't specify any field value(which is there in schema) will be assigned NULL as value.
+	// If you specify any field that is not in model, then it'll be removed simply!
+
 	expect(note_sqz).toMatchObject(NOTE) // this has lots of unnecessar information so not suitable to send over http request.
 
 	let note = note_sqz.toJSON()
 	expect(note).toMatchObject(NOTE)
 	expect(typeof note).toBe('object')
+})
+
+test('save note using build method', async () => {
+	/** @type any */
+	const noteBuild = NoteM.build(NOTE)
+	noteBuild.important = true // Also legit way to change properties.
+	let note_sqz = await noteBuild.save()
+	let note = note_sqz.toJSON()
+	// loggert.info(note)
+})
+
+test('save note and save only certain properties', async () => {
+	const note_sqz = await NoteM.create(NOTE, {
+		fields: ['content'], // only `content` property will be saved for the note and rest other properties will be discarded.
+	})
+
+	let note = note_sqz.toJSON()
+	// loggert.info(note) // important and date value will be either null or their deafult property if set in the model definition.
+	expect(note.content).toBe(NOTE.content)
+	expect(note.important).toBeNull()
+	expect(note.date).toBeNull()
 })
 
 test('find a note by primary key', async () => {
@@ -141,7 +167,7 @@ let NOTES = [
 	},
 	{
 		content: 'i am note 2',
-		important: false,
+		important: true,
 		date: new Date(),
 	},
 ]
@@ -166,13 +192,63 @@ test('count document', async () => {
 	expect(notesCount).toBe(NOTES.length)
 })
 
+test('using "GROUP BY" to get count for all the rows which have same values in that column', async () => {
+	let sequelize = global.sequelize
+
+	let notes_sqz = await NoteM.findAll({
+		attributes: [
+			[sequelize.fn('COUNT', sequelize.col('important')), 'n_important'],
+			// [sequelize.fn("COUNT", sequelize.col("cash")), "n_cash"],
+			/** Putting more attributes here break the output,says something like "you must use some aggregation/group by thing to use it." */
+		],
+	})
+	let notes = notes_sqz.map((n) => n.toJSON())
+	// loggert.info(notes)
+	expect(notes).toEqual([{n_important: '2'}])
+})
+
 test('get all notes/rows', async () => {
 	let notes_sqz = await NoteM.findAll()
 
-	// FSO WAY and Sequelize docs way: (actually good way!)
+	const isEveryNoteIsSequelizeModelInstance = notes_sqz.every((n) => n instanceof NoteM)
+	expect(isEveryNoteIsSequelizeModelInstance).toBe(true)
+
 	let notes = notes_sqz.map((n) => n.toJSON())
+	// loggert.info(notes)
 	notes.forEach((row, idx) => {
 		expect(row).toMatchObject(NOTES[idx])
+	})
+})
+
+test('get all notes but only specific properties of each note (attributes)', async () => {
+	let notes_sqz = await NoteM.findAll({
+		attributes: ['id', 'important'],
+	})
+
+	let notes = notes_sqz.map((n) => n.toJSON())
+	// loggert.info(notes)
+	notes.forEach((n) => {
+		let keyNames = Object.keys(n) // array
+		let numberOfKeys = keyNames.length // number of keys in the object.
+		expect(numberOfKeys).toBe(2) // bcoz `id` and `important` adds to two properties.
+		expect(keyNames).toStrictEqual(['id', 'important'])
+	})
+})
+
+test('exclude specific properties when fetching', async () => {
+	let notes_sqz = await NoteM.findAll({
+		attributes: {
+			exclude: ['id', 'content'],
+			// This will fetch all properties except id and age fields.
+		},
+	})
+	let notes = notes_sqz.map((n) => n.toJSON())
+	notes.forEach((n) => {
+		let keys = Object.keys(n)
+		// loggert.info(keys)
+		expect(keys).toEqual(['important', 'date'])
+		expect(n.id).toBeUndefined()
+		expect(n.content).toBeUndefined()
 	})
 })
 
@@ -187,7 +263,7 @@ test('get all notes/rows (with empty filter)', async () => {
 	})
 })
 
-test('get all notes/rows using for a matching property value', async () => {
+test('get all notes/rows using filter', async () => {
 	const notes_sqz = await NoteM.findAll({where: {important: false}})
 
 	let notes = notes_sqz.map((n) => n.toJSON())
@@ -342,4 +418,51 @@ describe('delete multiple of given ids', async () => {
 		let deletedCount = await NoteM.destroy(filter2)
 		expect(deletedCount).toBe(noteIds.length)
 	})
+})
+
+test('using op.eq', async () => {
+	await NoteM.bulkCreate(DUMMY_NOTES)
+
+	let notes_sqz = await NoteM.findAll({
+		where: {
+			// age: {
+			important: {
+				[Op.eq]: false,
+				// This is equivalent to `important: false` ~ imo i.e., having no operator at all.
+			},
+			// Other fields can be specified here too.
+		},
+		// This will fetch multiple records if matched!
+		// Also, will fetch empty array if nothing is matched.
+	})
+	let notes = notes_sqz.map((n) => n.toJSON())
+	loggert.info(notes)
+	const nonImportantInDummyNotes = DUMMY_NOTES.filter((n) => n.important === false).length
+	expect(notes.length).toBe(nonImportantInDummyNotes)
+	/**
+	 * Read all operators @ https://sequelize.org/master/manual/model-querying-basics.html#operators
+
+	Op.eq =
+
+	Op.ne !=
+
+	Op.is , Used to check for null, true, false values.
+	Read more about is operator at postgres docs(not sequelize), https://www.postgresql.org/docs/9.1/functions-comparison.html
+
+	OP.not , Used to check for null, true, false values. Its just opposite of Op.is thingg.
+
+	Op.or , Feed values as an array i.e., [5,6]
+
+	Op.gt , greater than
+
+	Op.gte , greater than equal to
+
+	Op.lt , less than
+
+	Op.lte , less than equal to
+
+	Op.between , Feed value as array i.e., [6,10]
+
+	Op.notBetween , Feed value as array i.e., [11,15]
+ */
 })

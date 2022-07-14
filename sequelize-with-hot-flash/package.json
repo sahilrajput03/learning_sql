@@ -8,6 +8,7 @@
 		"test:watch": "fr src/test1.test.js -w"
 	},
 	"dependencies": {
+		"@array/logger": "file:../fso-part13/exercise-13.4-blogs/utils/logger.js",
 		"dotenv": "^16.0.0",
 		"expect": "^28.1.0",
 		"hot-module-replacement": "^3.0.4",

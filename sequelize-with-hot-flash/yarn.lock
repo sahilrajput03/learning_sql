@@ -2,6 +2,9 @@
 # yarn lockfile v1
 
 
+"@array/logger@file:../fso-part13/exercise-13.4-blogs/utils/logger.js":
+  "resolved" "file:../fso-part13/exercise-13.4-blogs/utils/logger.js"
+
 "@babel/code-frame@^7.12.13":
   "integrity" "sha512-iAXqUn8IIeBTNd72xsFlgaXHkMBMt6y4HJp1tIaK465CWLT/fG1aqB7ykr95gHHmlBdGbFeWWfyB4NJJ0nmeIg=="
   "resolved" "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.16.7.tgz"
@@ -472,13 +475,6 @@
   "version" "7.0.1"
   dependencies:
     "to-regex-range" "^5.0.1"
-
-"flash@file:../../flash":
-  "resolved" "file:../../flash"
-  "version" "1.0.0"
-  dependencies:
-    "dotenv" "^16.0.1"
-    "hot-module-replacement" "^3.0.4"
 
 "fs.realpath@^1.0.0":
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
