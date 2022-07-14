@@ -574,3 +574,13 @@ test('re-create notes table', async () => {
 
 	let notes = (await NoteM.findAll()).map((n) => n.toJSON())
 })
+
+test('sequelize has all the models inside it', async () => {
+	const sequelize = global.sequelize
+
+	// list all models
+	// loggert.info(sequelize.models)
+
+	const hasNoteModel = NoteM === sequelize.models.note
+	expect(hasNoteModel).toBeTruthy()
+})
