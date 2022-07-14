@@ -21,6 +21,10 @@ const initNoteM = (sequelize) =>
 			date: {
 				type: DataTypes.DATE,
 			},
+			favoriteColor: {
+				type: DataTypes.TEXT,
+				defaultValue: 'green',
+			},
 		},
 		{
 			sequelize,

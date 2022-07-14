@@ -156,7 +156,7 @@ test('drop notes table (#delete all)', async () => {
 	await NoteM.sync({force: true})
 
 	let notes = (await NoteM.findAll()).map((n) => n.toJSON())
-	loggert.info(notes)
+	// loggert.info(notes)
 	expect(notes.length).toBe(0)
 })
 
@@ -245,7 +245,7 @@ test('get all notes but only specific properties of each note (attributes)', asy
 	})
 })
 
-test('exclude specific properties when fetching', async () => {
+test('exclude specific properties when querying', async () => {
 	let notes_sqz = await NoteM.findAll({
 		attributes: {
 			exclude: ['id', 'content'],
@@ -256,7 +256,7 @@ test('exclude specific properties when fetching', async () => {
 	notes.forEach((n) => {
 		let keys = Object.keys(n)
 		// loggert.info(keys)
-		expect(keys).toEqual(['important', 'date'])
+		expect(keys).toEqual(['important', 'date', 'favoriteColor'])
 		expect(n.id).toBeUndefined()
 		expect(n.content).toBeUndefined()
 	})
