@@ -155,9 +155,19 @@ test('saving note with duplicate id should throw unique id error', async () => {
 test('drop notes table (#delete all)', async () => {
 	await NoteM.sync({force: true})
 
-	let notes = await NoteM.findAll()
+	let notes = (await NoteM.findAll()).map((n) => n.toJSON())
+	loggert.info(notes)
 	expect(notes.length).toBe(0)
 })
+
+/* 	
+	? Both of below ways also delete all rows in the table but the new ids given to newer notes will continue from the maximum id that was earlier present for some row in the table. So better to use `Model.sync({force: true})` to empty the table in comletely fresh manner.
+	await NoteM.destroy({truncate: true})
+	await NoteM.destroy({where: {}})
+	
+	? For verifying ids of newer created notes when we use any of above two ways of clearing the table.
+	let notes_sqz = await NoteM.bulkCreate(NOTES)
+*/
 
 let NOTES = [
 	{
@@ -313,7 +323,9 @@ test('delete a note/row', async () => {
 	// Docs: https://sequelize.org/docs/v6/core-concepts/paranoid/#deleting
 	let deleteCount = await NoteM.destroy({
 		where: {
+			// This will destroy multiple records if matched!
 			id: 8,
+			// Other fields can be added here as well.
 		},
 	})
 
@@ -436,7 +448,7 @@ test('using op.eq', async () => {
 		// Also, will fetch empty array if nothing is matched.
 	})
 	let notes = notes_sqz.map((n) => n.toJSON())
-	loggert.info(notes)
+	// loggert.info(notes)
 	const nonImportantInDummyNotes = DUMMY_NOTES.filter((n) => n.important === false).length
 	expect(notes.length).toBe(nonImportantInDummyNotes)
 	/**
@@ -465,4 +477,100 @@ test('using op.eq', async () => {
 
 	Op.notBetween , Feed value as array i.e., [11,15]
  */
+})
+
+test('using "Op.or" operator', async () => {
+	let notes_sqz = await NoteM.findAll({
+		where: {
+			[Op.or]: [{id: 1}, {id: 4}],
+			// Other fields can be specified here too.
+		},
+		// This will fetch multiple records if matched!
+		// Also, will fetch empty array if nothing is matched.
+	})
+	let notes = notes_sqz.map((n) => n.toJSON())
+	// loggert.info(notes)
+	let ids = notes.map((n) => n.id)
+	// loggert.info({ids})
+	expect(ids.length).toBe(2)
+	expect(ids).toEqual([1, 4])
+})
+
+test('using "Op.or" operator with destroy', async () => {
+	let deletedCount = await NoteM.destroy({
+		where: {
+			id: {
+				[Op.or]: [1, 4],
+			},
+		},
+	})
+	// loggert.info(deletedCount)
+	expect(deletedCount).toBe(2)
+})
+
+test('update a note', async () => {
+	let update = {content: 'i am super note 6'}
+	let filter = {
+		where: {
+			id: '6',
+			content: 'i am note 6',
+		},
+	}
+
+	let [updateCount] = await NoteM.update(
+		update, // NOTE: This type of update is type of update like newData = {...oldData, cash: "6_999"} i.e., other older properties will be preserved, yikes!
+		filter
+	)
+
+	// loggert.info(updateCount)
+	expect(updateCount).toBe(1) // total number of rows updated is 1 in our case.
+
+	let note_sqz = await NoteM.findByPk(6) // this finds by "id:6"
+	let note = note_sqz.toJSON()
+	expect(note.content).toBe(update.content)
+})
+
+test('update all non-important notes to important', async () => {
+	let filter = {
+		where: {
+			important: false,
+		},
+	}
+
+	let update = {important: true}
+	let [updateCount] = await NoteM.update(
+		update, // NOTE: This type of update is type of update like newData = {...oldData, lastName: "Doe"} i.e., other older properties will be preserved, yikes!
+		filter
+	)
+	// loggert.info(updateCount)
+	expect(updateCount).toBe(3) // 3 is manually verified from above log.
+
+	let notes = (await NoteM.findAll()).map((n) => n.toJSON())
+	// loggert.info(notes)
+	notes.forEach((n) => {
+		expect(n.important).toBe(true)
+	})
+})
+
+test('drop table', async () => {
+	await NoteM.drop() // It drops the table completely and doesn't return anything.
+	console.log('::MyInfo::User table dropped!')
+
+	// RE-Create table to prevent errors from sequelize from further queries.
+	await NoteM.sync({force: true})
+
+	let notes = (await NoteM.findAll()).map((n) => n.toJSON())
+	// loggert.info(notes)
+})
+
+test('delete all tables in the db', async () => {
+	const sequelize = global.sequelize
+	await sequelize.drop() // Removes all tables
+	// loggert.info('::MyInfo::All tables dropped!')
+})
+
+test('re-create notes table', async () => {
+	await NoteM.sync({force: true})
+
+	let notes = (await NoteM.findAll()).map((n) => n.toJSON())
 })

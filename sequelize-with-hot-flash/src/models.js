@@ -27,6 +27,9 @@ const initNoteM = (sequelize) =>
 			underscored: true,
 			timestamps: false,
 			modelName: 'note',
+			updatedAt: false,
+			// tableName: 'users', // (optional) explicity providing table name!
+			// freezeTableName: true, // (optional) This enforces the model to be exactly equal to table name i.e., disabled pluralization.
 		}
 	)
 
