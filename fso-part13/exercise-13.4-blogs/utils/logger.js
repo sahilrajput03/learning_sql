@@ -58,6 +58,7 @@ const printer = (args, chalkify) => {
 		if (typeof element === 'object') {
 			const {inspect} = require('util') // src: https://stackoverflow.com/a/6157569/10012446
 			process.stdout.write(chalkify(inspect(element, {depth: null})))
+			// FYI: We can simply colorize the output inspect (see in the end of this page) - https://nodejs.org/en/knowledge/getting-started/how-to-use-util-inspect/
 		} else {
 			process.stdout.write(chalkify(element))
 		}
