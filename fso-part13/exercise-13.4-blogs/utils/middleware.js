@@ -67,11 +67,11 @@ const errorHandler = (err, request, response, next) => {
 	// ######## PRINITNG ERRORS - ENDS HERE ####### //
 
 	/** Short notes for cases for printing errors:
-	 * testing enabled
-	 * 1		1 = 1
-	 * 1		0 = 0
-	 * 0		1 = 1
-	 * 0		0 = 1
+	 * TESTING 		ENABLED	= 	ERROR PRINTED
+	 * 1			1 		= 	1
+	 * 1			0 		= 	0
+	 * 0			1 		= 	1
+	 * 0			0 		= 	1
 	 */
 	let SERVER_ERRORS_IN_TESTING = 0
 
