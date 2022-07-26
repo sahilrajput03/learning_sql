@@ -228,7 +228,10 @@ test("modify USER's username", async () => {
 test('bad username err on USER creation  ', async () => {
 	const expectedBody = {username: 'some_bad_username', name: 'Sahil Rajput'}
 	const expectedError = {
-		error: ['Validation isEmail on username failed'],
+		error: {
+			name: 'SequelizeValidationError',
+			message: 'Validation error: Validation isEmail on username failed',
+		},
 	}
 	const {body, statusCode} = await api.post('/api/users').send(expectedBody)
 	loggert.info('body: ', body) // { error: { name: 'SequelizeValidationError', errors: [ [Object] ] } }

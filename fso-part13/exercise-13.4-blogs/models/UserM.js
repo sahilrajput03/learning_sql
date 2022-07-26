@@ -16,7 +16,7 @@ const initUserM = (sequelize) =>
 				allowNull: false,
 				// exercise: 13.9
 				validate: {
-					isEmail: true,
+					isEmail: true, // on failure throws error as ```{ name: 'SequelizeValidationError', message: 'Validation error: Validation isEmail on username failed'}```
 				},
 			},
 			name: {

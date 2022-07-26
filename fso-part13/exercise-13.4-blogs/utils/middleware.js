@@ -23,12 +23,8 @@ const errorHandler = (err, request, response, next) => {
 			break
 
 		case 'SequelizeValidationError':
-			if (err.message === 'Validation error: Validation isEmail on username failed') {
-				customErrorMessage = 'Failed to create user because of validation errorr'
-				response.status(400).json({error: ['Validation isEmail on username failed']})
-			} else {
-				response.status(400).json({error: {name: err.name, message: err.message}})
-			}
+			customErrorMessage = err.message // We want to print this to console so assigninig it to customErrorMessage as well.
+			response.status(400).json({error: {name: err.name, message: err.message}})
 			break
 
 		default:
@@ -46,9 +42,6 @@ const errorHandler = (err, request, response, next) => {
 			break
 	}
 	// ######## HANDLING RESPONSES ENDS HERE ####### //
-
-	let NODE_ENV = process.env
-	// log({NODE_ENV})
 
 	next(err)
 	// ^^ LEARN: ALERT: When we use `express-async-errors` express doesn't print the error to the console at all so we must print the error to console manually by having:
