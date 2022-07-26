@@ -48,22 +48,22 @@ beforeAll(async () => {
 	await ReadingListM.sync({force: true})
 })
 
-test('bad request ', async () => {
+test('bad request', async () => {
 	// Please read code of ``CAUTION`` in `middleware/errorHandler` function to know why I have disabled error logging for `test` mode in backend by default but still you can enable it very easily enable it.
-	let expectedError
+	let errMessage = 'Some stupid error..'
 	const res = await api.get('/api/bugged/bugged_api')
 
 	expect(res.body.error).toBeDefined()
-	expect(res.body.error.message).toBe('Some stupid error..')
+	expect(res.body.error.message).toBe(errMessage)
 })
 
 test('bad request (with `express-async-errors`)', async () => {
 	// Please read code of ``CAUTION`` in `middleware/errorHandler` function to know why I have disabled error logging for `test` mode in backend by default but still you can enable it very easily enable it.
-	let expectedError
+	let errMessage = 'Some stupid error..'
 	const res = await api.get('/api/bugged/bugged_api_2')
 
 	expect(res.body.error.message).toBeDefined()
-	expect(res.body.error.message).toBe('Some stupid error..')
+	expect(res.body.error.message).toBe(errMessage)
 })
 
 //! USERS ROUTER TESTS //
@@ -453,8 +453,8 @@ describe('user session management', async () => {
 })
 
 test('any depth of logs gets printed with the logger module unlike default i.e., depth=2', async () => {
-	console.log('things')
+	// logger.info('things')
 	let a = {car: {bar: {tar: {mar: 10}}}}
-	console.log(a) // this prints to the level of of only two level nested objects only.
-	loggert.info(a)
+	// logger.info(a) // this prints to the level of of only two level nested objects only.
+	// loggert.info(a)
 })

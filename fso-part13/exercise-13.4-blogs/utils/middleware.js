@@ -37,7 +37,7 @@ const errorHandler = (err, request, response, next) => {
 					name: err.name,
 					message: err.message,
 				},
-				funFact: 'Server does not have separate error detecting case for this error in errorHndler middleware yet!! ~ Sahil',
+				FUNFACT: 'SERVER DOES NOT HAVE SEPARATE ERROR DETECTING CASE FOR THIS ERROR IN errorHandler MIDDLEWARE YET!! ~ Sahil',
 			})
 			break
 	}

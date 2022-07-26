@@ -10,7 +10,9 @@ const middleware = require('./utils/middleware')
 app.use(express.json())
 
 // Disable logMw for a while
-app.use(logMw)
+if (process.env.NODE_ENV === 'test') {
+	app.use(logMw)
+}
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/authors', authorsRouter)
