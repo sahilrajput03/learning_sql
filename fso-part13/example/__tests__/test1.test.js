@@ -32,9 +32,9 @@ let isFlashRunner = global.isFlashRunner,
 // withSupertest.test
 connectToDb(async () => {
 	// await require('../initMongodb.js')
-	const {connection} = require('../db')
+	const {connect} = require('../initPostgreSql')
 	// wait till the connection establishes to postgresql!
-	await connection
+	await connect()
 })
 
 closeDb(async () => {

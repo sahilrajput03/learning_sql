@@ -23,7 +23,6 @@ let config = {
 	},
 }
 
-logger.info('DATABASE_URL', DATABASE_URL)
 const sequelize = new Sequelize(DATABASE_URL, config)
 
 // let connection = sequelize
@@ -71,8 +70,9 @@ const rollbackMigration = async () => {
 
 const connect = async () => {
 	try {
+		logger.info('DATABASE_URL', DATABASE_URL)
 		await sequelize.authenticate()
-		logger.success('connection to db::SUCCESSFUL')
+		logger.success('CONNECTION TO DB::SUCCESSFUL')
 
 		// Setup Models with sequelize
 		setupModels(sequelize)
@@ -90,8 +90,6 @@ const connect = async () => {
 	}
 }
 
-let connection = connect()
-
-module.exports = {sequelize, connection, rollbackMigration}
+module.exports = {sequelize, connect, rollbackMigration}
 
 global.sequelize = sequelize

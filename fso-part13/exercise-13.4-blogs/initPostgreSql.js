@@ -73,9 +73,7 @@ let connect = async () => {
 	await runMigrations()
 }
 
-let connection = connect()
-
-module.exports = {connection, sequelize, rollbackMigration}
+module.exports = {connect, sequelize, rollbackMigration}
 global.sequelize = sequelize
 
 // .then(() => {

@@ -9,8 +9,6 @@ const tokenExtractor = require('../utils/tokenExtractor')
 // To fix the ts-check warnings.
 let log = global.log
 
-require('../initPostgreSql')
-
 let dataValues = (data) => data.map((n) => n.dataValues)
 
 // src: https://stackoverflow.com/a/64315233/10012446, year: 2020

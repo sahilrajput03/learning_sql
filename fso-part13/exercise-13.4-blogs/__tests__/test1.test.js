@@ -16,6 +16,7 @@ const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM, ReadingListM, SessionM} = require('../models')
 const {loggert, logger} = require('sahilrajput03-logger')
+const {connect} = require('../initPostgreSql')
 
 // Reuired bcoz I am using @ts-check and it complains via vscode.
 let isFlashRunner = global.isFlashRunner,
@@ -29,10 +30,8 @@ let isFlashRunner = global.isFlashRunner,
 if (isFlashRunner) {
 	// withSupertest.test
 	connectToDb(async () => {
-		// await require('../initMongodb.js')
-		const {connection} = require('../initPostgreSql')
 		// wait till the connection establishes to postgresql!
-		await connection
+		await connect()
 	})
 
 	closeDb(async () => {

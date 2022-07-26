@@ -1,13 +1,11 @@
 const express = require('express')
+const {logger, logMw} = require('sahilrajput03-logger')
 require('express-async-errors')
 
-// const BlogM = require('./models/Note')
-const {connection} = require('./initPostgreSql')
 const {blogsRouter, usersRouter, authorsRouter, loginRouter, logoutRouter, buggedRouter, readingListRouter} = require('./controllers')
 
 const app = express()
 const middleware = require('./utils/middleware')
-const {logger, logMw} = require('sahilrajput03-logger')
 
 app.use(express.json())
 

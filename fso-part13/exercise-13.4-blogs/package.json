@@ -5,8 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "nodemon server.js",
-		"dev": "env-cmd -f .env.dev nodemon --inspect server.js",
-		"dev2": "nodemon --inspect server.js .env.dev",
+		"dev": "nodemon --inspect server.js .env.dev",
+		"dev2": "env-cmd -f .env.dev nodemon --inspect server.js",
 		"test": "fr __tests__/test1.test.js",
 		"test:watch": "fr -w __tests__/test1.test.js",
 		"migration:down": "node utils/rollback.js"
@@ -34,7 +34,7 @@
 		"jsonwebtoken": "^8.5.1",
 		"morgan": "^1.10.0",
 		"pg": "^8.7.1",
-		"sahilrajput03-logger": "^1.0.4",
+		"sahilrajput03-logger": "^1.0.6",
 		"sequelize": "^6.12.0-beta.3",
 		"supertest": "^6.2.3",
 		"umzug": "^3.1.1"

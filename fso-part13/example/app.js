@@ -1,8 +1,5 @@
 const express = require('express')
-const morgan = require('morgan')
 const {logMw} = require('sahilrajput03-logger')
-
-const {l, s, ps, dataValues, _dataValues} = require('./utils')
 require('express-async-errors')
 
 const {notesRouter, usersRouter, loginRouter} = require('./controllers')
