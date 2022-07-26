@@ -1,7 +1,7 @@
 /* global connectToDb, closeDb beforeAll test sequelize */
 //? Use .env.test file for environment.
 // @ts-ignore
-const {loggert} = require('logger-sahil')
+const {loggert} = require('sahilrajput03-logger')
 const path = require('path')
 const dotenv = require('dotenv')
 dotenv.config({path: path.join(__dirname, '..', '.env.test')}) // Joining path using path.join and __dirname allows us to execute files withSupertest using `fr withSupertest` from inside __tests__ folder and from the root folder as well.

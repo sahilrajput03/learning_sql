@@ -2,7 +2,7 @@ const usersRouter = require('express').Router()
 const tokenExtractor = require('../utils/tokenExtractor')
 
 const {UserM, BlogM} = require('../models')
-const {logger, loggert} = require('../utils/logger')
+const {logger, loggert} = require('sahilrajput03-logger')
 
 //?  join query is done using the `include` option as a `query parameter`
 const includeBlogs = {

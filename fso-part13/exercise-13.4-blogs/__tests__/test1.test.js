@@ -15,7 +15,7 @@ const app = require('../app')
 const api = supertest(app)
 const {expect} = require('expect')
 const {BlogM, UserM, ReadingListM, SessionM} = require('../models')
-const {loggert, logger} = require('../utils/logger') // Only import loggert (testing) from logger file.
+const {loggert, logger} = require('sahilrajput03-logger')
 
 // Reuired bcoz I am using @ts-check and it complains via vscode.
 let isFlashRunner = global.isFlashRunner,

@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 const DUMMY_NOTES = require('./dummyNotes')
 const {NoteM} = require('./models')
 // @ts-ignore
-const {loggert} = require('@array/logger')
+const {loggert} = require('sahilrajput03-logger')
 
 // Setting envionment on start of the program is necessary.
 dotenv.config({

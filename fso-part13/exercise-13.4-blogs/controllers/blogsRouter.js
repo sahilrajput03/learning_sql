@@ -2,7 +2,7 @@ const express = require('express')
 const {Op} = require('sequelize')
 const {UserM} = require('../models')
 const {BlogM} = require('../models/BlogM')
-const {logger} = require('../utils/logger')
+const {logger} = require('sahilrajput03-logger')
 const blogsRouter = express.Router()
 const tokenExtractor = require('../utils/tokenExtractor')
 

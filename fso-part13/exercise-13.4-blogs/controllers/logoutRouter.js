@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const {SessionM} = require('../models')
 const router = require('express').Router()
-const {logger} = require('../utils/logger')
+const {logger} = require('sahilrajput03-logger')
 const tokenExtractor = require('../utils/tokenExtractor')
 
 router.delete('/', tokenExtractor, async (request, response) => {

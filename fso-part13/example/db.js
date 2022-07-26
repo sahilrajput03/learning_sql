@@ -2,7 +2,7 @@ const {Umzug, SequelizeStorage} = require('umzug') // src: https://github.com/se
 const {Sequelize} = require('sequelize')
 const {NoteM, UserM, setupModels} = require('./models')
 // @ts-ignore
-const {logger} = require('logger-sahil')
+const {logger} = require('sahilrajput03-logger')
 
 let {DATABASE_URL, NODE_ENV} = process.env
 // console.log({DATABASE_URL, NODE_ENV})

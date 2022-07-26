@@ -1,4 +1,4 @@
-const {logger, loggert} = require('./logger')
+const {logger, loggert} = require('sahilrajput03-logger')
 
 const unknownEndpoint = (request, response) => {
 	logger.err('got here unknownEndpoint', request.path)

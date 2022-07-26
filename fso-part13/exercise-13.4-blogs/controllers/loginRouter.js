@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const {SessionM} = require('../models')
 const router = require('express').Router()
 const {UserM} = require('../models/UserM')
-const {logger} = require('../utils/logger')
+const {logger} = require('sahilrajput03-logger')
 
 router.post('/', async (request, response) => {
 	const body = request.body

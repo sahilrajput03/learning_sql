@@ -1,11 +1,11 @@
 const express = require('express')
-const logMw = require('logmw')
+const morgan = require('morgan')
+const {logMw} = require('sahilrajput03-logger')
+
 const {l, s, ps, dataValues, _dataValues} = require('./utils')
 require('express-async-errors')
 
-const notesRouter = require('./controllers/notesRouter')
-const usersRouter = require('./controllers/usersRouter')
-const loginRouter = require('./controllers/loginRouter')
+const {notesRouter, usersRouter, loginRouter} = require('./controllers')
 
 const app = express()
 

@@ -2,7 +2,7 @@ const readingListRouter = require('express').Router()
 const tokenExtractor = require('../utils/tokenExtractor')
 
 const {UserM, BlogM, ReadingListM} = require('../models')
-const {logger, loggert} = require('../utils/logger')
+const {logger, loggert} = require('sahilrajput03-logger')
 
 // ex 13.22
 readingListRouter.put('/:id', tokenExtractor, async (req, res) => {

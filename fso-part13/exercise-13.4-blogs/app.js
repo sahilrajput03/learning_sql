@@ -2,29 +2,17 @@ const express = require('express')
 require('express-async-errors')
 
 // const BlogM = require('./models/Note')
-// @ts-ignore
-const logMw = require('logmw')
-const {l, s, ps, dataValues, _dataValues} = require('./utils')
 const {connection} = require('./initPostgreSql')
-const blogsRouter = require('./controllers/blogsRouter')
-const usersRouter = require('./controllers/usersRouter')
-const authorsRouter = require('./controllers/authorsRouter')
-const loginRouter = require('./controllers/loginRouter')
-const logoutRouter = require('./controllers/logoutRouter')
-const buggedRouter = require('./controllers/buggedRouter')
-const readingListRouter = require('./controllers/readingListRouter')
-
-// let log = console.log
-// log('typeof db', db)
+const {blogsRouter, usersRouter, authorsRouter, loginRouter, logoutRouter, buggedRouter, readingListRouter} = require('./controllers')
 
 const app = express()
 const middleware = require('./utils/middleware')
-const {logger} = require('./utils/logger')
+const {logger, logMw} = require('sahilrajput03-logger')
 
 app.use(express.json())
 
 // Disable logMw for a while
-// app.use(logMw)
+app.use(logMw)
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/authors', authorsRouter)
