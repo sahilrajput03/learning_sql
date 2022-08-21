@@ -29,6 +29,11 @@
 
 # Pictorial Memories:
 
+- Fixed server requires ssl errror:
+
+![image](https://user-images.githubusercontent.com/31458531/185803197-fc8dda43-9231-4e97-87a2-c15c5fee657d.png)
+
+
 - **Many to many relationship:**
 
 ![image](https://user-images.githubusercontent.com/31458531/175762567-9d0cd2e4-9f92-4d50-a9b1-3843c079feec.png)
