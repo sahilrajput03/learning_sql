@@ -7,8 +7,9 @@
 
 **Course Notes**
 
-- W3school Notes: [Click here](./Notes_sql_w3schools.md)
-- Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
+- ❤️ W3school Notes: [Click here](./Notes_sql_w3schools.md)
+- ❤️ Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
+- ❤️ SQLite CLI Notes: [Click here](./sequelize-with-sqlite//sqlQueries/README.md)
 
 **Sequelize Docs**
 
@@ -32,7 +33,6 @@
 - Fixed server requires ssl errror:
 
 ![image](https://user-images.githubusercontent.com/31458531/185803197-fc8dda43-9231-4e97-87a2-c15c5fee657d.png)
-
 
 - **Many to many relationship:**
 
