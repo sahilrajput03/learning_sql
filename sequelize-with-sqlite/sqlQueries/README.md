@@ -7,6 +7,7 @@ Use below commands to use it:
 .tables                 # shows tables
 .schema user            # shows schema of `user` table
 .help                   # shows help for all commands
+.exit (to exit shell OR use ctrl+d OR cmd+c (twice))
 ```
 
 **Quick Links:**
