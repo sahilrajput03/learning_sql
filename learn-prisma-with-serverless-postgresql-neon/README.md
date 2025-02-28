@@ -4,6 +4,7 @@
 
 ```bash
 npx tiged sahilrajput03/learning_sql/learn-prisma-with-serverless-postgresql-neon learn-prisma-with-serverless-postgresql-neon
+cd learn-prisma-with-serverless-postgresql-neon
 npm i
 # Create .env file referring the .env.tempalte file
 npm run dev
