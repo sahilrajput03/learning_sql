@@ -4,7 +4,7 @@
   "description": "```bash mkdir hello-prisma cd hello-prisma npm init -y npm install typescript tsx @types/node --save-dev ```",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx index.ts"
   },
   "keywords": [],
   "author": "",

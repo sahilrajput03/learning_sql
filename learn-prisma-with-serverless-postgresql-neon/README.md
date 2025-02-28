@@ -1,5 +1,15 @@
 # README
 
+## Running this project
+
+```bash
+npx tiged sahilrajput03/learning_sql/learn-prisma-with-serverless-postgresql-neon learn-prisma-with-serverless-postgresql-neon
+npm i
+npm run dev
+```
+
+## Steps followed to create this project
+
 Guide followed from - https://www.prisma.io/docs/getting-started/quickstart-sqlite
 
 ```bash
