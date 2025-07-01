@@ -3,8 +3,8 @@
 **Quick Links:**
 - **My Notes:**
   - 🚀 `sequelize-with-flash-runner-cli`: [Click here](https://github.com/sahilrajput03/learning_sql/blob/main/sequelize-with-flash-runner-cli/src/test1.test.js)
-  - Installing pgadmin4 via pip - Archlinux: [Click here](./Notes_pgadmin4_install.md)
-    - Setup of PostgreSQL on Archlinux: [Click here](./Notes_setup-postgres.md)
+  - Installing pgadmin4 via pip - archlinux: [Click here](./Notes_pgadmin4_install.md)
+    - Setup of PostgreSQL - archlinux: [Click here](./Notes_setup-postgres.md)
 - **Course Notes**
   - ❤️ W3school Notes: [Click here](./Notes_sql_w3schools.md)
   - ❤️ Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
