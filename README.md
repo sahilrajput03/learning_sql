@@ -70,11 +70,11 @@ yarn add pg pg-hstore
 - Also, assigned all privilidges to user chetan too, i.e., right click user in pgadmin4, and click on Privilidges tab, and gave all rights to it.
 - Port in use: 5432
 - Locale: English, India
-
-- Apache port for PERM_HTTPD: 8083 (didn't work this shit though.)
-- Installed `pgAdmin` for postgres too.
-- `Postgres` master password: `postgresp`
-- Browse `pgamin`: visit http://127.0.0.1:51022/browser/
+- Other:
+  - Apache port for PERM_HTTPD: 8083 (didn't work this shit though.)
+  - Installed `pgAdmin` for postgres too.
+  - `Postgres` master password: `postgresp`
+  - Browse `pgamin`: visit http://127.0.0.1:51022/browser/
 
 **Changing postgres port**
 
