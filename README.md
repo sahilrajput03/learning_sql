@@ -1,7 +1,7 @@
 # Readme
 
 **Quick Links:**
-- My Notes:
+- **My Notes:**
   - Setup of PostgreSQL on Archlinux: [Click here](./Notes_setup-postgres.md)
   - Installing pgadmin4 via pip - Archlinux: [Click here](./Notes_pgadmin4_install.md)
   - 🚀 `sequelize-with-flash-runner-cli`: [Click here](https://github.com/sahilrajput03/learning_sql/blob/main/sequelize-with-flash-runner-cli/src/test1.test.js)
