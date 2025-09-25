@@ -11,6 +11,11 @@
   - ❤️ W3school Notes: [Click here](./Notes_sql_w3schools.md)
   - ❤️ Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
   - ❤️ SQLite CLI Notes: [Click here](./sequelize-with-sqlite//sqlQueries/README.md)
+- **Prisma:**
+  - Official Examples:
+    - Postgres: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/prisma-postgres)
+    - Microsoft SQL Server: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/sql-server)
+    - MongoDB: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/mongodb)
 - **Sequelize Docs**
   - Sequelize Basics: [Click here](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/)
   - Sequelize Sub Queries: [Click here](https://sequelize.org/docs/v6/other-topics/sub-queries/)
