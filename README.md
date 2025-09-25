@@ -1,5 +1,7 @@
 # Readme
 
+**❤️❤️TODO: Migrate notes of this whole repo to a single google doc so its more editable faster!**
+
 **Quick Links:**
 - **My Notes:**
   - 🚀 `sequelize-with-flash-runner-cli`: [Click here](https://github.com/sahilrajput03/learning_sql/blob/main/sequelize-with-flash-runner-cli/src/test1.test.js)
