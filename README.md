@@ -12,7 +12,7 @@
   - ❤️ Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
   - ❤️ SQLite CLI Notes: [Click here](./sequelize-with-sqlite//sqlQueries/README.md)
 - **Prisma:**
-  - Official Examples:
+  - Official Examples: [Click here](https://github.com/prisma/prisma-examples/tree/latest)
     - Postgres: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/prisma-postgres)
     - Microsoft SQL Server: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/sql-server)
     - MongoDB: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/mongodb)
