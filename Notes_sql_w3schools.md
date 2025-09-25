@@ -1,4 +1,6 @@
-Call it sequel. Its cool.
+# Todo - Continue doing w3schools SQL Course
+
+*Pronunciation: Sequel or SQL (former is cooler)*
 
 https://www.w3schools.com/sql/exercise.asp?filename=exercise_where1
 
