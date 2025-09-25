@@ -1,6 +1,6 @@
 # Readme
 
-**❤️❤️TODO: Migrate notes of this whole repo to a single google doc so its more editable faster!**
+**❤️❤️TODO: MIGRATE NOTES OF THIS WHOLE REPO TO A SINGLE GOOGLE DOC SO ITS MORE EDITABLE FASTER!**
 
 **Quick Links:**
 - **My Notes:**
