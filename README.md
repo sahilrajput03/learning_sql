@@ -11,7 +11,8 @@
   - ❤️ W3school Notes: [Click here](./Notes_sql_w3schools.md)
   - ❤️ Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
   - ❤️ SQLite CLI Notes: [Click here](./sequelize-with-sqlite//sqlQueries/README.md)
-- **Prisma:**
+- **Prisma Docs:**
+  - Get Started: [Click here](https://www.prisma.io/docs/getting-started)
   - Official Examples: [Click here](https://github.com/prisma/prisma-examples/tree/latest)
     - Postgres: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/prisma-postgres)
     - Microsoft SQL Server: [Click here](https://github.com/prisma/prisma-examples/tree/latest/databases/sql-server)
