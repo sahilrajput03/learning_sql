@@ -12,6 +12,7 @@
   - ❤️ W3school Notes: [Click here](./Notes_sql_w3schools.md)
   - ❤️ Sql bolt Notes: [Click here](./Notes_sql_bolt.md)
   - ❤️ SQLite CLI Notes: [Click here](./sequelize-with-sqlite//sqlQueries/README.md)
+  - ❤️ YouTube Video -Postgres with Drizzle: [Click here](https://www.youtube.com/watch?v=vLze97zZKsU) *(#Tags: shared by Samaksh Grover on 2 November, 2025)*
 - **Prisma Docs:**
   - Get Started: [Click here](https://www.prisma.io/docs/getting-started)
   - Official Examples: [Click here](https://github.com/prisma/prisma-examples/tree/latest)
