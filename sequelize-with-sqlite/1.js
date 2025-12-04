@@ -1,19 +1,30 @@
-const User = require('./models/User')
+// @ts-nocheck
+const { connectDB, disconnectDB } = require('./db.js');
+const { UserModel } = require('./models/User');
 
-const js = JSON.stringify
+async function main() {
+	console.log('🚀 Running main function:');
+	try {
+		await connectDB();
 
-module.exports = async () => {
-	await User.sync()
+		await UserModel.sync();
 
-	console.log('Jane was saved to the database!'.bm)
-	// ? This creates the User table it already doesn't exist. Read its docs for more.
+		console.log('✅ Jane saved to the database!');
 
-	const jane = await User.create({
-		firstName: 'Joe',
-		age: 25,
-		gender: 'male',
-		india: 'yoyo',
-	})
-	console.log(js(jane, null, 2).bm)
-	// Jane exists in the database now!
+		// Learn: It creates the User table if doesn't exist already.
+		const jane = await UserModel.create({
+			firstName: 'Joe',
+			age: 25,
+			gender: 'male',
+			india: 'yoyo',
+		});
+		console.log('jane?', JSON.stringify(jane, null, 2));
+		// Jane exists in the database now!
+
+		await disconnectDB();
+	} catch (error) {
+		console.error('Unable to connect to the database:', error);
+	}
 }
+
+main();
