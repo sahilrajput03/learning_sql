@@ -1,8 +1,11 @@
 # Learn `sqlite3` Cli
 
 ```sh
-# Run query via argument (For more examples, run - `nodemon -x bash learn-sqlite3-cli.sh`)
+# Run query via argument
 sqlite3 db.sqlite "YOUR QUERY HERE"
+
+# Examples queries via argument:
+nodemon -x bash learn-sqlite3-cli.sh
 
 # Running a `.sql` file against a db file (db file will be created if not present)
 sqlite3 db.sqlite < 1.createUserTable.sql
