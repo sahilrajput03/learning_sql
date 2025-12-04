@@ -7,23 +7,29 @@ async function main() {
 	try {
 		await connectDB();
 
+		// Creates table if it doesn't exist
 		await UserModel.sync();
 
-		console.log('✅ Jane saved to the database!');
+		// Delete all users
+		await UserModel.destroy({
+			where: {}, // no condition i.e, deletes all rows
+			truncate: true  // optional: resets auto-increment IDs
+		});
 
-		// Learn: It creates the User table if doesn't exist already.
 		const jane = await UserModel.create({
 			firstName: 'Joe',
 			age: 25,
 			gender: 'male',
 			india: 'yoyo',
 		});
-		console.log('jane?', JSON.stringify(jane, null, 2));
-		// Jane exists in the database now!
+		console.log('✅ Jane saved to the database!', jane.toJSON());
+
+		const users = await UserModel.findAll();
+		console.log("🚀 ~ users:", users.map(user => user.toJSON()));
 
 		await disconnectDB();
 	} catch (error) {
-		console.error('Unable to connect to the database:', error);
+		console.error('❌ Error:', error);
 	}
 }
 
