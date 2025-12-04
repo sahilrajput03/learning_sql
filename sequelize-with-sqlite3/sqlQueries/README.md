@@ -1,4 +1,4 @@
-# Learn SQLite 3
+# Learn SQLite 3 CLI
 
 ```bash
 $ sqlite3
@@ -23,12 +23,10 @@ Use below commands to use it:
 
 # Using database files and running commands via .sql files
 
-11 Jan 2025
+```sh
+# Run a sql file against a db file (Db file will be created if not present)
+sqlite3 db.sqlite < 1.createUserTable.sql
 
-```bash
-# Run the setup.sql in your db file (file will be created if not present)
-sqlite3 sqlite.db < setup.sql
-
-# Opens the SQLite database file `sqlite.db` in the SQLite command-line interface for querying and managing the database
-sqlite3 sqlite.db
+# Using a db file via SQLite CLI for querying and managing the database
+sqlite3 db.sqlite
 ```

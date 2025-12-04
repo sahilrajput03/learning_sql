@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 
 const db = new Sequelize({
 	dialect: 'sqlite',
-	storage: 'database.sqlite', // this is the filename.
+	storage: 'db.sqlite', // this is the filename.
 	// Learn: Sequelize’s does SQL logging for every query to the
 	// 			console. To disables all SQL logs:
 	logging: false,
