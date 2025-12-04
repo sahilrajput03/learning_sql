@@ -3,7 +3,7 @@
 ```bash
 $ sqlite3
 Use below commands to use it:
-.open database.sqlite   # opens the database file
+.open db.sqlite   # opens the database file
 .tables                 # shows tables
 .schema user            # shows schema of `user` table
 .help                   # shows help for all commands
