@@ -1,5 +1,7 @@
 # Learn SQLite 3 CLI
 
+❤️ For running SQL queries in CLI directly please run `nodemon -x bash learn-sqlite3-cli.sh`.
+
 ```bash
 $ sqlite3
 Use below commands to use it:
@@ -9,8 +11,6 @@ Use below commands to use it:
 .help                   # shows help for all commands
 .exit (to exit shell OR use ctrl+d OR cmd+c (twice))
 ```
-
-❤️ For running SQL queries in CLI directly please run `nodemon -x bash learn-sqlite3-cli.sh`.
 
 **Quick Links:**
 
