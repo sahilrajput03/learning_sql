@@ -1,8 +1,16 @@
-# Learn SQLite 3 CLI
+# Learn `sqlite3` Cli
 
-❤️ For running SQL queries in CLI directly please run `nodemon -x bash learn-sqlite3-cli.sh`.
+```sh
+# Run query via argument (For more examples, run - `nodemon -x bash learn-sqlite3-cli.sh`)
+sqlite3 db.sqlite "YOUR QUERY HERE"
 
-```bash
+# Running a `.sql` file against a db file (db file will be created if not present)
+sqlite3 db.sqlite < 1.createUserTable.sql
+
+# Using a db file via SQLite CLI for querying and managing the database
+sqlite3 db.sqlite
+
+# Learn subshell prompt
 $ sqlite3
 Use below commands to use it:
 .open db.sqlite   # opens the database file
@@ -13,7 +21,6 @@ Use below commands to use it:
 ```
 
 **Quick Links:**
-
 - Inspiration:
   - Is anyone using SQLite on production? (either side project or business) - Reddit: [Click here](https://www.reddit.com/r/rails/comments/k4vlqo/is_anyone_using_sqlite_on_production_either_side/)
   - How (and why) to run SQLite in production: [HackerNews](https://news.ycombinator.com/item?id=39835496)
@@ -22,13 +29,3 @@ Use below commands to use it:
   - ~quoting from above link: `Other kinds of ALTER TABLE operations such as ALTER COLUMN, ADD CONSTRAINT, and so forth are omitted.`~
   - Newer version of sqlite allows renaming column names and table names now: [Click here](https://chatgpt.com/c/687aa6ad-0658-8007-b701-e46b6b76db6a)
 - SQL docs (w3school): https://www.w3schools.com/sql/default.asp
-
-# Using database files and running commands via .sql files
-
-```sh
-# Run a sql file against a db file (Db file will be created if not present)
-sqlite3 db.sqlite < 1.createUserTable.sql
-
-# Using a db file via SQLite CLI for querying and managing the database
-sqlite3 db.sqlite
-```
