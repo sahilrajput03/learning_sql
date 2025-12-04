@@ -38,6 +38,29 @@ Use below commands to use it:
 ## File: `script-1.sh`
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./script-1.sh) -->
+<!-- The below code snippet is automatically added from ./script-1.sh -->
+```sh
+#!/usr/bin/env bash
+
+dbFile=db2.sqlite
+
+# Learn: Create table
+# sqlite3 $dbFile "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT);"
+
+# Learn: Insert user, Get all users
+# sqlite3 $dbFile \
+# "INSERT INTO users (name) VALUES ('Bob'); \
+# SELECT * FROM users;"
+
+# Learn: Get all users
+# sqlite3 $dbFile "SELECT * FROM users;"
+
+# Learn: Create Table, Insert, Get all users
+rm $dbFile
+sqlite3 $dbFile "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT); \
+INSERT INTO users (name) VALUES ('Alice'); \
+SELECT * FROM users;"
+```
 <!-- MARKDOWN-AUTO-DOCS:END -->
 
 ## File: `1.createUserTable.sql`
@@ -65,14 +88,38 @@ CREATE TABLE User (
 ## File: `2.addColumn.sql`
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./2.addColumn.sql) -->
+<!-- The below code snippet is automatically added from ./2.addColumn.sql -->
+```sql
+-- Syntax:
+-- ALTER TABLE table_name
+-- ADD column_name datatype;
+
+ALTER TABLE user
+ADD gender string;
+```
 <!-- MARKDOWN-AUTO-DOCS:END -->
 
 ## File: `3.deleteColumn.sql`
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./3.deleteColumn.sql) -->
+<!-- The below code snippet is automatically added from ./3.deleteColumn.sql -->
+```sql
+-- Syntax:
+-- ALTER TABLE Customers
+-- DROP COLUMN ContactName;
+
+-- Deletes a column lastname from user table:
+ALTER TABLE user
+DROP COLUMN lastname;
+```
 <!-- MARKDOWN-AUTO-DOCS:END -->
 
 ## File: `4.searchEntry.sql`
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./4.searchEntry.sql) -->
+<!-- The below code snippet is automatically added from ./4.searchEntry.sql -->
+```sql
+select * from user
+where firstName="Carl"
+```
 <!-- MARKDOWN-AUTO-DOCS:END -->
