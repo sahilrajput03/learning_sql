@@ -2,21 +2,21 @@
 
 ```sh
 # Run query via argument
-sqlite3 db.sqlite "YOUR QUERY HERE"
+sqlite3 db1.sqlite "YOUR QUERY HERE"
 
 # Examples queries via argument:
 nodemon -x bash learn-sqlite3-cli.sh
 
 # Running a `.sql` file against a db file (db file will be created if not present)
-sqlite3 db.sqlite < 1.createUserTable.sql
+sqlite3 db1.sqlite < 1.createUserTable.sql
 
 # Using a db file via SQLite CLI for querying and managing the database
-sqlite3 db.sqlite
+sqlite3 db1.sqlite
 
 # Learn subshell prompt
 $ sqlite3
 Use below commands to use it:
-.open db.sqlite   # opens the database file
+.open db1.sqlite   # opens the database file
 .tables                 # shows tables
 .schema user            # shows schema of `user` table
 .help                   # shows help for all commands

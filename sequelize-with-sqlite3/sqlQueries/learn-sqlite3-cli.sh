@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dbFile=db1.sqlite
+dbFile=db2.sqlite
 
 # Create table
 # sqlite3 $dbFile "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT);"
