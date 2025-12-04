@@ -5,7 +5,7 @@
 sqlite3 db1.sqlite "YOUR QUERY HERE"
 
 # Examples queries via argument:
-nodemon -x bash learn-sqlite3-cli.sh
+nodemon -x bash script-1.sh
 
 # Running a `.sql` file against a db file (db file will be created if not present)
 sqlite3 db1.sqlite < 1.createUserTable.sql
