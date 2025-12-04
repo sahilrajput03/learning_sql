@@ -10,6 +10,8 @@ Use below commands to use it:
 .exit (to exit shell OR use ctrl+d OR cmd+c (twice))
 ```
 
+❤️ For running SQL queries in CLI directly please run `nodemon -x bash learn-sqlite3-cli.sh`.
+
 **Quick Links:**
 
 - Inspiration:
