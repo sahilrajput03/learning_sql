@@ -1,6 +1,6 @@
 // @ts-nocheck
 const { connectDB, disconnectDB } = require('./db.js');
-const { UserModel } = require('./models/User');
+const { UserModel } = require('./models/User.js');
 
 async function main() {
 	console.log('🚀 Running main function:');
